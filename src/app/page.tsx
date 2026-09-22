@@ -1,4 +1,4 @@
-import { client, featuredProductsQuery, recentPostsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { client, featuredProductsQuery, recentPostsQuery, siteSettingsQuery, editorialCatalogQuery, urlFor } from '@/lib/sanity'
 import HomeClient from '@/components/HomeClient'
 
 export const revalidate = 60
@@ -10,15 +10,18 @@ export default async function HomePage() {
   let posts: any[] = []
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let settings: any = null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let editorialItems: any[] = []
 
   try {
-    ;[products, posts, settings] = await Promise.all([
+    ;[products, posts, settings, editorialItems] = await Promise.all([
       client.fetch(featuredProductsQuery),
       client.fetch(recentPostsQuery),
       client.fetch(siteSettingsQuery),
+      client.fetch(editorialCatalogQuery),
     ])
   } catch {
-    // Sanity not yet configured
+    // Sanity not yet configured — graceful fallback
   }
 
   const waNumber = (settings?.whatsappNumber || '237682710405').replace(/\D/g, '')
@@ -29,7 +32,9 @@ export default async function HomePage() {
   const productsWithUrls = products.map((p: any) => ({
     ...p,
     imageUrl: p.image ? urlFor(p.image).width(520).url() : null,
-    images: Array.isArray(p.images) ? p.images.map((img: any) => img ? urlFor(img).width(520).url() : null).filter(Boolean) : [],
+    images: Array.isArray(p.images)
+      ? p.images.map((img: any) => (img ? urlFor(img).width(520).url() : null)).filter(Boolean)
+      : [],
   }))
 
   const heroImageUrl = settings?.heroImage ? urlFor(settings.heroImage).url() : undefined
@@ -56,7 +61,23 @@ export default async function HomePage() {
     images: Array.isArray(l.images) ? l.images.map((img: any) => urlFor(img).width(800).quality(85).url()) : [],
   })) || []
 
-  const bespokeHeroImage = settings?.bespokeHeroImage ? urlFor(settings.bespokeHeroImage).width(1200).quality(90).url() : undefined
+  const bespokeHeroImage = settings?.bespokeHeroImage
+    ? urlFor(settings.bespokeHeroImage).width(1200).quality(90).url()
+    : undefined
+
+  // Resolve editorial catalog image URLs on server
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const editorialItemsWithUrls = editorialItems.map((item: any) => {
+    const imgSource = item.mainImage || item.image
+    return {
+      ...item,
+      imageUrl: imgSource ? urlFor(imgSource).width(800).quality(85).url() : null,
+      displayTitle: item.title || item.name || null,
+    }
+  })
+
+  // Use first hero slide image as lead editorial hero image
+  const leadHeroImageUrl = heroSlides?.[0]?.image || heroImageUrl
 
   return (
     <HomeClient
@@ -70,7 +91,8 @@ export default async function HomePage() {
       heroSlides={heroSlides}
       lookbook={lookbook}
       bespokeHeroImage={bespokeHeroImage}
+      editorialItems={editorialItemsWithUrls}
+      leadHeroImageUrl={leadHeroImageUrl}
     />
   )
 }
-

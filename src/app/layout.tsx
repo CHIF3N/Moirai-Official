@@ -64,7 +64,8 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      {/* paddingTop accounts for fixed ticker (29px) + editorial navbar (~80px) */}
+      <body style={{ paddingTop: '109px' }}>
         <Providers>
           <Navbar />
           <main style={{ position: 'relative', zIndex: 1 }}>

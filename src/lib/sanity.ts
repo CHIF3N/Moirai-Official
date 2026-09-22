@@ -46,3 +46,20 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0] {
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]`
+
+// ── Editorial Catalog ─ for homepage gallery ──────────────────────────────
+export const editorialCatalogQuery = `
+  *[_type in ["product", "collection"]] | order(_createdAt desc)[0...8] {
+    _id,
+    title,
+    name,
+    slug,
+    mainImage,
+    image,
+    category-> { title },
+    priceXAF,
+    priceUSD,
+    price,
+    description
+  }
+`
