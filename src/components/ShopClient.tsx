@@ -6,6 +6,7 @@ import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { useCurrency } from './Providers'
+import { useCart } from './CartDrawer'
 
 const WA = '237682710405'
 export default function ShopClient({ products }: { products: any[] }) {
@@ -13,6 +14,14 @@ export default function ShopClient({ products }: { products: any[] }) {
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [search, setSearch] = useState('')
   const { formatPrice } = useCurrency()
+  const { addItem } = useCart()
+  const [addedId, setAddedId] = useState<string | null>(null)
+
+  const quickAdd = (p: any) => {
+    addItem({ id: p.id, name: p.name, price: p.price, image: p.image, slug: p.slug, category: p.category })
+    setAddedId(p.id)
+    setTimeout(() => setAddedId(null), 1800)
+  }
 
   const parsedItems = useMemo(() => products.map((p: any) => ({
     id: p._id,
@@ -235,26 +244,61 @@ export default function ShopClient({ products }: { products: any[] }) {
                       </Link>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
                         <span style={{ fontSize: '12px', color: 'var(--accent)', letterSpacing: '0.05em' }}>{p.price ? formatPrice(p.price) : 'Contact Us'}</span>
-                        <motion.a
-                          href={waEnquire(p.name)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            padding: '0.6rem 1.25rem',
-                            border: '1px solid var(--accent)',
-                            color: 'var(--accent)',
-                            fontSize: '10px',
-                            letterSpacing: '0.2em',
-                            textTransform: 'uppercase',
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                          }}
-                          whileHover={{ backgroundColor: 'var(--accent-soft)', scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          Order Now
-                        </motion.a>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          {/* Quick Add to Bag */}
+                          <motion.button
+                            onClick={() => quickAdd(p)}
+                            style={{
+                              padding: '0.6rem 1.1rem',
+                              background: addedId === p.id ? 'var(--gold)' : 'var(--obsidian)',
+                              border: `1px solid ${addedId === p.id ? 'var(--gold)' : 'var(--obsidian)'}`,
+                              color: addedId === p.id ? '#161412' : 'var(--canvas)',
+                              fontSize: '9.5px',
+                              letterSpacing: '0.18em',
+                              textTransform: 'uppercase',
+                              cursor: 'pointer',
+                              transition: 'background 0.3s, border-color 0.3s, color 0.3s',
+                              fontFamily: 'var(--font-body)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              minHeight: '34px',
+                            }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.96 }}
+                          >
+                            {addedId === p.id ? (
+                              <>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                Added
+                              </>
+                            ) : '+ Bag'}
+                          </motion.button>
+                          {/* WhatsApp enquire */}
+                          <motion.a
+                            href={waEnquire(p.name)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              padding: '0.6rem 0.9rem',
+                              border: '1px solid var(--hairline)',
+                              color: 'var(--umber)',
+                              fontSize: '9.5px',
+                              letterSpacing: '0.18em',
+                              textTransform: 'uppercase',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              fontFamily: 'var(--font-body)',
+                              minHeight: '34px',
+                            }}
+                            whileHover={{ borderColor: 'var(--obsidian)', color: 'var(--obsidian)', scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            Enquire
+                          </motion.a>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
