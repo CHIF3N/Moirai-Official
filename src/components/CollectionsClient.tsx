@@ -5,6 +5,16 @@ import { urlFor } from '@/sanity/lib/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 
+// Curated luxury fashion editorial fallbacks — ensures no empty wireframe boxes
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=1000&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&h=1000&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1000&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&h=1000&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=1000&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&h=1000&fit=crop&q=80',
+]
+
 interface CollectionsClientProps {
   grouped: Record<string, any[]>
   waNumber: string
@@ -99,59 +109,69 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
                 viewport={{ once: true, margin: '-40px' }}
               >
                 {catProducts.length === 0
-                  ? [1, 2, 3].map(n => (
+                  ? [0, 1, 2].map(n => (
                     <motion.div
                       key={n}
                       variants={staggerFadeUp}
-                      style={{ aspectRatio: '3/4', background: 'var(--bg)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}
+                      className="img-zoom"
+                      style={{ aspectRatio: '3/4', position: 'relative', overflow: 'hidden', border: '1px solid var(--card-border)', background: 'var(--card-bg)', transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}
+                      whileHover={{ y: -4, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
                     >
-                      <span style={{ fontSize: '2rem', opacity: 0.15, marginBottom: '0.5rem' }}>✧</span>
-                      <p style={{ fontSize: '8px', letterSpacing: '0.25em', color: 'var(--muted)', textTransform: 'uppercase' }}>Curating Category</p>
+                      <Image
+                        src={FALLBACK_IMAGES[n % FALLBACK_IMAGES.length]}
+                        alt="Editorial fashion"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        style={{ objectFit: 'cover' }}
+                        loading="lazy"
+                      />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.25rem', background: 'linear-gradient(to top, rgba(251,249,245,0.95) 0%, transparent 100%)' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '8px', letterSpacing: '0.25em', color: 'var(--card-index)', textTransform: 'uppercase' }}>Coming Soon</p>
+                      </div>
                     </motion.div>
                   ))
                   : catProducts.map((p: any) => {
                     const msg = encodeURIComponent(`Hi I want to order ${p.name || 'this item'}`)
+                    const fallbackIdx = catProducts.indexOf(p) % FALLBACK_IMAGES.length
+                    const displayImage = p.imageUrl || FALLBACK_IMAGES[fallbackIdx]
                     return (
                       <motion.div
                         key={p._id}
                         variants={staggerFadeUp}
-                        style={{ position: 'relative', overflow: 'hidden', aspectRatio: '3/4', background: 'var(--bg)', border: '1px solid var(--border)' }}
+                        className="img-zoom"
+                        style={{ position: 'relative', overflow: 'hidden', border: '1px solid var(--card-border)', background: 'var(--card-bg)', transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}
                         whileHover="hover"
                         initial="rest"
                       >
-                        {(() => {
-                           const imgRaw = p?.imageUrl
-                           const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(800).quality(80).url()) : null
-                           return imageSrc ? (
-                             <motion.div style={{ width: '100%', height: '100%', position: 'relative' }} variants={{ rest: { scale: 1 }, hover: { scale: 1.06 } }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-                               <Image src={imageSrc} alt={p?.name || 'Item'} fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} loading="lazy" />
-                             </motion.div>
-                           ) : (
-                             <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, var(--bg), var(--accent-soft))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ fontSize: '2rem', opacity: 0.1 }}>✦</span></div>
-                           )
-                        })()}
-                        <div style={{ position: 'absolute', inset: 0, padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: p.imageUrl ? 'transparent' : 'linear-gradient(to top, var(--bg) 0%, transparent 50%)' }}>
+                        <div style={{ aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
+                          <motion.div style={{ width: '100%', height: '100%', position: 'relative' }} variants={{ rest: { scale: 1 }, hover: { scale: 1.06 } }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+                            <Image src={displayImage} alt={p?.name || 'Item'} fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} loading="lazy" />
+                          </motion.div>
+                        </div>
+                        {/* Product info overlay on hover */}
+                        <div style={{ position: 'absolute', inset: 0, padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: 'linear-gradient(to top, rgba(251,249,245,0.96) 0%, transparent 50%)' }}>
                           <motion.div 
                             initial={{ opacity: 0 }} 
                             variants={{ hover: { opacity: 1, y: 0 }, rest: { opacity: 0, y: 10 } }} 
                             transition={{ duration: 0.2 }}
-                            style={{ background: 'var(--bg)', padding: '1rem', border: '1px solid var(--border)' }}
+                            style={{ background: 'var(--canvas)', padding: '1rem', border: '1px solid var(--card-border)' }}
                           >
-                            <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.25rem', color: 'var(--text)' }}>{p.name}</p>
-                            {p.price && <p style={{ fontSize: '11px', color: 'var(--accent-soft)', marginBottom: '0.75rem' }}>{p.price}</p>}
+                            <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.25rem', color: 'var(--card-title)' }}>{p.name}</p>
+                            {p.category?.title && <p style={{ fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--card-index)', marginBottom: '0.35rem' }}>{p.category.title}</p>}
+                            {p.price && <p style={{ fontSize: '11px', color: 'var(--card-body)', marginBottom: '0.75rem' }}>{p.price}</p>}
                             {p.available !== false && (
                               <motion.a
                                 href={`https://wa.me/237682710405?text=${msg}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{ display: 'inline-block', padding: '0.4rem 0.9rem', border: '1px solid var(--accent)', color: 'var(--accent-soft)', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', width: 'fit-content' }}
-                                whileHover={{ backgroundColor: 'rgba(124, 58, 237, 0.3)', scale: 1.04 }}
+                                style={{ display: 'inline-block', padding: '0.4rem 0.9rem', border: '1px solid var(--accent)', color: 'var(--card-title)', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', width: 'fit-content' }}
+                                whileHover={{ backgroundColor: 'var(--accent)', color: 'var(--canvas)', scale: 1.04 }}
                                 whileTap={{ scale: 0.97 }}
                                 transition={{ duration: 0.2 }}
                               >Order Now</motion.a>
                             )}
                             {p.available === false && (
-                              <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'var(--muted)', textTransform: 'uppercase' }}>Sold Out</span>
+                              <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'var(--card-index)', textTransform: 'uppercase' }}>Sold Out</span>
                             )}
                           </motion.div>
                         </div>

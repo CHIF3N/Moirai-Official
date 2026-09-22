@@ -85,19 +85,19 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
               <motion.div
                 key={m.title}
                 variants={staggerFadeUp}
-                whileHover={{ borderColor: 'var(--accent)', y: -6 }}
+                whileHover={{ borderColor: 'var(--accent)', y: -6, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
                 transition={{ duration: 0.3 }}
-                style={{ padding: '2.5rem', background: 'var(--bg)', border: '1px solid var(--border)' }}
+                style={{ padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
               >
                 <motion.p
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 700, color: 'var(--border)', lineHeight: 1, marginBottom: '1.25rem' }}
+                  style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 500, color: 'var(--card-index)', lineHeight: 1, marginBottom: '1.25rem' }}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.09 }}
                 >{m.num}</motion.p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--accent-soft)', marginBottom: '0.75rem' }}>{m.title}</p>
-                <p style={{ color: 'var(--muted)', fontSize: '12px', lineHeight: 1.9 }}>{m.desc}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--card-title)', marginBottom: '0.75rem' }}>{m.title}</p>
+                <p style={{ color: 'var(--card-body)', fontSize: '12px', lineHeight: 1.9 }}>{m.desc}</p>
               </motion.div>
             ))}
           </motion.div>

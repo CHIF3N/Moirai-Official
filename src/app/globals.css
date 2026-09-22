@@ -9,7 +9,15 @@
   --hairline: #E5DFC8;   /* 1px subtle divider lines */
   --hairline2:#E8E3D9;   /* alternate hairline */
   --obsidian: #141413;   /* Deep foreground & primary typography */
-  --umber:    #756F66;   /* Muted secondary text */
+  --umber:    #5E574E;   /* Muted secondary text — WCAG AA compliant */
+
+  /* Card-specific tokens */
+  --card-body:   #3D3833;   /* Rich charcoal for card descriptive copy */
+  --card-index:  #5E574E;   /* Step numbers (01, 02…) */
+  --card-title:  #2C2926;   /* Deep umber for card headings */
+  --card-bg:     #F4EFEA;   /* Warm card background */
+  --card-border: #E5E0D8;   /* Subtle warm card border */
+  --bio-text:    #24211E;   /* Ultra-legible dark for bio/prose */
   --accent:   #282623;   /* Active state */
   --accent-warm: #4A3728; /* Deep warm accent for hovers */
 
@@ -513,6 +521,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 @keyframes tickerScroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -525,6 +537,28 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 @keyframes aipulse  { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
 @keyframes aitype   { 0%, 80%, 100% { transform: scale(0); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
 @keyframes imageReveal { 0% { opacity: 0; filter: blur(8px); } 100% { opacity: 1; filter: blur(0); } }
+
+/* ── LUXURY CARD HOVER ── */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ── IMAGE ZOOM ON HOVER ── */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img,
+.img-zoom > div > img {
+  transition: transform 0.7s ease-out;
+}
+.img-zoom:hover img,
+.img-zoom:hover > div > img {
+  transform: scale(1.05);
+}
 
 /* ── HERO SECTION (legacy alias) ── */
 .hero-section { min-height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; }

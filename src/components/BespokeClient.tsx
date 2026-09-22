@@ -110,24 +110,24 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                 variants={staggerFadeUp}
                 style={{
                   padding: '3rem 2.5rem',
-                  border: '1px solid rgba(168, 85, 247, 0.1)',
+                  border: '1px solid var(--card-border)',
                   marginLeft: i === 0 ? 0 : '-1px',
                   position: 'relative',
-                  background: 'var(--bg)',
-                  transition: 'background 0.3s, box-shadow 0.3s',
+                  background: 'var(--card-bg)',
+                  transition: 'background 0.3s, box-shadow 0.3s, transform 0.3s',
                 }}
-                whileHover={{ background: 'rgba(26,20,35,0.8)', boxShadow: '0 0 20px rgba(124, 58, 237, 0.1)' }}
+                whileHover={{ y: -4, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
               >
                 <motion.div
-                  style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, var(--accent-soft), var(--accent))', originX: 0 }}
+                  style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, var(--accent-warm), var(--accent))', originX: 0 }}
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
                 />
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '3.5rem', fontWeight: 700, color: 'rgba(255,255,255,0.05)', lineHeight: 1, marginBottom: '1.5rem' }}>{step.num}</p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--accent-soft)', marginBottom: '0.75rem' }}>{step.title}</p>
-                <p style={{ color: 'var(--muted)', fontSize: '12px', lineHeight: 1.9 }}>{step.desc}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '3.5rem', fontWeight: 500, color: 'var(--card-index)', lineHeight: 1, marginBottom: '1.5rem' }}>{step.num}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--card-title)', marginBottom: '0.75rem' }}>{step.title}</p>
+                <p style={{ color: 'var(--card-body)', fontSize: '12px', lineHeight: 1.9 }}>{step.desc}</p>
               </motion.div>
             ))}
           </motion.div>

@@ -56,13 +56,13 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,2.8rem)', marginBottom: '2rem', lineHeight: 1.2 }}>
                 Woven by the Fates.<br />Worn by You.
               </h2>
-              <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 2, marginBottom: '1.5rem' }}>
+              <p style={{ color: 'var(--card-body)', fontSize: '13px', lineHeight: 2, marginBottom: '1.5rem' }}>
                 Moirai takes its name from the ancient Greek Fates — the three goddesses who spun, measured, and cut the thread of every human life. Clotho spun the thread of life. Lachesis measured it. Atropos cut it.
               </p>
-              <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 2, marginBottom: '1.5rem' }}>
+              <p style={{ color: 'var(--card-body)', fontSize: '13px', lineHeight: 2, marginBottom: '1.5rem' }}>
                 We believe fashion is not accidental. Every piece you choose to wear is a deliberate act — of defining who you are and who you are becoming. That intentionality is the spirit of Moirai.
               </p>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontStyle: 'italic', color: 'var(--accent-soft)', lineHeight: 1.7, borderLeft: '2px solid var(--accent)', paddingLeft: '1.25rem' }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontStyle: 'italic', color: 'var(--accent-warm)', lineHeight: 1.7, borderLeft: '2px solid var(--accent)', paddingLeft: '1.25rem' }}>
                 &ldquo;Made for who you are becoming.&rdquo;
               </p>
             </motion.div>
@@ -82,7 +82,10 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                     src={imageSrc}
                     alt="Moirai Brand"
                     fill
-                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    quality={95}
+                    priority
+                    style={{ objectFit: 'cover', objectPosition: 'top' }}
                   />
                 ) : (
                   <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.2)' }} />
@@ -108,7 +111,7 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                   const imgRaw = ceo?.image
                   const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(800).quality(80).url()) : null
                   return imageSrc ? (
-                    <Image src={imageSrc} alt={ceo.name || "CEO"} fill style={{ objectFit: 'cover' }} />
+                    <Image src={imageSrc} alt={ceo.name || "CEO"} fill sizes="(max-width: 768px) 100vw, 50vw" quality={95} priority style={{ objectFit: 'cover', objectPosition: 'top' }} />
                   ) : (
                     <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.05)' }} />
                   )
@@ -124,7 +127,7 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,3vw,2.5rem)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
                   {ceo.name}
                 </h2>
-                <div style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 2, whiteSpace: 'pre-wrap' }}>
+                <div style={{ color: 'var(--bio-text)', fontSize: '13px', lineHeight: 2, whiteSpace: 'pre-wrap' }}>
                   {ceo.bio}
                 </div>
               </motion.div>
@@ -180,10 +183,10 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
              {partners.map((partner, i) => (
                 <motion.div 
                   key={i} 
-                  initial={{ filter: 'grayscale(100%)', opacity: 0.6 }}
-                  whileHover={{ filter: 'grayscale(0%)', opacity: 1 }}
+                  initial={{ opacity: 0.8 }}
+                  whileHover={{ opacity: 1, scale: 1.05 }}
                   transition={{ duration: 0.3 }}
-                  style={{ width: 120, height: 60, position: 'relative', cursor: 'pointer' }}
+                  style={{ width: 140, height: 64, position: 'relative', cursor: 'pointer' }}
                 >
                    {(() => {
                      const imgRaw = partner?.logo
@@ -229,8 +232,8 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                 style={{ padding: '2.5rem 2rem', background: 'var(--bg)', border: '1px solid var(--border)' }}
               >
                 <p style={{ fontSize: '1.5rem', color: 'var(--accent)', marginBottom: '1rem' }}>{v.icon}</p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--accent-soft)', marginBottom: '0.75rem' }}>{v.title}</p>
-                <p style={{ color: 'var(--muted)', fontSize: '12px', lineHeight: 1.9 }}>{v.desc}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--card-title)', marginBottom: '0.75rem' }}>{v.title}</p>
+                <p style={{ color: 'var(--card-body)', fontSize: '12px', lineHeight: 1.9 }}>{v.desc}</p>
               </motion.div>
             ))}
           </motion.div>
