@@ -101,8 +101,23 @@ export default function HomeClient({
         style={{ paddingTop: '5rem' }}   /* body already has 109px offset for ticker+navbar */
         aria-label="Hero"
       >
+        {/* ── Ambient Silk Video Background ── */}
+        <div className="silk-video-wrap">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+          >
+            <source src="/videos/hero-silk-loop.mp4" type="video/mp4" />
+          </video>
+          <div className="silk-gradient" />
+        </div>
+
         {/* ── Left Column ── */}
-        <div className="hero-left">
+        <div className="hero-left" style={{ position: 'relative', zIndex: 1 }}>
+
           <motion.p
             className="section-label"
             custom={0}
@@ -134,7 +149,7 @@ export default function HomeClient({
               fontFamily: 'var(--font-body)',
               fontSize: '14px',
               lineHeight: 1.9,
-              color: 'var(--umber)',
+              color: 'var(--text-secondary)',
               maxWidth: '420px',
               marginBottom: '2.5rem',
             }}
@@ -150,17 +165,15 @@ export default function HomeClient({
             animate="visible"
             style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
           >
-            <Link href="/collections" className="btn-primary">
-              EXPLORE ATELIER
+            <Link href="/bespoke" className="btn-primary">
+              BESPOKE CONSULTATION
             </Link>
-            <a
-              href={`https://wa.me/${waNumber}?text=${waMsg}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/collections"
               className="btn-ghost"
             >
-              BESPOKE CONSULTATION
-            </a>
+              EXPLORE ARCHIVE
+            </Link>
           </motion.div>
 
           {/* Heritage decorative counter */}
@@ -191,7 +204,7 @@ export default function HomeClient({
         </div>
 
         {/* ── Right Column: Lead Editorial Image ── */}
-        <div className="hero-right">
+        <div className="hero-right" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -372,7 +385,7 @@ export default function HomeClient({
                 fontFamily: 'var(--font-body)',
                 fontSize: '14.5px',
                 lineHeight: 1.8,
-                color: '#1E1C1A',
+                color: 'var(--text-secondary)',
                 marginBottom: '1.5rem',
               }}
             >
@@ -385,7 +398,7 @@ export default function HomeClient({
                 fontFamily: 'var(--font-body)',
                 fontSize: '14.5px',
                 lineHeight: 1.8,
-                color: '#1E1C1A',
+                color: 'var(--text-secondary)',
               }}
             >
               From our flagship atelier in Cameroon, our couturiers craft bespoke gowns, sculpted corsets, and bridal silhouettes for those who refuse to be ordinary.

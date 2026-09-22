@@ -123,21 +123,24 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                   border: '1px solid var(--card-border)',
                   position: 'relative',
                   background: 'var(--card-bg)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
                   boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                  transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
                 }}
-                whileHover={{ y: -6, borderColor: 'var(--gold)', boxShadow: '0 8px 30px rgba(194, 162, 111, 0.16)' }}
+                whileHover={{ y: -4, borderColor: 'var(--gold)', boxShadow: '0 12px 40px rgba(0,0,0,0.08)' }}
                 transition={{ duration: 0.35 }}
               >
                 <motion.div
-                  style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, var(--gold), var(--bronze))', originX: 0 }}
+                  style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, var(--gold), var(--bronze))', originX: 0 }}
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
                 />
-                <p className="greek-numeral" style={{ fontSize: '2.5rem', lineHeight: 1, marginBottom: '1.25rem' }}>{step.num}</p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', fontWeight: 600, color: 'var(--card-title)', marginBottom: '0.75rem' }}>{step.title}</p>
-                <p style={{ color: '#1E1C1A', fontSize: '13px', lineHeight: 1.65 }}>{step.desc}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 300, color: 'var(--gold)', lineHeight: 1, marginBottom: '1.25rem' }}>{step.num}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>{step.title}</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.75 }}>{step.desc}</p>
               </motion.div>
             ))}
           </motion.div>

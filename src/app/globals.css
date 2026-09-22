@@ -1,69 +1,97 @@
 /* ── EDITORIAL FONTS ── */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
 
-/* ── DESIGN TOKENS ── */
+/* ── DESIGN TOKENS — DUAL THEME COUTURE SYSTEM ── */
 :root {
-  /* Editorial Palette — Greek Mythic Luxury */
-  --canvas:   #F5F2EB;   /* Warm ancient parchment/linen */
-  --surface:  #EBE6DC;   /* Warm ancient stone/parchment surface */
-  --hairline: #DFD8C8;   /* 1px subtle divider lines */
-  --hairline2:#D5CEBD;   /* alternate hairline */
-  --obsidian: #141413;   /* Deep foreground & primary typography */
-  --umber:    #5E574E;   /* Muted secondary text — WCAG AA compliant */
+  /* ── LIGHT LUXURY ATELIER (Wise Editorial) ── */
+  --canvas:        #FBF9F5;   /* Warm Alabaster Linen */
+  --surface:       #F2EEE7;   /* Subtle Sand Glass */
+  --surface-card:  rgba(255, 255, 255, 0.75);
+  --text-primary:  #141210;   /* Deep Obsidian Noir */
+  --text-secondary:#4A453E;   /* Rich Umber Charcoal */
+  --text-muted:    #7A7368;   /* Warm Earth */
+  --gold:          #A38247;   /* Antique Warm Bronze/Gold */
+  --gold-light:    #C4A46B;   /* Lighter gold highlight */
+  --border-hairline: rgba(20, 18, 16, 0.12);
+  --hairline:      rgba(20, 18, 16, 0.12);
+  --hairline2:     rgba(20, 18, 16, 0.18);
 
-  /* Mythic Luxury Tokens */
-  --gold:             #C2A26F;   /* Antique champagne gold */
-  --gold-light:       #D8BE8E;   /* Luminous gold highlight */
-  --bronze:           #B38E5D;   /* Rich antique bronze */
-  --obsidian-section: #161412;   /* Deep obsidian for dark luxury sections */
-  --parchment-text:   #1A1816;   /* Pitch charcoal for maximum contrast */
+  /* Video blend: multiply for light mode */
+  --video-opacity:    0.22;
+  --video-blend:      multiply;
 
-  /* Card-specific tokens */
-  --card-body:   #1E1C1A;   /* Crisp deep charcoal for card descriptive copy */
-  --card-index:  #C2A26F;   /* Gold Roman numerals */
-  --card-title:  #1A1816;   /* Deep umber for card headings */
-  --card-bg:     #EBE6DC;   /* Warm parchment card background */
-  --card-border: #DCD5C5;   /* Subtle warm card border */
-  --bio-text:    #1E1C1A;   /* Ultra-legible dark for bio/prose */
-  --accent:      #C2A26F;   /* Gold accent */
-  --accent-warm: #B38E5D;   /* Deep bronze for hovers */
+  /* Legacy & accent aliases (keep components working) */
+  --obsidian:        #141210;
+  --umber:           #4A453E;
+  --surface-alt:     #F2EEE7;
+  --bronze:          #8B6E3A;
+  --accent:          #A38247;
+  --accent-warm:     #8B6E3A;
+  --accent-soft:     rgba(163, 130, 71, 0.10);
+  --obsidian-section:#0E0D0B;
 
-  /* Legacy aliases (keeps other page components working) */
-  --bg:         var(--canvas);
-  --text:       var(--obsidian);
-  --muted:      var(--umber);
-  --border:     var(--hairline);
-  --accent-soft: rgba(194, 162, 111, 0.1);
+  /* Card tokens */
+  --card-bg:     rgba(255, 255, 255, 0.75);
+  --card-border: rgba(20, 18, 16, 0.12);
+  --card-body:   #4A453E;
+  --card-index:  #A38247;
+  --card-title:  #141210;
+  --bio-text:    #4A453E;
+
+  /* Legacy aliases */
+  --bg:     var(--canvas);
+  --text:   var(--text-primary);
+  --muted:  var(--text-muted);
+  --border: var(--hairline);
+  --obsidian-section: #0E0D0B;
 
   /* Typography */
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
+/* ── DARK AFRO-HELLENIC MODE (Obsidian Midnight Runway) ── */
 .dark {
-  --canvas:   #161412;
-  --surface:  #1F1C19;
-  --hairline: #2E2924;
-  --hairline2:#3A342E;
-  --obsidian: #F5F0E8;
-  --umber:    #A3998F;
-  --accent:   #C2A26F;
-  --accent-warm: #D8BE8E;
-  --gold:     #C2A26F;
-  --bronze:   #B38E5D;
-  --card-body:#D8D2C8;
-  --card-index:#C2A26F;
-  --card-title:#F5F0E8;
-  --card-bg:  #1F1C19;
-  --card-border:#2E2924;
-  --bio-text: #E8E2D8;
+  --canvas:        #080706;   /* Deep Obsidian Void */
+  --surface:       #12100E;   /* Warm Charcoal Surface */
+  --surface-card:  rgba(24, 21, 18, 0.85);
+  --text-primary:  #FAF8F5;   /* High-Luminance Ivory Silk */
+  --text-secondary:#CBC4B8;   /* Warm Muted Sand */
+  --text-muted:    #8E877D;   /* Muted Umber */
+  --gold:          #D4AF37;   /* Champagne Metallic Gold */
+  --gold-light:    #E8CB5A;
+  --border-hairline: rgba(212, 175, 55, 0.18);
+  --hairline:      rgba(212, 175, 55, 0.15);
+  --hairline2:     rgba(212, 175, 55, 0.22);
 
-  --bg:         var(--canvas);
-  --text:       var(--obsidian);
-  --muted:      var(--umber);
-  --border:     var(--hairline);
-  --accent-soft: rgba(194, 162, 111, 0.12);
+  /* Video blend: screen for dark mode */
+  --video-opacity:  0.35;
+  --video-blend:    screen;
+
+  /* Legacy & accent aliases */
+  --obsidian:       #FAF8F5;
+  --umber:          #CBC4B8;
+  --surface-alt:    #12100E;
+  --bronze:         #C4A46B;
+  --accent:         #D4AF37;
+  --accent-warm:    #E8CB5A;
+  --accent-soft:    rgba(212, 175, 55, 0.12);
+
+  /* Card tokens */
+  --card-bg:     rgba(24, 21, 18, 0.85);
+  --card-border: rgba(212, 175, 55, 0.18);
+  --card-body:   #CBC4B8;
+  --card-index:  #D4AF37;
+  --card-title:  #FAF8F5;
+  --bio-text:    #CBC4B8;
+
+  /* Legacy aliases */
+  --bg:     var(--canvas);
+  --text:   var(--text-primary);
+  --muted:  var(--text-muted);
+  --border: var(--hairline);
 }
+
 
 /* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -72,7 +100,7 @@ html { scroll-behavior: smooth; }
 body {
   position: relative;
   background-color: var(--canvas);
-  color: var(--obsidian);
+  color: var(--text-primary);
   font-family: var(--font-body);
   font-weight: 400;
   font-size: 14px;
@@ -136,7 +164,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 500;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--umber);
+  color: var(--text-muted);
   display: block;
 }
 
@@ -163,7 +191,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 500;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--umber);
+  color: var(--text-secondary);
   white-space: nowrap;
   padding: 0 2.5rem;
 }
@@ -181,14 +209,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 3.5rem;
-  background: rgba(245, 242, 235, 0.92);
+  background: rgba(251, 249, 245, 0.94);
   border-bottom: 1px solid var(--hairline);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: background 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
 }
 .dark .editorial-nav {
-  background: rgba(22, 20, 18, 0.92);
+  background: rgba(8, 7, 6, 0.92);
 }
 .editorial-nav.scrolled {
   padding: 0.85rem 3.5rem;
@@ -206,7 +234,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--umber);
+  color: var(--text-secondary);
   transition: color 0.25s ease;
   position: relative;
 }
@@ -215,10 +243,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: absolute;
   bottom: -3px; left: 0;
   width: 0; height: 1px;
-  background: var(--obsidian);
+  background: var(--gold);
   transition: width 0.3s ease;
 }
-.nav-link:hover { color: var(--obsidian); }
+.nav-link:hover { color: var(--text-primary); }
 .nav-link:hover::after { width: 100%; }
 
 /* ── WORDMARK ── */
@@ -228,7 +256,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 300;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: var(--obsidian);
+  color: var(--text-primary);
   line-height: 1;
   display: block;
 }
@@ -238,7 +266,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 500;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--umber);
+  color: var(--text-muted);
   display: block;
   margin-top: 3px;
   text-align: center;
@@ -251,26 +279,29 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--obsidian);
-  border: 1px solid var(--obsidian);
+  color: var(--text-primary);
+  border: 1px solid var(--border-hairline);
   padding: 0.5rem 1.25rem;
-  transition: background 0.25s ease, color 0.25s ease;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s;
   cursor: pointer;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
 }
 .btn-enquire:hover {
-  background: var(--obsidian);
+  background: var(--text-primary);
   color: var(--canvas);
+  border-color: var(--text-primary);
 }
+
 .dark .btn-enquire {
-  border-color: var(--obsidian);
-  color: var(--obsidian);
+  border-color: var(--border-hairline);
+  color: var(--text-primary);
 }
 .dark .btn-enquire:hover {
-  background: var(--obsidian);
-  color: var(--canvas);
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #080706;
 }
 
 /* ── EDITORIAL PRIMARY BUTTON ── */
@@ -279,21 +310,20 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   align-items: center;
   justify-content: center;
   padding: 1rem 2.5rem;
-  background: var(--obsidian);
-  color: var(--canvas);
+  background: var(--gold);
+  color: #0E0D0B;
   font-family: var(--font-body);
   font-size: 10.5px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  border: 1px solid var(--obsidian);
-  transition: background 0.25s ease, color 0.25s ease;
+  border: 1px solid var(--gold);
+  transition: background 0.25s ease, color 0.25s ease, opacity 0.25s;
   cursor: pointer;
   min-height: 48px;
 }
 .btn-primary:hover {
-  background: #000000;
-  border-color: #000000;
+  opacity: 0.88;
 }
 
 /* ── EDITORIAL OUTLINE BUTTON ── */
@@ -303,20 +333,20 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   justify-content: center;
   padding: 1rem 2.5rem;
   background: transparent;
-  color: var(--obsidian);
+  color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  border: 1px solid var(--obsidian);
-  transition: background 0.25s ease, color 0.25s ease;
+  border: 1px solid var(--border-hairline);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s;
   cursor: pointer;
   min-height: 48px;
 }
 .btn-ghost:hover {
-  background: var(--obsidian);
-  color: var(--canvas);
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .btn-outline {
@@ -691,3 +721,51 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     scroll-behavior: auto !important;
   }
 }
+
+/* ── WHATSAPP PULSE ── */
+@keyframes waPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* ── SILK VIDEO BACKGROUND UTILITY ── */
+.silk-video-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.silk-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Light mode — multiply blend, low opacity, warm parchment glow */
+.silk-video-wrap video {
+  opacity: var(--video-opacity, 0.22);
+  mix-blend-mode: var(--video-blend, multiply);
+}
+.silk-video-wrap .silk-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--canvas) 0%,
+    rgba(251, 249, 245, 0.65) 40%,
+    transparent 100%
+  );
+}
+.dark .silk-video-wrap .silk-gradient {
+  background: linear-gradient(
+    to top,
+    var(--canvas) 0%,
+    rgba(8, 7, 6, 0.65) 40%,
+    transparent 100%
+  );
+}
+
+/* ── HERO POSITION CONTEXT ── */
+.hero-editorial { position: relative; }

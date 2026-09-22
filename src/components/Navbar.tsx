@@ -41,26 +41,16 @@ const ALL_LINKS = [...LEFT_LINKS, ...RIGHT_LINKS]
 
 // ── Ticker content ──
 const TICKER_ITEMS = [
-  'THE HOUSE OF MOIRAI',
-  '✦',
-  'DESTINY, TAILORED',
-  '✦',
-  'BESPOKE COUTURE & ATELIER',
-  '✦',
-  'HANDCRAFTED IN CAMEROON',
-  '✦',
-  'AUTUMN / WINTER 2026',
-  '✦',
-  'THE HOUSE OF MOIRAI',
-  '✦',
-  'DESTINY, TAILORED',
-  '✦',
-  'BESPOKE COUTURE & ATELIER',
-  '✦',
-  'HANDCRAFTED IN CAMEROON',
-  '✦',
-  'AUTUMN / WINTER 2026',
-  '✦',
+  'CLOTHO SPINS THE THREAD', '✦',
+  'LACHESIS MEASURES DESTINY', '✦',
+  'ATROPOS CUTS THE SILHOUETTE', '✦',
+  'BUEA & DOUALA ATELIER', '✦',
+  'BESPOKE COUTURE WORLDWIDE', '✦',
+  'CLOTHO SPINS THE THREAD', '✦',
+  'LACHESIS MEASURES DESTINY', '✦',
+  'ATROPOS CUTS THE SILHOUETTE', '✦',
+  'BUEA & DOUALA ATELIER', '✦',
+  'BESPOKE COUTURE WORLDWIDE', '✦',
 ]
 
 export default function Navbar() {
@@ -81,16 +71,25 @@ export default function Navbar() {
   return (
     <>
       {/* ── Heritage Ticker Ribbon ── */}
-      <div className="ticker-wrap" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1020 }}>
+      <div
+        className="ticker-wrap"
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1020,
+          borderTop: '1px solid var(--hairline)',
+          borderBottom: '1px solid var(--hairline)',
+          background: 'var(--canvas)',
+        }}
+      >
         <div className="ticker-track">
           {TICKER_ITEMS.map((item, i) => (
             <span
               key={i}
               className="ticker-item"
               style={{
-                color: item === '✦' ? 'var(--obsidian)' : 'var(--umber)',
-                opacity: item === '✦' ? 0.4 : 1,
-                padding: item === '✦' ? '0 1.5rem' : '0 2.5rem',
+                color: item === '✦' ? 'var(--gold)' : 'var(--text-secondary)',
+                opacity: item === '✦' ? 1 : 0.9,
+                padding: item === '✦' ? '0 1.25rem' : '0 2.5rem',
+                fontWeight: item === '✦' ? 400 : 500,
               }}
             >
               {item}
@@ -147,7 +146,7 @@ export default function Navbar() {
             </motion.div>
           ))}
 
-          {/* WhatsApp Enquire pill */}
+          {/* WhatsApp Enquire pill with live pulse */}
           <motion.div
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
@@ -158,7 +157,16 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               className="btn-enquire"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
             >
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: '#22C55E',
+                display: 'inline-block',
+                flexShrink: 0,
+                boxShadow: '0 0 0 0 rgba(34,197,94,0.6)',
+                animation: 'waPulse 1.8s ease-out infinite',
+              }} />
               ENQUIRE
             </a>
           </motion.div>
@@ -172,9 +180,9 @@ export default function Navbar() {
             <button
               onClick={toggleCart}
               aria-label={`Open cart, ${totalItems} items`}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--umber)', cursor: 'pointer', transition: 'color 0.2s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--obsidian)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--umber)')}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
             >
               <div style={{ position: 'relative' }}>
                 <BagIcon />
@@ -211,9 +219,9 @@ export default function Navbar() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.45, delay: 0.5 }}
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              style={{ color: 'var(--umber)', transition: 'color 0.25s', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--obsidian)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--umber)')}
+              style={{ color: 'var(--text-secondary)', transition: 'color 0.25s', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
               aria-label="Toggle Theme"
             >
               {theme === 'dark' ? <Sun /> : <Moon />}
@@ -258,6 +266,8 @@ export default function Navbar() {
               inset: 0,
               zIndex: 1015,
               background: 'var(--canvas)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -288,14 +298,14 @@ export default function Navbar() {
                     fontFamily: 'var(--font-display)',
                     fontSize: '1.65rem',
                     fontWeight: 300,
-                    color: 'var(--obsidian)',
+                    color: 'var(--text-primary)',
                     letterSpacing: '0.05em',
                     display: 'block',
                     textAlign: 'center',
                     transition: 'color 0.2s',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--umber)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--obsidian)')}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-primary)')}
                 >
                   {l.label}
                 </Link>
