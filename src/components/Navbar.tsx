@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from './Providers'
+import { useCart } from './CartDrawer'
 
 // ── Icons ──
 const Sun = () => (
@@ -66,6 +67,7 @@ export default function Navbar() {
   const [scrolled, setScrolled]   = useState(false)
   const [open, setOpen]           = useState(false)
   const { theme, setTheme }       = useTheme()
+  const { toggleCart, totalItems } = useCart()
   const [mounted, setMounted]     = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
@@ -161,17 +163,45 @@ export default function Navbar() {
             </a>
           </motion.div>
 
-          {/* Bag counter */}
+          {/* Bag counter — opens CartDrawer */}
           <motion.div
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.45, delay: 0.46 }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--umber)', cursor: 'default' }}
           >
-            <BagIcon />
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '9.5px', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-              BAG (0)
-            </span>
+            <button
+              onClick={toggleCart}
+              aria-label={`Open cart, ${totalItems} items`}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--umber)', cursor: 'pointer', transition: 'color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--obsidian)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--umber)')}
+            >
+              <div style={{ position: 'relative' }}>
+                <BagIcon />
+                {totalItems > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-5px', right: '-6px',
+                    minWidth: '14px', height: '14px',
+                    borderRadius: '50%',
+                    background: 'var(--gold)',
+                    color: '#161412',
+                    fontSize: '7px',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    letterSpacing: 0,
+                    fontFamily: 'var(--font-body)',
+                  }}>
+                    {totalItems}
+                  </span>
+                )}
+              </div>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9.5px', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                BAG {totalItems > 0 ? `(${totalItems})` : ''}
+              </span>
+            </button>
           </motion.div>
 
           {/* Theme Toggle */}

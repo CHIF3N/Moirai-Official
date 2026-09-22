@@ -6,6 +6,7 @@ import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { useCurrency, useRecentlyViewed } from './Providers'
+import { useCart } from './CartDrawer'
 import { PortableText } from '@portabletext/react'
 
 const ChevronDown = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>;
@@ -60,6 +61,8 @@ const AccordionItem = ({ title, content }: { title: string, content: any[] }) =>
 export default function ProductDetailClient({ product }: { product: ProductProps }) {
   const { formatPrice } = useCurrency()
   const { viewedItems, addViewedItem } = useRecentlyViewed()
+  const { addItem, toggleCart } = useCart()
+  const [added, setAdded] = useState(false)
   
   const WA = '237682710405'
   const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi I want to order ${product.name}`)}`
@@ -70,6 +73,19 @@ export default function ProductDetailClient({ product }: { product: ProductProps
   useEffect(() => {
     addViewedItem(product)
   }, [product, addViewedItem])
+
+  const handleAddToBag = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      slug: product.slug,
+      category: product.category,
+    })
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
 
   const handleDragEnd = (e: any, { offset, velocity }: any) => {
     const swipe = offset.x
@@ -229,20 +245,62 @@ export default function ProductDetailClient({ product }: { product: ProductProps
               {product.deliveryInfo && <AccordionItem title="Delivery Info" content={product.deliveryInfo} />}
             </motion.div>
 
-            <motion.div variants={staggerFadeUp} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <motion.a 
-                whileHover={{ scale: 1.03 }}
+            <motion.div variants={staggerFadeUp} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {/* Add to Bag CTA */}
+              <motion.button
+                onClick={handleAddToBag}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                href={waUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="btn-primary" 
-                style={{ textAlign: 'center', width: '100%', padding: '1.2rem', fontSize: '0.9rem', letterSpacing: '0.15em', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                className="btn-primary"
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  padding: '1.2rem',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.15em',
+                  minHeight: '52px',
+                  background: added ? 'var(--gold)' : 'var(--obsidian)',
+                  borderColor: added ? 'var(--gold)' : 'var(--obsidian)',
+                  transition: 'background 0.3s, border-color 0.3s',
+                  gap: '0.5rem',
+                }}
               >
-                Chat to Customize This Piece
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={added ? 'added' : 'add'}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    {added ? (
+                      <>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Added to Bag
+                      </>
+                    ) : (
+                      'Add to Atelier Bag'
+                    )}
+                  </motion.span>
+                </AnimatePresence>
+              </motion.button>
+
+              {/* WhatsApp bespoke CTA */}
+              <motion.a
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost"
+                style={{ textAlign: 'center', width: '100%', padding: '1rem', fontSize: '0.85rem', letterSpacing: '0.15em', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                Request Bespoke Customisation
               </motion.a>
-              <p style={{ textAlign: 'center', fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.1em', marginTop: '0.5rem' }}>
-                Purchases are finalized via WhatsApp consultation.
+
+              <p style={{ textAlign: 'center', fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.1em', marginTop: '0.25rem' }}>
+                Orders finalized via WhatsApp consultation with our atelier.
               </p>
             </motion.div>
           </motion.div>

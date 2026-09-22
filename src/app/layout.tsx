@@ -6,6 +6,8 @@ import WhatsAppButton from '@/components/WhatsAppButton'
 import AIChatWidget from '@/components/AIChatWidget'
 import PageTransition from '@/components/PageTransition'
 import { Providers } from '@/components/Providers'
+import { CartProvider } from '@/components/CartDrawer'
+import SilkLoader from '@/components/SilkLoader'
 import { client, siteSettingsQuery } from '@/lib/sanity'
 
 export const metadata: Metadata = {
@@ -67,13 +69,16 @@ export default async function RootLayout({
       {/* paddingTop accounts for fixed ticker (29px) + editorial navbar (~80px) */}
       <body style={{ paddingTop: '109px' }}>
         <Providers>
-          <Navbar />
-          <main style={{ position: 'relative', zIndex: 1 }}>
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer settings={settings} />
-          <WhatsAppButton number={waNumber} message={waMessage} />
-          <AIChatWidget />
+          <CartProvider>
+            <SilkLoader />
+            <Navbar />
+            <main style={{ position: 'relative', zIndex: 1 }}>
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer settings={settings} />
+            <WhatsAppButton number={waNumber} message={waMessage} />
+            <AIChatWidget />
+          </CartProvider>
         </Providers>
       </body>
     </html>
