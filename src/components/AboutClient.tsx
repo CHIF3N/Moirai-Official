@@ -26,25 +26,25 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
       <section style={{ minHeight: '55vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6rem 2rem', background: 'linear-gradient(170deg, var(--bg), var(--bg))', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
         {!aboutImage && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />}
         <motion.div
-          style={{ maxWidth: 700, position: 'relative', zIndex: 1 }}
+          style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
-          <motion.p className="section-label" variants={staggerFadeUp}>Our Story</motion.p>
+          <motion.p className="section-label" variants={staggerFadeUp}>Our Heritage</motion.p>
           <motion.h1
             variants={staggerFadeUp}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem,8vw,6rem)', fontWeight: 700, marginBottom: '1.5rem', background: 'linear-gradient(135deg, var(--text) 0%, var(--accent-soft) 50%, var(--accent) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem,8vw,6rem)', fontWeight: 600, letterSpacing: '0.02em', marginTop: '0.5rem', marginBottom: '1.25rem', color: 'var(--obsidian)' }}
           >
-            About Moirai.
+            The House of Moirai
           </motion.h1>
-          <motion.div className="divider" variants={staggerFadeUp} />
+          <motion.div variants={staggerFadeUp} className="greek-divider" />
         </motion.div>
       </section>
 
       {/* The name */}
-      <section className="section">
-        <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
+      <section className="section" style={{ background: 'var(--surface)' }}>
+        <div className="container" style={{ maxWidth: 1040, margin: '0 auto' }}>
           <div className="about-grid">
             <motion.div
               initial={{ opacity: 0, x: -48 }}
@@ -52,31 +52,33 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
               transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
               viewport={{ once: true, margin: '-80px' }}
             >
-              <p className="section-label">The Name</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,2.8rem)', marginBottom: '2rem', lineHeight: 1.2 }}>
+              <p className="section-label">Mythic Origin</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3.25rem)', marginTop: '0.5rem', marginBottom: '1.5rem', lineHeight: 1.15 }}>
                 Woven by the Fates.<br />Worn by You.
               </h2>
-              <p style={{ color: 'var(--card-body)', fontSize: '13px', lineHeight: 2, marginBottom: '1.5rem' }}>
-                Moirai takes its name from the ancient Greek Fates — the three goddesses who spun, measured, and cut the thread of every human life. Clotho spun the thread of life. Lachesis measured it. Atropos cut it.
+              <div className="greek-divider" style={{ margin: '1.5rem 0' }} />
+              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.75, marginBottom: '1.25rem' }}>
+                Moirai takes its name from the ancient Greek Fates — Clotho who spun the thread of life, Lachesis who measured destiny, and Atropos who cut the ultimate silhouette.
               </p>
-              <p style={{ color: 'var(--card-body)', fontSize: '13px', lineHeight: 2, marginBottom: '1.5rem' }}>
-                We believe fashion is not accidental. Every piece you choose to wear is a deliberate act — of defining who you are and who you are becoming. That intentionality is the spirit of Moirai.
+              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.75, marginBottom: '2rem' }}>
+                We believe couture is never accidental. Every garment chosen is a conscious revelation of self-sovereignty — an intentional proclamation of who you are and the legacy you are weaving.
               </p>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontStyle: 'italic', color: 'var(--accent-warm)', lineHeight: 1.7, borderLeft: '2px solid var(--accent)', paddingLeft: '1.25rem' }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontStyle: 'italic', color: 'var(--obsidian)', lineHeight: 1.6, borderLeft: '3px solid var(--gold)', paddingLeft: '1.25rem', background: 'rgba(194, 162, 111, 0.08)', padding: '1rem 1.25rem' }}>
                 &ldquo;Made for who you are becoming.&rdquo;
               </p>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 1.06, x: 40 }}
+              initial={{ opacity: 0, scale: 1.05, x: 40 }}
               whileInView={{ opacity: 1, scale: 1, x: 0 }}
               transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
               viewport={{ once: true, margin: '-60px' }}
-              style={{ aspectRatio: '3/4', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden', background: 'var(--bg)' }}
+              className="gold-frame"
+              style={{ aspectRatio: '3/4', overflow: 'hidden' }}
             >
               {(() => {
                 const imgRaw = aboutImage
-                const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(1200).quality(80).url()) : null
+                const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(1200).quality(95).url()) : null
                 return imageSrc ? (
                   <Image
                     src={imageSrc}
@@ -88,7 +90,7 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                     style={{ objectFit: 'cover', objectPosition: 'top' }}
                   />
                 ) : (
-                  <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                  <div style={{ width: '100%', height: '100%', backgroundColor: 'var(--surface)' }} />
                 )
               })()}
             </motion.div>
@@ -98,18 +100,19 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
 
       {/* CEO Feature */}
       {ceo && ceo.name && (
-        <section className="section" style={{ background: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
-          <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
+        <section className="section" style={{ background: 'var(--canvas)', borderTop: '1px solid var(--hairline)' }}>
+          <div className="container" style={{ maxWidth: 1040, margin: '0 auto' }}>
             <div className="ceo-grid">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.96 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-60px' }}
-                style={{ aspectRatio: '3/4', position: 'relative', overflow: 'hidden', border: '1px solid var(--border)' }}
+                className="gold-frame"
+                style={{ aspectRatio: '3/4', overflow: 'hidden' }}
               >
                 {(() => {
                   const imgRaw = ceo?.image
-                  const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(800).quality(80).url()) : null
+                  const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(800).quality(95).url()) : null
                   return imageSrc ? (
                     <Image src={imageSrc} alt={ceo.name || "CEO"} fill sizes="(max-width: 768px) 100vw, 50vw" quality={95} priority style={{ objectFit: 'cover', objectPosition: 'top' }} />
                   ) : (
@@ -121,13 +124,14 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                style={{ padding: '2rem 0' }}
+                style={{ padding: '1rem 0' }}
               >
                 <p className="section-label">A Word From The Founder</p>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,3vw,2.5rem)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,3.5vw,2.75rem)', marginTop: '0.5rem', marginBottom: '1.25rem', fontStyle: 'italic', color: 'var(--obsidian)' }}>
                   {ceo.name}
                 </h2>
-                <div style={{ color: 'var(--bio-text)', fontSize: '13px', lineHeight: 2, whiteSpace: 'pre-wrap' }}>
+                <div className="greek-divider" style={{ margin: '1rem 0 1.5rem', marginLeft: 0 }} />
+                <div style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
                   {ceo.bio}
                 </div>
               </motion.div>
@@ -204,20 +208,21 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
       )}
 
       {/* Values */}
-      <section className="section" style={{ background: 'var(--bg)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section className="section" style={{ background: 'var(--surface)', borderTop: '1px solid var(--hairline)', borderBottom: '1px solid var(--hairline)' }}>
         <div className="container">
           <motion.div
-            style={{ textAlign: 'center', marginBottom: '4rem' }}
+            style={{ textAlign: 'center', marginBottom: '3.5rem' }}
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
           >
             <motion.p className="section-label" variants={staggerFadeUp}>What Drives Us</motion.p>
-            <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)' }}>Core Values</motion.h2>
+            <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3.25rem)', marginTop: '0.5rem' }}>Core Tenets</motion.h2>
+            <motion.div variants={staggerFadeUp} className="greek-divider" />
           </motion.div>
           <motion.div
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -227,13 +232,13 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
               <motion.div
                 key={v.title}
                 variants={staggerFadeUp}
-                whileHover={{ borderColor: 'var(--accent)', y: -4 }}
-                transition={{ duration: 0.3 }}
-                style={{ padding: '2.5rem 2rem', background: 'var(--bg)', border: '1px solid var(--border)' }}
+                whileHover={{ borderColor: 'var(--gold)', y: -6, boxShadow: '0 8px 30px rgba(194, 162, 111, 0.16)' }}
+                transition={{ duration: 0.35 }}
+                style={{ padding: '2.5rem 2rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)', position: 'relative' }}
               >
-                <p style={{ fontSize: '1.5rem', color: 'var(--accent)', marginBottom: '1rem' }}>{v.icon}</p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--card-title)', marginBottom: '0.75rem' }}>{v.title}</p>
-                <p style={{ color: 'var(--card-body)', fontSize: '12px', lineHeight: 1.9 }}>{v.desc}</p>
+                <p style={{ fontSize: '1.6rem', color: 'var(--gold)', marginBottom: '1rem' }}>{v.icon}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--card-title)', marginBottom: '0.75rem' }}>{v.title}</p>
+                <p style={{ color: '#1E1C1A', fontSize: '13px', lineHeight: 1.65 }}>{v.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -241,16 +246,17 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
       </section>
 
       {/* Slogans */}
-      <section style={{ padding: '6rem 2rem', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
+      <section style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--canvas)', borderBottom: '1px solid var(--hairline)' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <motion.p
             className="section-label"
-            style={{ marginBottom: '3rem' }}
+            style={{ marginBottom: '1.5rem' }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-          >The Moirai Way</motion.p>
+          >The Moirai Creed</motion.p>
+          <div className="greek-divider" style={{ marginBottom: '2.5rem' }} />
           {SLOGANS.map((s, i) => (
             <motion.p
               key={s}
@@ -258,16 +264,16 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.1rem,2.5vw,1.5rem)', fontStyle: 'italic', color: 'var(--muted)', marginBottom: '2rem', lineHeight: 1.4 }}
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.15rem,2.5vw,1.6rem)', fontStyle: 'italic', color: 'var(--obsidian)', marginBottom: '2rem', lineHeight: 1.4, letterSpacing: '0.02em' }}
             >{s}</motion.p>
           ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section style={{ padding: '5rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
+      <section style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--surface)' }}>
         <motion.div
-          style={{ maxWidth: 500, margin: '0 auto' }}
+          style={{ maxWidth: 540, margin: '0 auto' }}
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -275,11 +281,12 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
         >
           <motion.h2
             variants={staggerFadeUp}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', fontStyle: 'italic', marginBottom: '2rem', lineHeight: 1.2 }}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.25rem,4vw,3.25rem)', fontStyle: 'italic', marginBottom: '1rem', lineHeight: 1.15, color: 'var(--obsidian)' }}
           >
             Ready to wear your destiny?
           </motion.h2>
-          <motion.div variants={staggerFadeUp} style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <motion.div variants={staggerFadeUp} className="greek-divider" />
+          <motion.div variants={staggerFadeUp} style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2rem' }}>
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
               <Link href="/collections" className="btn-primary">View Collections</Link>
             </motion.div>

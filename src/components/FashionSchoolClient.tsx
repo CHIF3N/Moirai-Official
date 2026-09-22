@@ -6,19 +6,19 @@ import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 
 const MODULES = [
-  { num: '01', title: 'Foundation of Fashion Design', desc: 'History, theory, and the language of fashion. Understanding what makes great design.' },
-  { num: '02', title: 'Pattern Making & Cutting', desc: 'Translate designs from paper to fabric with precision and confidence.' },
-  { num: '03', title: 'Sewing Techniques', desc: 'From basic stitches to advanced couture construction methods.' },
-  { num: '04', title: 'Fabric & Material Knowledge', desc: 'Understanding textures, weights, and how different fabrics behave.' },
-  { num: '05', title: 'Styling & Presentation', desc: 'How to dress the body, direct shoots, and present your work professionally.' },
-  { num: '06', title: 'Business of Fashion', desc: 'Pricing, branding, clients, and building your own fashion business from scratch.' },
+  { num: 'I', title: 'Foundation of Fashion Design', desc: 'History, theory, and the language of couture. Understanding what makes enduring, timeless design.' },
+  { num: 'II', title: 'Pattern Making & Cutting', desc: 'Translate designs from sketch to silhouette with mathematical precision and tactile confidence.' },
+  { num: 'III', title: 'Sewing Techniques & Craft', desc: 'From foundational hand stitches to advanced couture construction methods and tailoring.' },
+  { num: 'IV', title: 'Fabric & Material Knowledge', desc: 'Understanding textures, weights, grain lines, and how rare fabrics behave across silhouettes.' },
+  { num: 'V', title: 'Styling & Presentation', desc: 'How to dress the human form, direct editorial shoots, and present collections professionally.' },
+  { num: 'VI', title: 'Business of Fashion', desc: 'Pricing, brand architecture, atelier client management, and scaling an independent luxury label.' },
 ]
 
 const WHO = [
-  'Beginners with a passion for fashion and no prior experience',
-  'Aspiring designers wanting structured, hands-on training',
-  'Entrepreneurs starting their own fashion label',
-  'Anyone wanting to create and understand their own wardrobe',
+  'Beginners with an enduring passion for haute couture and no prior garment experience',
+  'Aspiring designers seeking rigorous, master-apprentice structured studio training',
+  'Entrepreneurs launching their own independent luxury or ready-to-wear label',
+  'Creatives eager to master the art of bespoke construction for personal expression',
 ]
 
 const WA = '237682710405'
@@ -65,17 +65,18 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
       <section className="section">
         <div className="container">
           <motion.div
-            style={{ textAlign: 'center', marginBottom: '4rem' }}
+            style={{ textAlign: 'center', marginBottom: '3.5rem' }}
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
           >
             <motion.p className="section-label" variants={staggerFadeUp}>Curriculum</motion.p>
-            <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)' }}>What You Will Learn</motion.h2>
+            <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', marginTop: '0.5rem' }}>What You Will Learn</motion.h2>
+            <motion.div variants={staggerFadeUp} className="greek-divider" />
           </motion.div>
           <motion.div
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.75rem' }}
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -85,19 +86,20 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
               <motion.div
                 key={m.title}
                 variants={staggerFadeUp}
-                whileHover={{ borderColor: 'var(--accent)', y: -6, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
-                transition={{ duration: 0.3 }}
-                style={{ padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
+                whileHover={{ borderColor: 'var(--gold)', y: -6, boxShadow: '0 8px 30px rgba(194, 162, 111, 0.16)' }}
+                transition={{ duration: 0.35 }}
+                style={{ padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)', position: 'relative' }}
               >
                 <motion.p
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 500, color: 'var(--card-index)', lineHeight: 1, marginBottom: '1.25rem' }}
+                  className="greek-numeral"
+                  style={{ fontSize: '2.25rem', lineHeight: 1, marginBottom: '1.25rem' }}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.09 }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
                 >{m.num}</motion.p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--card-title)', marginBottom: '0.75rem' }}>{m.title}</p>
-                <p style={{ color: 'var(--card-body)', fontSize: '12px', lineHeight: 1.9 }}>{m.desc}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--card-title)', marginBottom: '0.75rem', letterSpacing: '0.02em' }}>{m.title}</p>
+                <p style={{ color: '#1E1C1A', fontSize: '13px', lineHeight: 1.65 }}>{m.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -105,7 +107,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
       </section>
 
       {/* Who it's for */}
-      <section className="section" style={{ background: 'var(--bg)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section className="section" style={{ background: 'var(--surface)', borderTop: '1px solid var(--hairline)', borderBottom: '1px solid var(--hairline)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
             <motion.div
@@ -115,7 +117,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
               viewport={{ once: true, margin: '-80px' }}
             >
               <p className="section-label">Is This For You?</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', marginBottom: '2.5rem', lineHeight: 1.2 }}>Who It&apos;s For</h2>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3.25rem)', marginTop: '0.5rem', marginBottom: '2.5rem', lineHeight: 1.15 }}>Who It&apos;s For</h2>
               {WHO.map((w, i) => (
                 <motion.div
                   key={w}
@@ -123,10 +125,10 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: '-20px' }}
                   transition={{ duration: 0.5, delay: i * 0.1, ease: 'easeOut' }}
-                  style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', marginBottom: '1.25rem' }}
+                  style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}
                 >
-                  <span style={{ color: 'var(--accent)', marginTop: '0.1rem', flexShrink: 0 }}>✦</span>
-                  <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.8 }}>{w}</p>
+                  <span style={{ color: 'var(--gold)', marginTop: '0.1rem', flexShrink: 0, fontSize: '1.1rem' }}>✦</span>
+                  <p style={{ color: '#1E1C1A', fontSize: '13.5px', lineHeight: 1.65, fontWeight: 450 }}>{w}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -136,7 +138,8 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
               whileInView={{ opacity: 1, scale: 1, x: 0 }}
               transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
               viewport={{ once: true, margin: '-60px' }}
-              style={{ aspectRatio: '4/5', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden', background: 'var(--bg)' }}
+              className="gold-frame"
+              style={{ aspectRatio: '4/5', overflow: 'hidden' }}
             >
               {(() => {
                 const imgRaw = heroImage
@@ -160,18 +163,19 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
       </section>
 
       {/* Details + CTA */}
-      <section style={{ padding: '6rem 2rem', textAlign: 'center' }}>
+      <section style={{ padding: '7rem 2rem', textAlign: 'center' }}>
         <motion.div
-          style={{ maxWidth: 600, margin: '0 auto' }}
+          style={{ maxWidth: 640, margin: '0 auto' }}
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
           <motion.p className="section-label" variants={staggerFadeUp}>Program Details</motion.p>
-          <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', marginBottom: '1.5rem' }}>Duration &amp; Enrollment</motion.h2>
-          <motion.p variants={staggerFadeUp} style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 2, marginBottom: '3rem' }}>
-            Duration and schedule details are available on request. Intake is intentionally limited to ensure every student receives personal mentorship and hands-on time with the Moirai team.
+          <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', marginTop: '0.5rem', marginBottom: '1rem' }}>Duration &amp; Enrollment</motion.h2>
+          <motion.div variants={staggerFadeUp} className="greek-divider" />
+          <motion.p variants={staggerFadeUp} style={{ color: '#1E1C1A', fontSize: '13.5px', lineHeight: 1.7, marginBottom: '3rem' }}>
+            Duration and schedule details are available on request. Intake is intentionally limited each term to ensure every apprentice receives personal mentorship and uninterrupted studio time with the master couturiers of Moirai House.
           </motion.p>
           <motion.div variants={staggerFadeUp} style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>

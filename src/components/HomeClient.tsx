@@ -283,26 +283,30 @@ export default function HomeClient({
         }}
         aria-hidden="true"
       >
-        <div style={{ display: 'flex', animation: 'marqueeScroll 40s linear infinite', width: 'max-content' }}>
+        <div style={{ display: 'flex', animation: 'marqueeScroll 35s linear infinite', width: 'max-content' }}>
           {[
-            'THE HOUSE OF MOIRAI', '✦', 'DESTINY, TAILORED', '✦',
-            'AFRICAN HAUTE COUTURE', '✦', 'NOT A TREND. IDENTITY.', '✦',
-            'HANDCRAFTED IN CAMEROON', '✦', 'AUTUMN / WINTER 2026', '✦',
-            'THE HOUSE OF MOIRAI', '✦', 'DESTINY, TAILORED', '✦',
-            'AFRICAN HAUTE COUTURE', '✦', 'NOT A TREND. IDENTITY.', '✦',
-            'HANDCRAFTED IN CAMEROON', '✦', 'AUTUMN / WINTER 2026', '✦',
+            'CLOTHO SPINS THE THREAD', '✦',
+            'LACHESIS MEASURES DESTINY', '✦',
+            'ATROPOS CUTS THE SILHOUETTE', '✦',
+            'HANDCRAFTED IN CAMEROON', '✦',
+            'WORLDWIDE ATELIER', '✦',
+            'CLOTHO SPINS THE THREAD', '✦',
+            'LACHESIS MEASURES DESTINY', '✦',
+            'ATROPOS CUTS THE SILHOUETTE', '✦',
+            'HANDCRAFTED IN CAMEROON', '✦',
+            'WORLDWIDE ATELIER', '✦',
           ].map((t, i) => (
             <span
               key={i}
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '9px',
-                fontWeight: 500,
-                letterSpacing: '0.34em',
+                fontSize: '10px',
+                fontWeight: 600,
+                letterSpacing: '0.32em',
                 textTransform: 'uppercase',
-                color: t === '✦' ? 'var(--umber)' : 'var(--obsidian)',
-                opacity: t === '✦' ? 0.35 : 0.7,
-                padding: t === '✦' ? '0 1.25rem' : '0 2.5rem',
+                color: t === '✦' ? 'var(--gold)' : 'var(--obsidian)',
+                opacity: t === '✦' ? 1 : 0.85,
+                padding: t === '✦' ? '0 1.25rem' : '0 2rem',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -367,23 +371,24 @@ export default function HomeClient({
               style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: '14.5px',
-                lineHeight: 2,
-                color: 'var(--umber)',
-                marginBottom: '2rem',
+                lineHeight: 1.8,
+                color: '#1E1C1A',
+                marginBottom: '1.5rem',
               }}
             >
-              Moirai draws from the Greek Fates — the ancient weavers of human destiny. We believe every silhouette tells a story, every stitch carries intention. Fashion is not decoration. It is the language of becoming.
+              Moirai draws inspiration from the Greek Fates — Clotho, Lachesis, and Atropos — the ancient weavers who spun, measured, and cut the threads of human destiny. We believe every silhouette tells a story, every stitch carries intention. Fashion is not fleeting decoration. It is the architectural language of identity.
             </motion.p>
+            <div className="greek-divider" style={{ margin: '1.5rem 0' }} />
             <motion.p
               variants={staggerChild}
               style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: '14.5px',
-                lineHeight: 2,
-                color: 'var(--umber)',
+                lineHeight: 1.8,
+                color: '#1E1C1A',
               }}
             >
-              Based in Cameroon, our atelier crafts couture pieces, bespoke corsets, and bridal silhouettes for women who refuse to be ordinary.
+              From our flagship atelier in Cameroon, our couturiers craft bespoke gowns, sculpted corsets, and bridal silhouettes for those who refuse to be ordinary.
             </motion.p>
           </motion.div>
         </div>
@@ -401,27 +406,27 @@ export default function HomeClient({
       >
         <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
           {/* Header */}
-          <div className="gallery-header">
+          <div className="gallery-header" style={{ marginBottom: '2.5rem' }}>
             <div>
               <p className="section-label" style={{ marginBottom: '0.5rem' }}>JUST ADDED</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 3vw, 2.75rem)', fontWeight: 300, color: 'var(--obsidian)', letterSpacing: '0.03em' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 3vw, 2.75rem)', fontWeight: 400, color: 'var(--obsidian)', letterSpacing: '0.03em' }}>
                 Curated Pieces
               </h2>
             </div>
             <Link
               href="/shop"
-              style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--umber)', transition: 'color 0.25s', whiteSpace: 'nowrap' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--obsidian)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--umber)')}
+              style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--gold)', transition: 'color 0.25s', whiteSpace: 'nowrap' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--bronze)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--gold)')}
             >
               VIEW COMPLETE CATALOGUE →
             </Link>
           </div>
 
-          {/* Gallery Grid */}
+          {/* Gallery Grid / Mobile Carousel */}
           {galleryItems.length > 0 ? (
             <motion.div
-              className="gallery-grid"
+              className="gallery-grid carousel-scroll"
               variants={stagger}
               initial="hidden"
               whileInView="visible"
@@ -438,7 +443,7 @@ export default function HomeClient({
                 return (
                   <motion.article
                     key={item._id}
-                    className="product-card"
+                    className="product-card carousel-card card-hover"
                     variants={staggerChild}
                   >
                     {/* Image */}
@@ -652,17 +657,14 @@ export default function HomeClient({
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
           >
-            <motion.div variants={staggerChild} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
-              <span className="divider" />
-              <p className="section-label">WHAT WE STAND FOR</p>
-              <span className="divider" />
-            </motion.div>
+            <motion.p className="section-label" variants={staggerChild}>WHAT WE STAND FOR</motion.p>
             <motion.h2
               variants={staggerChild}
-              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 300, color: 'var(--obsidian)' }}
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 400, color: 'var(--obsidian)', marginTop: '0.5rem' }}
             >
               Core Values
             </motion.h2>
+            <motion.div variants={staggerChild} className="greek-divider" />
           </motion.div>
 
           <motion.div
@@ -685,9 +687,9 @@ export default function HomeClient({
                 onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'var(--surface)')}
                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'var(--canvas)')}
               >
-                <p style={{ fontSize: '1.35rem', color: 'var(--obsidian)', marginBottom: '1.25rem', opacity: 0.4 }}>{v.glyph}</p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--obsidian)', marginBottom: '0.65rem', fontWeight: 400 }}>{v.title}</p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--umber)', lineHeight: 1.85 }}>{v.desc}</p>
+                <p style={{ fontSize: '1.6rem', color: 'var(--gold)', marginBottom: '1.25rem' }}>{v.glyph}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', color: 'var(--obsidian)', marginBottom: '0.65rem', fontWeight: 600 }}>{v.title}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '13.5px', color: '#1E1C1A', lineHeight: 1.65 }}>{v.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -750,17 +752,19 @@ export default function HomeClient({
               fontStyle: 'italic',
               lineHeight: 1.05,
               color: 'var(--obsidian)',
-              marginBottom: '1.75rem',
+              marginBottom: '1rem',
             }}
           >
             Made for who<br />you are Becoming.
           </motion.h2>
 
+          <motion.div variants={staggerChild} className="greek-divider" />
+
           <motion.p
             variants={staggerChild}
-            style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--umber)', lineHeight: 2, marginBottom: '3rem', maxWidth: '480px', margin: '0 auto 3rem' }}
+            style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: '#1E1C1A', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: '520px', margin: '0 auto 2.5rem' }}
           >
-            Whether it is a bespoke piece, a cocktail dress, or your first lesson in the fashion school — your story starts here.
+            Whether it is an archival bespoke creation, a couture evening gown, or your foundational apprenticeship in our fashion school — your destiny is woven here.
           </motion.p>
 
           <motion.div
