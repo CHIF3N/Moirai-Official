@@ -91,3 +91,31 @@ export const EDITORIAL = {
   homeBespoke: { image: 'image-0e028a436b1bf268ac01ff15576417b59ccbf7ae-1023x1280-jpg', alt: 'Red sculpted gown with voluminous sleeves against a red backdrop' },
   homeClosing: { image: 'image-37e23fa99829eeeaa120ee3e6877e93fd9388437-1024x1280-jpg', alt: '' },
 }
+
+// Media from the brand's own Instagram (@moirai.th_), downloaded 17 Oct 2026 at the owner's request.
+// Only posts published by Moirai itself — collaboration posts belong to other accounts and need their permission.
+export const SOCIAL_MEDIA = {
+  bridalVideo: {
+    src: '/social/bridal-box.mp4',
+    poster: '/social/bridal-box-poster.jpg',
+    caption: 'We prepared a special box for a special lady on her special day.',
+    alt: 'A bride in a white robe opens an orange Moirai gift box on her wedding morning',
+    post: 'https://www.instagram.com/p/DZsQAiHgN-C/',
+  },
+  images: [
+    {
+      src: '/social/jacket-collection-green.jpg',
+      width: 1200, height: 1200,
+      alt: 'Man in a green geometric-quilted Moirai jacket, seated, in front of the Moirai wordmark',
+      caption: 'The Moirai Jacket Collection — “our definition of luxury is comfort.”',
+      post: 'https://www.instagram.com/p/DPD6LeFDX8V/',
+    },
+    {
+      src: '/social/pink-october.jpg',
+      width: 900, height: 1600,
+      alt: 'Woman in a tailored white blazer and black leggings for Pink October',
+      caption: 'Pink October — standing together for early detection.',
+      post: 'https://www.instagram.com/p/DPXKV0WgNfm/',
+    },
+  ],
+}
