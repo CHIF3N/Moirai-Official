@@ -1,6 +1,17 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { type Currency, type Priced, formatAmount, hasFixedPrice, PRICE_ON_REQUEST } from '@/lib/price'
+import type { SiteConfig } from '@/lib/site'
+
+// Site Config Context — business contact details from Sanity Site Settings
+const SiteConfigContext = createContext<SiteConfig | undefined>(undefined)
+
+export function useSiteConfig() {
+  const context = useContext(SiteConfigContext)
+  if (!context) throw new Error('useSiteConfig must be used within Providers')
+  return context
+}
 
 // Theme Context
 type Theme = 'light' | 'dark' | 'system'
@@ -10,36 +21,27 @@ const ThemeContext = createContext<ThemeContextProps>({ theme: 'light', setTheme
 
 export const useTheme = () => useContext(ThemeContext)
 
+// The site has one look (Noir Atelier), set on <html> in app/layout.tsx.
+// The context stays so existing callers keep working.
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
-  const [resolvedTheme, setResolvedTheme] = useState<'light'|'dark'>('light')
-
   useEffect(() => {
-     const stored = localStorage.getItem('theme') as Theme
-     if (stored) { setTheme(stored); setResolvedTheme(stored === 'dark' ? 'dark' : 'light'); }
+    // Clear a light-mode choice saved by the old theme toggle
+    try { localStorage.removeItem('theme') } catch { /* storage unavailable */ }
   }, [])
 
-  useEffect(() => {
-     localStorage.setItem('theme', theme)
-     const rTheme = theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme
-     setResolvedTheme(rTheme)
-     if (rTheme === 'dark') {
-       document.documentElement.classList.add('dark')
-     } else {
-       document.documentElement.classList.remove('dark')
-     }
-     document.documentElement.setAttribute('data-theme', rTheme)
-  }, [theme])
-
-  return <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>{children}</ThemeContext.Provider>
+  return <ThemeContext.Provider value={{ theme: 'dark', setTheme: () => {}, resolvedTheme: 'dark' }}>{children}</ThemeContext.Provider>
 }
 
 // Currency Context
-type Currency = 'XAF' | 'USD'
 interface CurrencyContextType {
   currency: Currency
   setCurrency: (c: Currency) => void
   formatPrice: (priceInXaf: number) => string
+  // Product price for display, or "Price on request"
+  displayPrice: (p: Priced) => string
+  // USD is offered only when the owner has set a rate in Site Settings
+  usdAvailable: boolean
+  usdRateUpdatedAt: string | null
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined)
@@ -64,9 +66,11 @@ export function useRecentlyViewed() {
   return context
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children, site }: { children: React.ReactNode; site: SiteConfig }) {
   // Currency Logic
-  const [currency, setCurrency] = useState<Currency>('XAF')
+  const usdAvailable = site.usdRate !== null
+  const [selectedCurrency, setCurrency] = useState<Currency>('XAF')
+  const currency: Currency = usdAvailable ? selectedCurrency : 'XAF'
   
   useEffect(() => {
     const saved = localStorage.getItem('moirai_currency') as Currency
@@ -80,13 +84,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     localStorage.setItem('moirai_currency', c)
   }
 
-  const formatPrice = (priceInXaf: number) => {
-    if (currency === 'USD') {
-      const priceUsd = Math.ceil(priceInXaf / 600) // approx conversion
-      return `$${priceUsd.toLocaleString()}`
-    }
-    return `${priceInXaf.toLocaleString()} FCFA`
-  }
+  const formatPrice = (priceInXaf: number) => formatAmount(priceInXaf, currency, site.usdRate)
+  const displayPrice = (p: Priced) => hasFixedPrice(p) ? formatPrice(p.price) : PRICE_ON_REQUEST
 
   // Recently Viewed Logic
   const [viewedItems, setViewedItems] = useState<any[]>([])
@@ -114,11 +113,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider>
-      <CurrencyContext.Provider value={{ currency, setCurrency: handleSetCurrency, formatPrice }}>
-        <RecentlyViewedContext.Provider value={{ viewedItems, addViewedItem }}>
-          {children}
-        </RecentlyViewedContext.Provider>
-      </CurrencyContext.Provider>
+      <SiteConfigContext.Provider value={site}>
+        <CurrencyContext.Provider value={{ currency, setCurrency: handleSetCurrency, formatPrice, displayPrice, usdAvailable, usdRateUpdatedAt: site.usdRateUpdatedAt }}>
+          <RecentlyViewedContext.Provider value={{ viewedItems, addViewedItem }}>
+            {children}
+          </RecentlyViewedContext.Provider>
+        </CurrencyContext.Provider>
+      </SiteConfigContext.Provider>
     </ThemeProvider>
   )
 }

@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import { urlFor } from '@/sanity/lib/image'
+import { useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 const PROCESS = [
   { num: 'I', title: 'Consultation & Discourse', desc: 'We start with a conversation. Your vision, your measurements, your heritage. Every seam matters. Conducted via private WhatsApp salon or in-person.' },
@@ -13,25 +15,15 @@ const PROCESS = [
   { num: 'IV', title: 'Delivery & Revelation', desc: 'Your finished garment arrives sealed in archival preservation, ready for the defining moment it was born for. Worn, captured, immortalized.' },
 ]
 
-const BESPOKE_FALLBACK_IMAGES = [
-  { url: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80', alt: 'Haute Couture Tailoring' },
-  { url: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=800&q=80', alt: 'Atelier Fabric & Drape' },
-  { url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80', alt: 'Couture Silhouette' },
-  { url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80', alt: 'Runway Elegance' },
-  { url: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80', alt: 'Editorial Fashion Design' },
-  { url: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80', alt: 'Luxury Bespoke Gown' },
-]
-
 const FAQS = [
   { q: 'How long does a bespoke piece take to craft?', a: 'Typically 2–4 weeks depending on silhouette complexity and hand-embroidery. Expedited couture timelines can be accommodated upon request.' },
-  { q: 'How do I initiate a bespoke order?', a: "Simply reach out via WhatsApp at +237 682 710 405 or submit the atelier form below. Our creative director will initiate your consultation." },
+  { q: 'How do I initiate a bespoke order?', a: "Simply reach out via WhatsApp at {whatsapp} or submit the atelier form below. Our creative director will initiate your consultation." },
   { q: 'Do you offer entirely custom sizing?', a: 'Every bespoke creation is drafted from your exact anatomical measurements. Zero standard sizing. Your body is the sole blueprint.' },
   { q: 'What is the investment range?', a: 'Commissions vary based on structural complexity, textile rarity, and hand-embellishment hours. We tailor proposals respectfully to your vision.' },
   { q: 'Can I view previous bespoke archival creations?', a: 'Explore our editorial lookbook below or follow @Moirai.th on Instagram to review private client commissions and couture reveals.' },
   { q: "What if I don't have a fully realized concept?", a: 'That is the beauty of haute couture. Our consultation is an exploratory dialogue — bring a feeling, a sketch, or let us originate the silhouette together.' },
 ]
 
-const WA = '237682710405'
 
 interface BespokeClientProps {
   heroImage?: string
@@ -40,16 +32,17 @@ interface BespokeClientProps {
 
 export default function BespokeClient({ heroImage, gallery }: BespokeClientProps) {
   const [formData, setFormData] = useState({ name: '', phone: '', desc: '' })
+  const site = useSiteConfig()
   
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const text = `Hi, I am ${formData.name}.\n\nI want a custom design: ${formData.desc}\n\nMy number is: ${formData.phone}`
-    const finalUrl = `https://wa.me/${WA}?text=${encodeURIComponent(text)}`
+    const finalUrl = waLink(site.whatsappNumber, text)
     window.open(finalUrl, '_blank')
   }
 
-  const baseWaUrl = `https://wa.me/${WA}?text=${encodeURIComponent('Hi! I am interested in a bespoke piece from Moirai.')}`
-  const activeGallery = gallery && gallery.length > 0 ? gallery : BESPOKE_FALLBACK_IMAGES
+  const baseWaUrl = waLink(site.whatsappNumber, 'Hi! I am interested in a bespoke piece from Moirai.')
+  const activeGallery = gallery || []
 
   return (
     <div style={{ paddingTop: '5rem' }}>
@@ -83,7 +76,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
           <motion.div variants={staggerFadeUp} className="greek-divider" />
           <motion.p
             variants={staggerFadeUp}
-            style={{ color: '#1E1C1A', fontSize: '15px', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: 560, margin: '0 auto 2.5rem' }}
+            style={{ color: 'var(--ivory-2)', fontSize: '15px', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: 560, margin: '0 auto 2.5rem' }}
           >
             Your identity, sculpted to perfection. A bespoke silhouette from Moirai is not merely cloth — it is an armor of poise, cut by the Fates of modern Cameroonian couture.
           </motion.p>
@@ -194,8 +187,8 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
               </motion.div>
             ))}
           </motion.div>
-          <p style={{ textAlign: 'center', marginTop: '3rem', fontSize: '13px', color: '#1E1C1A' }}>
-            Follow <a href="https://instagram.com/Moirai.th" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', fontWeight: 600, textDecoration: 'underline' }}>@Moirai.th</a> on Instagram to view recent private client commissions.
+          <p style={{ textAlign: 'center', marginTop: '3rem', fontSize: '13px', color: 'var(--ivory-2)' }}>
+            Follow <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', fontWeight: 600, textDecoration: 'underline' }}>{site.instagramHandle}</a> on Instagram to view recent private client commissions.
           </p>
         </div>
       </section>
@@ -213,7 +206,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
             <motion.p className="section-label" variants={staggerFadeUp}>Start Designing</motion.p>
             <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3.25rem)', marginTop: '0.5rem', marginBottom: '0.75rem' }}>Request Custom Design</motion.h2>
             <motion.div variants={staggerFadeUp} className="greek-divider" />
-            <motion.p variants={staggerFadeUp} style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>Describe your vision, and our master couturiers will originate it. Submit to coordinate directly with our atelier.</motion.p>
+            <motion.p variants={staggerFadeUp} style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>Describe your vision, and our master couturiers will originate it. Submit to coordinate directly with our atelier.</motion.p>
           </motion.div>
 
           <motion.form 
@@ -232,7 +225,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                 required 
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: '#1E1C1A', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
+                style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ivory-2)', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
                 placeholder="Madame / Monsieur"
               />
             </div>
@@ -244,8 +237,8 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                 required 
                 value={formData.phone}
                 onChange={e => setFormData({...formData, phone: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: '#1E1C1A', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
-                placeholder="+237 600 000 000"
+                style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ivory-2)', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
+                placeholder="e.g. +237 6XX XXX XXX"
               />
             </div>
 
@@ -255,7 +248,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                 required 
                 value={formData.desc}
                 onChange={e => setFormData({...formData, desc: e.target.value})}
-                style={{ width: '100%', padding: '1rem', minHeight: '130px', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: '#1E1C1A', outline: 'none', resize: 'vertical', fontFamily: 'inherit', fontSize: '14px' }}
+                style={{ width: '100%', padding: '1rem', minHeight: '130px', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ivory-2)', outline: 'none', resize: 'vertical', fontFamily: 'inherit', fontSize: '14px' }}
                 placeholder="Describe your event, aesthetic references, preferred textiles, or requested silhouette."
               />
             </div>
@@ -289,7 +282,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
               style={{ borderBottom: '1px solid var(--hairline)', padding: '2rem 0' }}
             >
               <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 600, color: 'var(--obsidian)', marginBottom: '0.65rem', letterSpacing: '0.01em' }}>{faq.q}</p>
-              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.65 }}>{faq.a}</p>
+              <p style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.65 }}>{faq.a.replace('{whatsapp}', site.whatsappDisplay)}</p>
             </motion.div>
           ))}
         </div>
@@ -314,7 +307,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
           </motion.h2>
           <motion.div variants={staggerFadeUp} className="greek-divider" style={{ opacity: 0.8 }} />
           <motion.div variants={staggerFadeUp} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} style={{ display: 'inline-block', marginTop: '1rem' }}>
-            <a href={baseWaUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ background: 'var(--gold)', color: '#161412', borderColor: 'var(--gold)' }}>Discourse on WhatsApp</a>
+            <a href={baseWaUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" >Discourse on WhatsApp</a>
           </motion.div>
         </motion.div>
       </section>

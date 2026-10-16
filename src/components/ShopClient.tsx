@@ -5,20 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
-import { useCurrency } from './Providers'
+import { useCurrency, useSiteConfig } from './Providers'
 import { useCart } from './CartDrawer'
+import { waLink } from '@/lib/site'
 
-const WA = '237682710405'
 export default function ShopClient({ products }: { products: any[] }) {
   const [activeCategory, setActiveCategory] = useState('All')
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [search, setSearch] = useState('')
-  const { formatPrice } = useCurrency()
+  const { displayPrice } = useCurrency()
+  const site = useSiteConfig()
   const { addItem } = useCart()
   const [addedId, setAddedId] = useState<string | null>(null)
 
   const quickAdd = (p: any) => {
-    addItem({ id: p.id, name: p.name, price: p.price, image: p.image, slug: p.slug, category: p.category })
+    addItem({ id: p.id, name: p.name, price: p.price, priceType: p.priceType, image: p.image, slug: p.slug, category: p.category })
     setAddedId(p.id)
     setTimeout(() => setAddedId(null), 1800)
   }
@@ -28,7 +29,8 @@ export default function ShopClient({ products }: { products: any[] }) {
     name: p.title || p.name || 'Product',
     slug: p.slug?.current || p.slug,
     category: p.category?.title || p.category || 'Other',
-    price: p.price, // Raw number for the hook
+    price: typeof p.price === 'number' ? p.price : null,
+    priceType: p.priceType,
     desc: p.description || '',
     image: p.imageUrl || p.image,
     secondaryImage: p.images?.[0], // For hover reveal
@@ -46,7 +48,7 @@ export default function ShopClient({ products }: { products: any[] }) {
   }, [parsedItems, activeCategory, search])
 
   const waEnquire = (name: string) =>
-    `https://wa.me/${WA}?text=${encodeURIComponent(`Hi I want to order ${name}`)}`
+    waLink(site.whatsappNumber, `Hi I want to order ${name}`)
 
   return (
     <div style={{ paddingTop: '5rem' }}>
@@ -59,7 +61,7 @@ export default function ShopClient({ products }: { products: any[] }) {
         position: 'relative',
         overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(124, 58, 237, 0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(142, 31, 44, 0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <motion.div
           style={{ position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
@@ -86,11 +88,11 @@ export default function ShopClient({ products }: { products: any[] }) {
 
       {/* Sticky filter bar */}
       <div className="sticky-bar" style={{
-        background: 'rgba(var(--bg-rgb, 255, 255, 255), 0.98)',
+        background: 'rgba(10, 9, 8, 0.94)',
         borderBottom: '1px solid var(--border)',
-        padding: '1rem 2rem',
+        padding: '1rem clamp(1.25rem, 4vw, 2rem)',
         position: 'sticky',
-        top: 60,
+        top: 'var(--nav-h)',
         zIndex: 100,
         backdropFilter: 'blur(12px)',
       }}>
@@ -118,11 +120,14 @@ export default function ShopClient({ products }: { products: any[] }) {
               {(['grid', 'list'] as const).map(v => (
                 <motion.button
                   key={v}
+                  type="button"
                   onClick={() => setView(v)}
+                  aria-label={v === 'grid' ? 'Grid view' : 'List view'}
+                  aria-pressed={view === v}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   style={{
-                    width: 32, height: 32,
+                    width: 40, height: 40,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     border: '1px solid',
                     cursor: 'pointer',
@@ -239,11 +244,11 @@ export default function ShopClient({ products }: { products: any[] }) {
                     </div>
                     <div style={{ padding: '1.5rem' }}>
                       <Link href={`/product/${p.slug}`} style={{ display: 'block' }}>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 400, marginBottom: '0.5rem', color: 'var(--text)' }}>{p.name}</h3>
+                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 400, marginBottom: '0.5rem', color: 'var(--text)' }}>{p.name}</h2>
                         <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.7, marginBottom: '1.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.desc || 'Moirai exclusive piece'}</p>
                       </Link>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--accent)', letterSpacing: '0.05em' }}>{p.price ? formatPrice(p.price) : 'Contact Us'}</span>
+                        <span style={{ fontSize: '12px', color: 'var(--accent)', letterSpacing: '0.05em' }}>{displayPrice(p)}</span>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                           {/* Quick Add to Bag */}
                           <motion.button
@@ -344,12 +349,12 @@ export default function ShopClient({ products }: { products: any[] }) {
                     <div>
                       <Link href={`/product/${p.slug}`} style={{ display: 'block' }}>
                         {p.category && p.category !== 'Other' && <p style={{ fontSize: '10px', letterSpacing: '0.2em', color: 'var(--accent)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>{p.category}</p>}
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 400, color: 'var(--text)', marginBottom: '0.5rem' }}>{p.name}</h3>
+                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 400, color: 'var(--text)', marginBottom: '0.5rem' }}>{p.name}</h2>
                         <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.7, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.desc || 'Moirai exclusive piece'}</p>
                       </Link>
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <p style={{ fontSize: '12px', color: 'var(--accent)', marginBottom: '1rem' }}>{p.price ? formatPrice(p.price) : 'Contact Us'}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--accent)', marginBottom: '1rem' }}>{displayPrice(p)}</p>
                       <motion.a
                         href={waEnquire(p.name)}
                         target="_blank"
@@ -371,7 +376,7 @@ export default function ShopClient({ products }: { products: any[] }) {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @media (max-width: 768px) {
-           .sticky-bar { top: 60px !important; }
+           .sticky-bar { top: var(--nav-h) !important; }
         }
       `}</style>
     </div>

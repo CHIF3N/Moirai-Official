@@ -1,363 +1,165 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTheme } from './Providers'
+import { useSiteConfig } from './Providers'
 import { useCart } from './CartDrawer'
+import { waLink, CONSULTATION_HREF } from '@/lib/site'
 
-// ── Icons ──
-const Sun = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-  </svg>
-)
-const Moon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-  </svg>
-)
 const BagIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
     <path d="M16 10a4 4 0 01-8 0"/>
   </svg>
 )
 
-// ── Nav Links ──
 const LEFT_LINKS = [
-  { href: '/collections', label: 'Collections' },
-  { href: '/shop',        label: 'Shop' },
-  { href: '/bespoke',     label: 'Bespoke' },
+  { href: '/collections',    label: 'Collections' },
+  { href: '/shop',           label: 'Shop' },
+  { href: '/bespoke',        label: 'Bespoke' },
+  { href: '/fashion-school', label: 'School' },
 ]
 const RIGHT_LINKS = [
-  { href: '/fashion-school', label: 'Fashion School' },
-  { href: '/blog',           label: 'Journal' },
-  { href: '/about',          label: 'About' },
+  { href: '/blog',  label: 'Journal' },
+  { href: '/about', label: 'About' },
 ]
-const ALL_LINKS = [...LEFT_LINKS, ...RIGHT_LINKS]
-
-// ── Ticker content ──
-const TICKER_ITEMS = [
-  'CLOTHO SPINS THE THREAD', '✦',
-  'LACHESIS MEASURES DESTINY', '✦',
-  'ATROPOS CUTS THE SILHOUETTE', '✦',
-  'BUEA & DOUALA ATELIER', '✦',
-  'BESPOKE COUTURE WORLDWIDE', '✦',
-  'CLOTHO SPINS THE THREAD', '✦',
-  'LACHESIS MEASURES DESTINY', '✦',
-  'ATROPOS CUTS THE SILHOUETTE', '✦',
-  'BUEA & DOUALA ATELIER', '✦',
-  'BESPOKE COUTURE WORLDWIDE', '✦',
+const ALL_LINKS = [
+  ...LEFT_LINKS.map(l => l.href === '/fashion-school' ? { ...l, label: 'Fashion School' } : l),
+  ...RIGHT_LINKS,
+  { href: '/contact', label: 'Contact' },
 ]
 
 export default function Navbar() {
-  const [scrolled, setScrolled]   = useState(false)
-  const [open, setOpen]           = useState(false)
-  const { theme, setTheme }       = useTheme()
+  const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
   const { toggleCart, totalItems } = useCart()
-  const [mounted, setMounted]     = useState(false)
-
-  useEffect(() => { setMounted(true) }, [])
+  const site = useSiteConfig()
+  const pathname = usePathname()
+  const menuRef = useRef<HTMLDivElement>(null)
+  const burgerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Close the menu whenever the route changes
+  useEffect(() => { setOpen(false) }, [pathname])
+
+  // Menu open: lock scroll, focus the first link, close on Escape, keep Tab inside
+  useEffect(() => {
+    if (!open) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const focusables = () => Array.from(menuRef.current?.querySelectorAll<HTMLElement>('a, button') ?? [])
+    focusables()[0]?.focus()
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); burgerRef.current?.focus(); return }
+      if (e.key !== 'Tab') return
+      const items = focusables()
+      if (items.length === 0) return
+      const first = items[0], last = items[items.length - 1]
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => { document.body.style.overflow = prevOverflow; document.removeEventListener('keydown', onKey) }
+  }, [open])
+
+  const isActive = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(href))
 
   return (
     <>
-      {/* ── Heritage Ticker Ribbon ── */}
-      <div
-        className="ticker-wrap"
-        style={{
-          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1020,
-          borderTop: '1px solid var(--hairline)',
-          borderBottom: '1px solid var(--hairline)',
-          background: 'var(--canvas)',
-        }}
-      >
-        <div className="ticker-track">
-          {TICKER_ITEMS.map((item, i) => (
-            <span
-              key={i}
-              className="ticker-item"
-              style={{
-                color: item === '✦' ? 'var(--gold)' : 'var(--text-secondary)',
-                opacity: item === '✦' ? 1 : 0.9,
-                padding: item === '✦' ? '0 1.25rem' : '0 2.5rem',
-                fontWeight: item === '✦' ? 400 : 500,
-              }}
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
+      <a href="#main" className="skip-link">Skip to content</a>
 
-      {/* ── Editorial Sticky Navbar ── */}
-      <motion.nav
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        className={`editorial-nav${scrolled ? ' scrolled' : ''}`}
-        style={{ top: '29px' }}  /* sits below ticker */
-      >
-        {/* Left Nav Links */}
-        <div className="nav-left desk-nav">
-          {LEFT_LINKS.map((l, i) => (
-            <motion.div
-              key={l.href}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.15 + i * 0.07, ease: 'easeOut' }}
-            >
-              <Link href={l.href} className="nav-link">{l.label}</Link>
-            </motion.div>
-          ))}
-        </div>
+      <header className={`site-nav${scrolled || open ? ' is-solid' : ''}`}>
+        <nav className="site-nav-inner" aria-label="Main">
+          <ul className="site-nav-links desk-only">
+            {LEFT_LINKS.map(l => (
+              <li key={l.href}>
+                <Link href={l.href} className="nav-link" aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</Link>
+              </li>
+            ))}
+          </ul>
 
-        {/* Center Wordmark */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.88 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}
-        >
-          <Link href="/" style={{ textDecoration: 'none', display: 'block' }}>
+          <Link href="/" className="site-nav-brand" aria-label="Moirai — home">
             <span className="wordmark">MOIRAI</span>
-            <span className="wordmark-sub">THE HOUSE OF MOIRAI</span>
+            <span className="wordmark-sub">The House of Moirai</span>
           </Link>
-        </motion.div>
 
-        {/* Right Utility */}
-        <div className="nav-right desk-nav">
-          {RIGHT_LINKS.map((l, i) => (
-            <motion.div
-              key={l.href}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.2 + i * 0.07, ease: 'easeOut' }}
-            >
-              <Link href={l.href} className="nav-link">{l.label}</Link>
-            </motion.div>
-          ))}
+          <div className="site-nav-actions">
+            <ul className="site-nav-links desk-only">
+              {RIGHT_LINKS.map(l => (
+                <li key={l.href}>
+                  <Link href={l.href} className="nav-link" aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
 
-          {/* WhatsApp Enquire pill with live pulse */}
-          <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.45, delay: 0.4 }}
-          >
-            <a
-              href="https://wa.me/237682710405"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-enquire"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-            >
-              <span style={{
-                width: 6, height: 6, borderRadius: '50%',
-                background: '#22C55E',
-                display: 'inline-block',
-                flexShrink: 0,
-                boxShadow: '0 0 0 0 rgba(34,197,94,0.6)',
-                animation: 'waPulse 1.8s ease-out infinite',
-              }} />
-              ENQUIRE
-            </a>
-          </motion.div>
-
-          {/* Bag counter — opens CartDrawer */}
-          <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.45, delay: 0.46 }}
-          >
-            <button
-              onClick={toggleCart}
-              aria-label={`Open cart, ${totalItems} items`}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
-            >
-              <div style={{ position: 'relative' }}>
-                <BagIcon />
-                {totalItems > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '-5px', right: '-6px',
-                    minWidth: '14px', height: '14px',
-                    borderRadius: '50%',
-                    background: 'var(--gold)',
-                    color: '#161412',
-                    fontSize: '7px',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    letterSpacing: 0,
-                    fontFamily: 'var(--font-body)',
-                  }}>
-                    {totalItems}
-                  </span>
-                )}
-              </div>
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '9.5px', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-                BAG {totalItems > 0 ? `(${totalItems})` : ''}
-              </span>
+            <button type="button" onClick={toggleCart} className="nav-icon-btn" aria-label={totalItems > 0 ? `Open bag, ${totalItems} item${totalItems === 1 ? '' : 's'}` : 'Open bag'}>
+              <BagIcon />
+              {totalItems > 0 && <span className="nav-bag-count" aria-hidden="true">{totalItems}</span>}
             </button>
-          </motion.div>
 
-          {/* Theme Toggle */}
-          {mounted && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.45, delay: 0.5 }}
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              style={{ color: 'var(--text-secondary)', transition: 'color 0.25s', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
-              aria-label="Toggle Theme"
+            <Link href={CONSULTATION_HREF} className="btn-primary nav-cta desk-only">Book a consultation</Link>
+
+            <button
+              ref={burgerRef}
+              type="button"
+              className="nav-icon-btn mob-only"
+              onClick={() => setOpen(o => !o)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? 'Close menu' : 'Open menu'}
             >
-              {theme === 'dark' ? <Sun /> : <Moon />}
-            </motion.button>
-          )}
-        </div>
+              <span className={`burger${open ? ' is-open' : ''}`} aria-hidden="true"><span /><span /></span>
+            </button>
+          </div>
+        </nav>
+      </header>
 
-        {/* Mobile Hamburger */}
-        <motion.button
-          onClick={() => setOpen(!open)}
-          className="burger-btn"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          style={{ display: 'none', flexDirection: 'column', gap: '5px', zIndex: 1021, cursor: 'pointer', marginLeft: 'auto' }}
-          aria-label="Menu"
-        >
-          {[0, 1, 2].map(i => (
-            <span key={i} style={{
-              width: 22, height: 1,
-              background: 'var(--obsidian)',
-              display: 'block',
-              transition: 'all 0.3s ease',
-              transform: open && i === 0 ? 'rotate(45deg) translate(4px, 4px)' : open && i === 2 ? 'rotate(-45deg) translate(4px,-4px)' : 'none',
-              opacity: open && i === 1 ? 0 : 1,
-            }} />
-          ))}
-        </motion.button>
-      </motion.nav>
-
-      {/* ── Mobile Full-Screen Menu ── */}
       <AnimatePresence>
         {open && (
           <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 1015,
-              background: 'var(--canvas)',
-              backdropFilter: 'blur(24px)',
-              WebkitBackdropFilter: 'blur(24px)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '2.25rem',
-              paddingTop: '5rem',
-            }}
+            id="mobile-menu"
+            ref={menuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+            className="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            {/* Mobile wordmark */}
-            <Link href="/" onClick={() => setOpen(false)} style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-              <span className="wordmark" style={{ fontSize: '2.25rem' }}>MOIRAI</span>
-              <span className="wordmark-sub" style={{ marginTop: '5px' }}>THE HOUSE OF MOIRAI</span>
-            </Link>
-
-            <div style={{ width: '32px', height: '1px', background: 'var(--hairline)', margin: '0 auto' }} />
-
-            {ALL_LINKS.map((l, i) => (
-              <motion.div
-                key={l.href}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.38, delay: i * 0.065, ease: 'easeOut' }}
-              >
-                <Link
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '1.65rem',
-                    fontWeight: 300,
-                    color: 'var(--text-primary)',
-                    letterSpacing: '0.05em',
-                    display: 'block',
-                    textAlign: 'center',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+            <ul className="mobile-menu-links">
+              {ALL_LINKS.map((l, i) => (
+                <motion.li
+                  key={l.href}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.05 + i * 0.04, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {l.label}
-                </Link>
-              </motion.div>
-            ))}
+                  <Link href={l.href} onClick={() => setOpen(false)} aria-current={isActive(l.href) ? 'page' : undefined}>
+                    <span className="mobile-menu-index">{String(i + 1).padStart(2, '0')}</span>{l.label}
+                  </Link>
+                </motion.li>
+              ))}
+            </ul>
 
-            {/* Mobile WhatsApp */}
-            <a
-              href="https://wa.me/237682710405"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-enquire"
-              style={{ marginTop: '1rem' }}
-            >
-              ENQUIRE VIA WHATSAPP
-            </a>
-
-            {/* Mobile theme toggle */}
-            {mounted && (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                style={{
-                  color: 'var(--umber)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '9.5px',
-                  letterSpacing: '0.22em',
-                  textTransform: 'uppercase',
-                  padding: '0.5rem 1rem',
-                  border: '1px solid var(--hairline)',
-                  cursor: 'pointer',
-                }}
-              >
-                {theme === 'dark' ? <><Sun /> Light Mode</> : <><Moon /> Dark Mode</>}
-              </motion.button>
-            )}
+            <div className="mobile-menu-foot">
+              <Link href={CONSULTATION_HREF} onClick={() => setOpen(false)} className="btn-primary" style={{ width: '100%' }}>Book a consultation</Link>
+              <a href={waLink(site.whatsappNumber, site.defaultMessage)} target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ width: '100%' }}>
+                WhatsApp {site.whatsappDisplay}
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Responsive styles */}
-      <style>{`
-        @media (max-width: 1060px) {
-          .desk-nav { display: none !important; }
-          .burger-btn { display: flex !important; }
-        }
-      `}</style>
     </>
   )
 }

@@ -1,24 +1,15 @@
-import { client, allProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { fetchOr, allProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
 import CollectionsClient from '@/components/CollectionsClient'
 
 export const revalidate = 60
 
 export default async function CollectionsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let products: any[] = []
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let settings: any = null
-
-  try {
-    ;[products, settings] = await Promise.all([
-      client.fetch(allProductsQuery),
-      client.fetch(siteSettingsQuery),
-    ])
-  } catch {
-    // Sanity not yet configured
-  }
-
-  const waNumber = (settings?.whatsappNumber || '237682710405').replace(/\D/g, '')
+  const [products, settings] = await Promise.all([
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fetchOr<any[]>('collections products', allProductsQuery, []),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fetchOr<any>('siteSettings', siteSettingsQuery, null),
+  ])
 
   // Resolve image URLs on the server side (functions can't cross server→client boundary)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,11 +23,12 @@ export default async function CollectionsPage() {
 
   // Group products by collection
   const grouped: Record<string, typeof productsWithUrls> = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   collections.forEach((c: any) => { grouped[c.title] = [] })
   productsWithUrls.forEach(p => {
-    const cat = p.category?.title
+    const cat = p.category
     if (cat && grouped[cat]) grouped[cat].push(p)
   })
 
-  return <CollectionsClient grouped={grouped} waNumber={waNumber} collections={collections} heroImage={collectionsHeroImage} />
+  return <CollectionsClient grouped={grouped} collections={collections} heroImage={collectionsHeroImage} />
 }

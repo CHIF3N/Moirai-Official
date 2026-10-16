@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
-import { useCurrency, useRecentlyViewed } from './Providers'
+import { useCurrency, useRecentlyViewed, useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
+import type { PriceType } from '@/lib/price'
 import { useCart } from './CartDrawer'
 import { PortableText } from '@portabletext/react'
 
@@ -17,7 +19,9 @@ const ArrowRight = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="n
 interface ProductProps {
   id: string
   name: string
-  price: number
+  price: number | null
+  priceType?: PriceType
+  available?: boolean
   desc: string
   image: string | null
   images?: string[]
@@ -59,13 +63,13 @@ const AccordionItem = ({ title, content }: { title: string, content: any[] }) =>
 }
 
 export default function ProductDetailClient({ product }: { product: ProductProps }) {
-  const { formatPrice } = useCurrency()
+  const { displayPrice } = useCurrency()
+  const site = useSiteConfig()
   const { viewedItems, addViewedItem } = useRecentlyViewed()
   const { addItem, toggleCart } = useCart()
   const [added, setAdded] = useState(false)
   
-  const WA = '237682710405'
-  const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi I want to order ${product.name}`)}`
+  const waUrl = waLink(site.whatsappNumber, `Hi I want to order ${product.name}`)
   
   const allImages = [product.image, ...(product.images || [])].filter(Boolean) as string[]
   const [activeIdx, setActiveIdx] = useState(0)
@@ -79,6 +83,7 @@ export default function ProductDetailClient({ product }: { product: ProductProps
       id: product.id,
       name: product.name,
       price: product.price,
+      priceType: product.priceType,
       image: product.image,
       slug: product.slug,
       category: product.category,
@@ -229,7 +234,7 @@ export default function ProductDetailClient({ product }: { product: ProductProps
             </motion.h1>
             
             <motion.p variants={staggerFadeUp} style={{ fontSize: '1.25rem', color: 'var(--accent)', letterSpacing: '0.05em', marginBottom: '2rem', fontFamily: 'var(--font-display)' }}>
-              {product.price ? formatPrice(product.price) : 'Contact Us'}
+              {displayPrice(product)}
             </motion.p>
             
             <motion.div variants={staggerFadeUp} className="divider" style={{ marginBottom: '2rem' }} />
@@ -326,7 +331,7 @@ export default function ProductDetailClient({ product }: { product: ProductProps
                      })()}
                    </motion.div>
                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--text)' }}>{rel.name || rel.title}</h3>
-                   <p style={{ fontSize: '12px', color: 'var(--accent)', marginTop: '0.25rem' }}>{rel.price ? formatPrice(rel.price) : ''}</p>
+                   <p style={{ fontSize: '12px', color: 'var(--accent)', marginTop: '0.25rem' }}>{displayPrice(rel)}</p>
                  </Link>
                ))}
             </div>

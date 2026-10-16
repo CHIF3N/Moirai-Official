@@ -4,25 +4,18 @@ import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
-
-// Curated luxury fashion editorial fallbacks — ensures no empty wireframe boxes
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=1000&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&h=1000&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1000&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&h=1000&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=1000&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&h=1000&fit=crop&q=80',
-]
+import { useCurrency, useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 interface CollectionsClientProps {
   grouped: Record<string, any[]>
-  waNumber: string
   collections: any[]
   heroImage: string | null
 }
 
-export default function CollectionsClient({ grouped, waNumber, collections, heroImage }: CollectionsClientProps) {
+export default function CollectionsClient({ grouped, collections, heroImage }: CollectionsClientProps) {
+  const { displayPrice } = useCurrency()
+  const site = useSiteConfig()
   return (
     <div style={{ paddingTop: '5rem' }}>
       {/* Header */}
@@ -42,7 +35,7 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
           ) : null
         })()}
         {!heroImage && (
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(124, 58, 237, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(142, 31, 44, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
         )}
         <motion.div
           style={{ position: 'relative', zIndex: 1 }}
@@ -70,7 +63,7 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
                 variants={staggerFadeUp}
                 whileHover={{ borderColor: 'var(--gold)', color: 'var(--gold)', scale: 1.04 }}
                 transition={{ duration: 0.2 }}
-                style={{ fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', padding: '0.55rem 1.35rem', border: '1px solid var(--card-border)', background: 'var(--card-bg)', color: '#1E1C1A', transition: 'all 0.25s', display: 'inline-block' }}
+                style={{ fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', padding: '0.55rem 1.35rem', border: '1px solid var(--card-border)', background: 'var(--card-bg)', color: 'var(--ivory-2)', transition: 'all 0.25s', display: 'inline-block' }}
               >{cat.title}</motion.a>
             ))}
           </motion.div>
@@ -112,31 +105,32 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
                 viewport={{ once: true, margin: '-40px' }}
               >
                 {catProducts.length === 0
-                  ? [0, 1, 2].map(n => (
+                  ? (
                     <motion.div
-                      key={n}
                       variants={staggerFadeUp}
-                      className="carousel-card card-hover img-zoom"
-                      style={{ aspectRatio: '3/4', position: 'relative', overflow: 'hidden', border: '1px solid var(--card-border)', background: 'var(--card-bg)' }}
-                      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(194, 162, 111, 0.15)' }}
+                      className="carousel-card"
+                      style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.2fr)', border: '1px solid var(--card-border)', background: 'var(--card-bg)', minHeight: 320 }}
                     >
-                      <Image
-                        src={FALLBACK_IMAGES[n % FALLBACK_IMAGES.length]}
-                        alt="Editorial fashion"
-                        fill
-                        sizes="(max-width: 768px) 80vw, 400px"
-                        style={{ objectFit: 'cover' }}
-                        loading="lazy"
-                      />
-                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.25rem', background: 'linear-gradient(to top, rgba(245, 242, 235, 0.95) 0%, transparent 100%)' }}>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.25em', color: 'var(--gold)', fontWeight: 600, textTransform: 'uppercase' }}>Atelier Archive</p>
+                      <div style={{ position: 'relative', minHeight: 320, background: 'var(--ink-3)' }}>
+                        {cat.image && (
+                          <Image src={urlFor(cat.image).width(900).quality(85).url()} alt={`${cat.title} collection`} fill sizes="(max-width: 768px) 100vw, 45vw" style={{ objectFit: 'cover' }} loading="lazy" />
+                        )}
+                      </div>
+                      <div style={{ padding: 'clamp(1.5rem, 4vw, 3rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem' }}>
+                        <p className="section-label">Pieces arriving soon</p>
+                        <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', color: 'var(--ivory)', lineHeight: 1.2 }}>
+                          The {cat.title.toLowerCase()} pieces are being photographed for the site.
+                        </p>
+                        <p style={{ fontSize: '15px', color: 'var(--ivory-2)', lineHeight: 1.65 }}>Ask the atelier on WhatsApp to see what is available now.</p>
+                        <a href={waLink(site.whatsappNumber, `Hi Moirai! I'd like to see pieces from the ${cat.title} collection.`)} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '0.5rem' }}>
+                          Ask about this collection
+                        </a>
                       </div>
                     </motion.div>
-                  ))
+                  )
                   : catProducts.map((p: any) => {
-                    const msg = encodeURIComponent(`Hi I want to order ${p.name || 'this item'}`)
-                    const fallbackIdx = catProducts.indexOf(p) % FALLBACK_IMAGES.length
-                    const displayImage = p.imageUrl || FALLBACK_IMAGES[fallbackIdx]
+                    const name = p.title || p.name || 'this item'
+                    const displayImage = p.imageUrl
                     return (
                       <motion.div
                         key={p._id}
@@ -148,27 +142,29 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
                       >
                         <div style={{ aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
                           <motion.div style={{ width: '100%', height: '100%', position: 'relative' }} variants={{ rest: { scale: 1 }, hover: { scale: 1.06 } }} transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}>
-                            <Image src={displayImage} alt={p?.name || 'Item'} fill sizes="(max-width: 768px) 80vw, 400px" style={{ objectFit: 'cover' }} loading="lazy" />
+                            {displayImage
+                              ? <Image src={displayImage} alt={name} fill sizes="(max-width: 768px) 80vw, 400px" style={{ objectFit: 'cover' }} loading="lazy" />
+                              : <span aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--ivory-3)', fontSize: '2rem' }}>✦</span>}
                           </motion.div>
                         </div>
                         {/* Product info overlay on hover */}
-                        <div style={{ position: 'absolute', inset: 0, padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: 'linear-gradient(to top, rgba(245, 242, 235, 0.96) 0%, transparent 50%)' }}>
+                        <div style={{ position: 'absolute', inset: 0, padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: 'linear-gradient(to top, rgba(10, 9, 8, 0.96) 0%, transparent 50%)' }}>
                           <motion.div 
                             initial={{ opacity: 0 }} 
                             variants={{ hover: { opacity: 1, y: 0 }, rest: { opacity: 0, y: 10 } }} 
                             transition={{ duration: 0.2 }}
                             style={{ background: 'var(--card-bg)', padding: '1.25rem', border: '1px solid var(--gold)', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
                           >
-                            <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--card-title)' }}>{p.name}</p>
-                            {p.category?.title && <p style={{ fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.35rem' }}>{p.category.title}</p>}
-                            {p.price && <p style={{ fontSize: '12px', fontWeight: 600, color: '#1E1C1A', marginBottom: '0.75rem' }}>{p.price}</p>}
+                            <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--card-title)' }}>{name}</p>
+                            {p.category && <p style={{ fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.35rem' }}>{p.category}</p>}
+                            <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ivory-2)', marginBottom: '0.75rem' }}>{displayPrice(p)}</p>
                             {p.available !== false && (
                               <motion.a
-                                href={`https://wa.me/237682710405?text=${msg}`}
+                                href={waLink(site.whatsappNumber, `Hi I want to order ${name}`)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{ display: 'inline-block', padding: '0.5rem 1rem', border: '1px solid var(--gold)', background: 'var(--gold)', color: '#161412', fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', width: 'fit-content' }}
-                                whileHover={{ backgroundColor: 'var(--bronze)', borderColor: 'var(--bronze)', color: '#FFFFFF', scale: 1.04 }}
+                                style={{ display: 'inline-block', padding: '0.5rem 1rem', border: '1px solid var(--oxblood)', background: 'var(--oxblood)', color: 'var(--ivory)', fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', width: 'fit-content' }}
+                                whileHover={{ backgroundColor: 'var(--oxblood-hover)', borderColor: 'var(--oxblood-hover)', scale: 1.04 }}
                                 whileTap={{ scale: 0.97 }}
                                 transition={{ duration: 0.2 }}
                               >Order Now</motion.a>

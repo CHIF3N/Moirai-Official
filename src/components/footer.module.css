@@ -1,0 +1,77 @@
+.footer { background: #050404; border-top: 1px solid var(--hairline); }
+
+.statement {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: clamp(5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 3.5rem) clamp(4rem, 8vw, 6rem);
+  border-bottom: 1px solid var(--hairline);
+  overflow: hidden;
+}
+.kicker { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); }
+.mark {
+  font-family: var(--font-display); font-weight: 300;
+  font-size: clamp(4rem, 17vw, 15rem);
+  letter-spacing: 0.18em; margin-right: -0.18em;
+  line-height: 1; color: var(--ivory);
+  margin-top: 1.5rem;
+}
+.motto { font-family: var(--font-display); font-size: clamp(1.15rem, 2vw, 1.5rem); color: var(--ivory-2); margin: 1.5rem 0 2.5rem; }
+.motto em { color: var(--gold-light); }
+
+.grid {
+  max-width: 1440px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.6fr 1fr 1.2fr 1fr; gap: 3rem;
+  padding: clamp(3.5rem, 7vw, 5rem) clamp(1.25rem, 4vw, 3.5rem);
+}
+.h { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ivory-3); margin-bottom: 1.25rem; }
+.text { font-size: 14px; line-height: 1.6; color: var(--ivory-2); margin-top: 0.75rem; }
+.newsletter .text { margin-top: 0; max-width: 26rem; }
+
+.links { list-style: none; display: grid; gap: 0.15rem; }
+.links a {
+  display: inline-flex; align-items: center; min-height: 36px;
+  font-size: 15px; color: var(--ivory);
+  transition: color 0.2s;
+}
+.links a:hover { color: var(--gold-light); }
+.links a:focus-visible, .currencyBtn:focus-visible, .submit:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.address { font-size: 14px; color: var(--ivory-3); margin-top: 1rem; line-height: 1.6; }
+
+.form { display: flex; margin-top: 1.5rem; max-width: 28rem; border-bottom: 1px solid var(--hairline2); }
+.input {
+  flex: 1; min-width: 0; min-height: 50px;
+  background: transparent; border: none; outline: none;
+  font: inherit; font-size: 15px; color: var(--ivory);
+}
+.input::placeholder { color: var(--ivory-3); }
+.input:focus-visible { box-shadow: inset 0 -2px 0 var(--gold); }
+.submit {
+  min-height: 50px; padding: 0 0.5rem 0 1.25rem;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ivory);
+}
+.submit:hover { color: var(--gold-light); }
+.formNote { font-size: 13px; color: var(--ivory-2); margin-top: 0.75rem; min-height: 1.2em; max-width: 28rem; }
+
+.currency { display: inline-flex; border: 1px solid var(--hairline2); }
+.currencyBtn {
+  min-height: 40px; padding: 0 1rem;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.16em; color: var(--ivory-2);
+}
+.currencyBtn[aria-pressed="true"] { background: var(--ivory); color: var(--ink); }
+
+.base {
+  max-width: 1440px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem 2rem;
+  padding: 1.5rem clamp(1.25rem, 4vw, 3.5rem) 5.5rem;
+  border-top: 1px solid var(--hairline);
+  font-size: 13px; color: var(--ivory-3);
+}
+.baseMotto { font-family: var(--font-display); font-style: italic; font-size: 15px; }
+
+@media (max-width: 1000px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .newsletter { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .grid { grid-template-columns: 1fr; gap: 2.5rem; }
+}

@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
+import { useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 const MODULES = [
   { num: 'I', title: 'Foundation of Fashion Design', desc: 'History, theory, and the language of couture. Understanding what makes enduring, timeless design.' },
@@ -21,20 +23,20 @@ const WHO = [
   'Creatives eager to master the art of bespoke construction for personal expression',
 ]
 
-const WA = '237682710405'
 
 interface FashionSchoolClientProps {
   heroImage?: string
 }
 
 export default function FashionSchoolClient({ heroImage }: FashionSchoolClientProps) {
-  const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent('Hi! I am interested in joining the Moirai Fashion School program. Can you share more details?')}`
+  const site = useSiteConfig()
+  const waUrl = waLink(site.whatsappNumber, 'Hi! I am interested in joining the Moirai Fashion School program. Can you share more details?')
 
   return (
     <div style={{ paddingTop: '5rem' }}>
       {/* Hero */}
       <section style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6rem 2rem', background: 'linear-gradient(170deg, var(--bg), var(--bg))', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(142, 31, 44, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <motion.div
           style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
