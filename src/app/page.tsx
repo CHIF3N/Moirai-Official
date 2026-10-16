@@ -1,5 +1,7 @@
-import { fetchOr, allProductsQuery, featuredProductsQuery, recentPostsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { fetchOr, allProductsQuery, featuredProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { getJournalEntries } from '@/lib/journal'
 import HomeClient from '@/components/HomeClient'
+import { CATEGORIES, EDITORIAL } from '@/content/brand'
 
 export const revalidate = 60
 
@@ -7,7 +9,7 @@ export const revalidate = 60
 export default async function HomePage() {
   const [products, posts, settings, latestProducts] = await Promise.all([
     fetchOr<any[]>('featured products', featuredProductsQuery, []),
-    fetchOr<any[]>('recent posts', recentPostsQuery, []),
+    getJournalEntries(),
     fetchOr<any>('siteSettings', siteSettingsQuery, null),
     fetchOr<any[]>('latest products', allProductsQuery, []),
   ])
@@ -28,11 +30,13 @@ export default async function HomePage() {
   const heroImageUrl = settings?.heroImage ? urlFor(settings.heroImage).width(1600).quality(85).url() : undefined
   const heroText = settings?.heroText
 
-  const collections = settings?.collections?.map((c: any) => ({
+  // The owner's four categories, each with its own editorial photograph
+  const collections = CATEGORIES.map(c => ({
     title: c.title,
-    slug: c.slug || c.title?.toLowerCase().replace(/ /g, '-'),
-    image: c.image ? urlFor(c.image).width(900).quality(85).url() : undefined,
-  })).filter((c: any) => c.image || c.title) || []
+    slug: c.slug,
+    image: urlFor(c.image).width(900).quality(85).url(),
+    alt: c.imageAlt,
+  }))
 
   const heroSlides = settings?.heroSlides?.map((s: any) => ({
     title: s.title,
@@ -47,20 +51,13 @@ export default async function HomePage() {
     images: Array.isArray(l.images) ? l.images.map((img: any) => urlFor(img).width(800).quality(85).url()) : [],
   })) || []
 
-  const bespokeHeroImage = settings?.bespokeHeroImage
-    ? urlFor(settings.bespokeHeroImage).width(1200).quality(85).url()
-    : undefined
+  const bespokeHeroImage = urlFor(EDITORIAL.homeBespoke.image).width(1200).quality(85).url()
   const schoolImage = settings?.fashionSchoolHeroImage
     ? urlFor(settings.fashionSchoolHeroImage).width(1200).quality(85).url()
     : undefined
-  const closingImage = settings?.collectionsHeroImage
-    ? urlFor(settings.collectionsHeroImage).width(1600).quality(80).url()
-    : undefined
+  const closingImage = urlFor(EDITORIAL.homeClosing.image).width(1600).quality(80).url()
 
-  const postsWithUrls = posts.map((p: any) => ({
-    ...p,
-    imageUrl: p.mainImage ? urlFor(p.mainImage).width(800).quality(80).url() : null,
-  }))
+  const postsWithUrls = posts.slice(0, 3)
 
   // Homepage gallery: the latest pieces in the catalogue
   const editorialItemsWithUrls = latestProducts.slice(0, 8).map((p: any) => withImageUrl(p, 800))

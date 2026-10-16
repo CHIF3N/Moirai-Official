@@ -27,8 +27,15 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const viewport: Viewport = {
-  themeColor: '#0A0908',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FBFAF8' },
+    { media: '(prefers-color-scheme: dark)', color: '#0D0B10' },
+  ],
 }
+
+// Runs before first paint: saved choice, else the operating-system preference.
+// Keeps the wrong theme from flashing. Storage key matches THEME_STORAGE_KEY in Providers.
+const THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('moirai-theme')}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);if(t==='dark'){d.classList.add('dark')}else{d.classList.remove('dark')}}catch(e){}})();`
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://moiraihouse.com'),
@@ -78,7 +85,10 @@ export default async function RootLayout({
   const site = getSiteConfig(settings)
 
   return (
-    <html lang="en" className={`dark ${cormorant.variable} ${jakarta.variable}`} data-theme="dark">
+    <html lang="en" className={`${cormorant.variable} ${jakarta.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <Providers site={site}>
           <CartProvider>

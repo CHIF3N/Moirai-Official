@@ -3,14 +3,16 @@
   height: 52px; padding: 0 1.25rem 0 1rem;
   display: inline-flex; align-items: center; gap: 0.6rem;
   border-radius: 999px;
-  background: var(--ink-2);
-  border: 1px solid rgba(194, 162, 111, 0.45);
-  color: var(--ivory);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  background: var(--glass-bg);
+  border: 1px solid rgb(var(--accent-rgb) / 0.4);
+  color: var(--fg);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
   transition: border-color 0.25s, background 0.25s, transform 0.25s;
 }
-.launcher:hover { border-color: var(--gold); background: var(--oxblood-deep); }
-.launcher:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.launcher:hover { border-color: var(--accent); background: var(--brand-deep); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .launcher, .panel { background: var(--bg-2); } }
+.launcher:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .launcherLabel { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
 .x { font-size: 1.5rem; line-height: 1; width: 22px; text-align: center; }
 
@@ -24,40 +26,45 @@
   width: min(380px, calc(100vw - 2rem));
   max-height: min(620px, calc(100svh - 120px));
   display: flex; flex-direction: column;
-  background: var(--ink-2);
-  border: 1px solid var(--hairline2);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: rgb(var(--bg-rgb) / 0.82);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
 }
 .head {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
   padding: 1.25rem 1.25rem 1rem;
   border-bottom: 1px solid var(--hairline);
 }
-.kicker { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
-.title { font-family: var(--font-display); font-size: 1.6rem; color: var(--ivory); line-height: 1.2; margin-top: 0.25rem; }
-.close { width: 44px; height: 44px; margin: -0.5rem -0.5rem 0 0; font-size: 1.6rem; color: var(--ivory-2); }
-.close:hover { color: var(--ivory); }
+.kicker { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.title { font-family: var(--font-display); font-size: 1.6rem; color: var(--fg); line-height: 1.2; margin-top: 0.25rem; }
+.close { width: 44px; height: 44px; margin: -0.5rem -0.5rem 0 0; font-size: 1.6rem; color: var(--fg-2); }
+.close:hover { color: var(--fg); }
 
 .scroll { overflow-y: auto; padding: 0.5rem 1.25rem 1.25rem; }
-.group { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ivory-3); margin: 1.25rem 0 0.5rem; }
-.note { font-size: 13px; color: var(--ivory-2); margin-bottom: 0.75rem; line-height: 1.5; }
+.group { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-3); margin: 1.25rem 0 0.5rem; }
+.note { font-size: 13px; color: var(--fg-2); margin-bottom: 0.75rem; line-height: 1.5; }
 .list { list-style: none; display: grid; gap: 0.4rem; }
 
 .wa {
   display: flex; align-items: center; gap: 0.75rem;
   min-height: 46px; padding: 0.6rem 0.85rem;
   border: 1px solid var(--hairline);
-  font-size: 14px; color: var(--ivory);
+  border-radius: 14px;
+  font-size: 14px; color: var(--fg);
   transition: border-color 0.2s, background 0.2s;
 }
-.wa svg { color: #3FCF7F; flex-shrink: 0; }
-.wa:hover { border-color: var(--hairline2); background: var(--ink-3); }
+.wa svg { color: #1FA855; flex-shrink: 0; }
+[data-theme="dark"] .wa svg { color: #3FCF7F; }
+.wa:hover { border-color: var(--hairline2); background: var(--bg-3); }
 
 .faq { border-bottom: 1px solid var(--hairline); }
 .faqQ {
   width: 100%; min-height: 46px;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  text-align: left; font-size: 14px; color: var(--ivory);
+  text-align: left; font-size: 14px; color: var(--fg);
 }
-.faqQ span { color: var(--gold); font-size: 1.1rem; }
-.faqA { font-size: 14px; line-height: 1.6; color: var(--ivory-2); padding-bottom: 0.9rem; }
+.faqQ span { color: var(--accent); font-size: 1.1rem; }
+.faqA { font-size: 14px; line-height: 1.6; color: var(--fg-2); padding-bottom: 0.9rem; }

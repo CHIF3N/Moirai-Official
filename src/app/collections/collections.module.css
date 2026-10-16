@@ -1,0 +1,69 @@
+.page { padding-top: calc(var(--nav-h) + clamp(3rem, 7vw, 5rem)); }
+.head { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 3.5rem) clamp(3rem, 6vw, 5rem); }
+.head :global(.section-label) { margin-bottom: 1.25rem; }
+.title { font-family: var(--font-display); font-weight: 300; font-size: clamp(2.75rem, 8vw, 7.5rem); line-height: 0.95; letter-spacing: -0.02em; color: var(--fg); }
+.title em { font-style: italic; color: var(--accent); }
+
+.index { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: clamp(2rem, 4vw, 3rem); }
+.indexLink {
+  display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; padding: 0 1.1rem;
+  border-radius: var(--r-pill); border: 1px solid var(--hairline2);
+  font-size: 14px; color: var(--fg); background: rgb(var(--fg-rgb) / 0.02);
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+.indexLink span { font-size: 11px; color: var(--accent); letter-spacing: 0.08em; }
+.indexLink:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.indexLink:hover span { color: inherit; }
+.indexLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.img { object-fit: cover; }
+
+/* A chapter: photograph + text, composed differently for each collection */
+.chapter { display: grid; grid-template-columns: 1.25fr 1fr; min-height: min(92vh, 940px); border-top: 1px solid var(--hairline); }
+.media { position: relative; overflow: hidden; background: var(--bg-3); min-height: 440px; }
+.body { display: flex; flex-direction: column; justify-content: center; padding: clamp(3rem, 7vw, 7rem) clamp(1.25rem, 5vw, 5.5rem); }
+.num { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1; color: rgb(var(--accent-rgb) / 0.35); }
+.h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.25rem, 4.2vw, 4rem); line-height: 1.02; color: var(--fg); margin: 0.75rem 0 1.25rem; }
+.desc { font-size: 17px; line-height: 1.7; color: var(--fg-2); max-width: 30rem; }
+.note { margin-top: 1.75rem; padding: 1rem 1.25rem; border-radius: var(--r-md); background: rgb(var(--accent-rgb) / 0.08); font-size: 15px; line-height: 1.6; color: var(--fg-2); max-width: 30rem; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 2rem; }
+.textLink { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg); border-bottom: 1px solid var(--hairline2); }
+.textLink:hover { color: var(--accent); }
+.small { font-size: 13px; color: var(--fg-3); margin-top: 0.9rem; }
+
+/* 01 — photograph left, ivory text right */
+.v0 .media { border-radius: 0 var(--r-lg) var(--r-lg) 0; }
+/* 02 — plum band, photograph right */
+.v1 { grid-template-columns: 1fr 1.25fr; background: var(--brand-deep); }
+.v1 .media { order: 2; border-radius: var(--r-lg) 0 0 var(--r-lg); }
+/* 03 — full-bleed photograph with a glass panel */
+.v2 { grid-template-columns: 1fr; position: relative; isolation: isolate; min-height: min(100vh, 980px); }
+.v2 .media { position: absolute; inset: 0; z-index: -1; border-radius: 0; }
+.v2 .img { object-position: center 30%; }
+.v2 .body {
+  align-self: end; justify-self: end; max-width: 34rem; margin: clamp(1.25rem, 4vw, 3.5rem);
+  padding: clamp(1.75rem, 4vw, 3rem); border-radius: var(--r-lg);
+  background: var(--glass-bg); border: 1px solid var(--glass-edge); box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .v2 .body { background: var(--bg-2); } }
+/* 04 — tall portrait framed inside the page, text left */
+.v3 { grid-template-columns: 1fr 1fr; padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3.5rem); gap: clamp(2rem, 5vw, 5rem); }
+.v3 .media { order: 2; border-radius: 999px 999px var(--r-lg) var(--r-lg); min-height: 620px; }
+.v3 .body { padding-left: 0; padding-right: 0; }
+
+/* Products inside a chapter */
+.products { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; margin-top: 2rem; max-width: 34rem; }
+.product { display: grid; gap: 0.35rem; }
+.productMedia { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-sm); background: var(--bg-3); }
+.productName { font-family: var(--font-display); font-size: 1.15rem; color: var(--fg); line-height: 1.2; }
+.productPrice { font-size: 13px; color: var(--fg-2); }
+
+@media (max-width: 900px) {
+  .chapter, .v1, .v3 { grid-template-columns: 1fr; min-height: 0; }
+  .media, .v1 .media, .v3 .media { order: 0; aspect-ratio: 4 / 5; min-height: 0; border-radius: 0; }
+  .v3 .media { border-radius: 999px 999px var(--r-lg) var(--r-lg); }
+  .v2 { min-height: 0; }
+  .v2 .media { position: relative; inset: auto; z-index: 0; aspect-ratio: 4 / 5; }
+  .v2 .body { margin: -4rem 1rem 1.5rem; justify-self: stretch; }
+}

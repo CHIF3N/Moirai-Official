@@ -6,21 +6,22 @@ import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import { urlFor } from '@/sanity/lib/image'
 import { useSiteConfig } from './Providers'
+import BespokeForm from './BespokeForm'
 import { waLink } from '@/lib/site'
 
 const PROCESS = [
   { num: 'I', title: 'Consultation & Discourse', desc: 'We start with a conversation. Your vision, your measurements, your heritage. Every seam matters. Conducted via private WhatsApp salon or in-person.' },
   { num: 'II', title: 'Silhouette & Drafting', desc: 'Our master artisans sketch your piece, sourcing rare fabrics aligned with your posture, skin tone, and the majestic occasion you grace.' },
   { num: 'III', title: 'Fitting & Sculpting', desc: 'A dedicated atelier fitting ensures the drape cascades flawlessly over your natural lines — because you are the standard, not an off-the-rack mannequin.' },
-  { num: 'IV', title: 'Delivery & Revelation', desc: 'Your finished garment arrives sealed in archival preservation, ready for the defining moment it was born for. Worn, captured, immortalized.' },
+  { num: 'IV', title: 'Delivery & Revelation', desc: 'Your finished garment is handed over, ready for the moment it was made for. Delivery arrangements are agreed with you when you commission the piece.' },
 ]
 
 const FAQS = [
-  { q: 'How long does a bespoke piece take to craft?', a: 'Typically 2–4 weeks depending on silhouette complexity and hand-embroidery. Expedited couture timelines can be accommodated upon request.' },
+  { q: 'How long does a bespoke piece take to craft?', a: 'It depends on the design, the fabric and the number of fittings. We agree a timeline with you during the consultation — tell us your date when you get in touch.' },
   { q: 'How do I initiate a bespoke order?', a: "Simply reach out via WhatsApp at {whatsapp} or submit the atelier form below. Our creative director will initiate your consultation." },
   { q: 'Do you offer entirely custom sizing?', a: 'Every bespoke creation is drafted from your exact anatomical measurements. Zero standard sizing. Your body is the sole blueprint.' },
   { q: 'What is the investment range?', a: 'Commissions vary based on structural complexity, textile rarity, and hand-embellishment hours. We tailor proposals respectfully to your vision.' },
-  { q: 'Can I view previous bespoke archival creations?', a: 'Explore our editorial lookbook below or follow @Moirai.th on Instagram to review private client commissions and couture reveals.' },
+  { q: 'Can I view previous bespoke archival creations?', a: 'Explore the lookbook on this page, or follow Moirai on Instagram and TikTok — links are in the footer.' },
   { q: "What if I don't have a fully realized concept?", a: 'That is the beauty of haute couture. Our consultation is an exploratory dialogue — bring a feeling, a sketch, or let us originate the silhouette together.' },
 ]
 
@@ -31,15 +32,8 @@ interface BespokeClientProps {
 }
 
 export default function BespokeClient({ heroImage, gallery }: BespokeClientProps) {
-  const [formData, setFormData] = useState({ name: '', phone: '', desc: '' })
   const site = useSiteConfig()
   
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const text = `Hi, I am ${formData.name}.\n\nI want a custom design: ${formData.desc}\n\nMy number is: ${formData.phone}`
-    const finalUrl = waLink(site.whatsappNumber, text)
-    window.open(finalUrl, '_blank')
-  }
 
   const baseWaUrl = waLink(site.whatsappNumber, 'Hi! I am interested in a bespoke piece from Moirai.')
   const activeGallery = gallery || []
@@ -76,7 +70,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
           <motion.div variants={staggerFadeUp} className="greek-divider" />
           <motion.p
             variants={staggerFadeUp}
-            style={{ color: 'var(--ivory-2)', fontSize: '15px', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: 560, margin: '0 auto 2.5rem' }}
+            style={{ color: 'var(--fg-2)', fontSize: '15px', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: 560, margin: '0 auto 2.5rem' }}
           >
             Your identity, sculpted to perfection. A bespoke silhouette from Moirai is not merely cloth — it is an armor of poise, cut by the Fates of modern Cameroonian couture.
           </motion.p>
@@ -121,17 +115,17 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                   boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
                   transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
                 }}
-                whileHover={{ y: -4, borderColor: 'var(--gold)', boxShadow: '0 12px 40px rgba(0,0,0,0.08)' }}
+                whileHover={{ y: -4, borderColor: 'var(--accent)', boxShadow: '0 12px 40px rgba(0,0,0,0.08)' }}
                 transition={{ duration: 0.35 }}
               >
                 <motion.div
-                  style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, var(--gold), var(--bronze))', originX: 0 }}
+                  style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, var(--accent), var(--bronze))', originX: 0 }}
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
                 />
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 300, color: 'var(--gold)', lineHeight: 1, marginBottom: '1.25rem' }}>{step.num}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 300, color: 'var(--accent)', lineHeight: 1, marginBottom: '1.25rem' }}>{step.num}</p>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>{step.title}</p>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.75 }}>{step.desc}</p>
               </motion.div>
@@ -187,9 +181,11 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
               </motion.div>
             ))}
           </motion.div>
-          <p style={{ textAlign: 'center', marginTop: '3rem', fontSize: '13px', color: 'var(--ivory-2)' }}>
-            Follow <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', fontWeight: 600, textDecoration: 'underline' }}>{site.instagramHandle}</a> on Instagram to view recent private client commissions.
-          </p>
+          {site.tiktokUrl && (
+            <p style={{ textAlign: 'center', marginTop: '3rem', fontSize: '14px', color: 'var(--fg-2)' }}>
+              See more of our work on TikTok: <a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}>{site.tiktokHandle}</a>
+            </p>
+          )}
         </div>
       </section>
 
@@ -206,55 +202,17 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
             <motion.p className="section-label" variants={staggerFadeUp}>Start Designing</motion.p>
             <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3.25rem)', marginTop: '0.5rem', marginBottom: '0.75rem' }}>Request Custom Design</motion.h2>
             <motion.div variants={staggerFadeUp} className="greek-divider" />
-            <motion.p variants={staggerFadeUp} style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>Describe your vision, and our master couturiers will originate it. Submit to coordinate directly with our atelier.</motion.p>
+            <motion.p variants={staggerFadeUp} style={{ color: 'var(--fg-2)', fontSize: '14px', lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>Describe your vision and we will continue the conversation on WhatsApp.</motion.p>
           </motion.div>
 
-          <motion.form 
-            onSubmit={handleFormSubmit}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="gold-frame"
-            style={{ padding: '3.5rem 2.5rem' }}
           >
-            <div style={{ marginBottom: '1.75rem' }}>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--gold)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '0.75rem' }}>Full Name</label>
-              <input 
-                type="text" 
-                required 
-                value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ivory-2)', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
-                placeholder="Madame / Monsieur"
-              />
-            </div>
-            
-            <div style={{ marginBottom: '1.75rem' }}>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--gold)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '0.75rem' }}>WhatsApp Number</label>
-              <input 
-                type="tel" 
-                required 
-                value={formData.phone}
-                onChange={e => setFormData({...formData, phone: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ivory-2)', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
-                placeholder="e.g. +237 6XX XXX XXX"
-              />
-            </div>
-
-            <div style={{ marginBottom: '2.5rem' }}>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--gold)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '0.75rem' }}>Your Vision &amp; Occasion</label>
-              <textarea 
-                required 
-                value={formData.desc}
-                onChange={e => setFormData({...formData, desc: e.target.value})}
-                style={{ width: '100%', padding: '1rem', minHeight: '130px', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ivory-2)', outline: 'none', resize: 'vertical', fontFamily: 'inherit', fontSize: '14px' }}
-                placeholder="Describe your event, aesthetic references, preferred textiles, or requested silhouette."
-              />
-            </div>
-
-            <button type="submit" className="btn-primary" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>Send Inquiry via WhatsApp</button>
-          </motion.form>
+            <BespokeForm />
+          </motion.div>
         </div>
       </section>
 
@@ -282,7 +240,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
               style={{ borderBottom: '1px solid var(--hairline)', padding: '2rem 0' }}
             >
               <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 600, color: 'var(--obsidian)', marginBottom: '0.65rem', letterSpacing: '0.01em' }}>{faq.q}</p>
-              <p style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.65 }}>{faq.a.replace('{whatsapp}', site.whatsappDisplay)}</p>
+              <p style={{ color: 'var(--fg-2)', fontSize: '14px', lineHeight: 1.65 }}>{faq.a.replace('{whatsapp}', site.whatsappDisplay)}</p>
             </motion.div>
           ))}
         </div>
@@ -290,7 +248,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
 
       {/* Final CTA — Obsidian Luxury Mode */}
       <section className="obsidian-section" style={{ padding: '8rem 2rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(194, 162, 111, 0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgb(var(--accent-rgb) / 0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <motion.div
           style={{ maxWidth: 560, margin: '0 auto', position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
@@ -298,7 +256,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
-          <motion.p className="section-label" variants={staggerFadeUp} style={{ color: 'var(--gold)' }}>The Atelier Awaits</motion.p>
+          <motion.p className="section-label" variants={staggerFadeUp} style={{ color: 'var(--accent)' }}>The Atelier Awaits</motion.p>
           <motion.h2
             variants={staggerFadeUp}
             style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem,5vw,3.75rem)', fontStyle: 'italic', marginTop: '0.5rem', marginBottom: '1.5rem', lineHeight: 1.15, color: '#F5F0E8' }}

@@ -264,8 +264,8 @@ export default function ProductDetailClient({ product }: { product: ProductProps
                   fontSize: '0.9rem',
                   letterSpacing: '0.15em',
                   minHeight: '52px',
-                  background: added ? 'var(--gold)' : 'var(--obsidian)',
-                  borderColor: added ? 'var(--gold)' : 'var(--obsidian)',
+                  background: added ? 'var(--accent)' : 'var(--obsidian)',
+                  borderColor: added ? 'var(--accent)' : 'var(--obsidian)',
                   transition: 'background 0.3s, border-color 0.3s',
                   gap: '0.5rem',
                 }}

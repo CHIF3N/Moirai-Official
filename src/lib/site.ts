@@ -6,18 +6,23 @@ export interface SiteConfig {
   whatsappDisplay: string
   defaultMessage: string
   email: string | null
-  instagramUrl: string
-  instagramHandle: string
-  tiktokUrl: string
-  tiktokHandle: string
+  // Social links appear only when the URL is verified (set in Site Settings or confirmed by the owner)
+  instagramUrl: string | null
+  instagramHandle: string | null
+  tiktokUrl: string | null
+  tiktokHandle: string | null
   location: string | null
   usdRate: number | null
   usdRateUpdatedAt: string | null
+  // Prices stay hidden ("Price on request") until the owner switches this on in Site Settings
+  showPrices: boolean
 }
 
 const FALLBACK_WHATSAPP = '237682710405'
-const FALLBACK_INSTAGRAM = 'https://instagram.com/Moirai.th'
-const FALLBACK_TIKTOK = 'https://tiktok.com/@MOIRAI'
+// Both confirmed by the owner on 16 Oct 2026 and checked: profiles are named "MOIRAI." / "MOIRAI".
+// (The old handles @Moirai.th and @MOIRAI belonged to other or missing accounts.)
+const FALLBACK_INSTAGRAM = 'https://www.instagram.com/moirai.th_/'
+const FALLBACK_TIKTOK = 'https://www.tiktok.com/@threads_ofheritage'
 
 function displayPhone(digits: string) {
   // Cameroon numbers: +237 6XX XXX XXX
@@ -37,8 +42,8 @@ function handleFromUrl(url: string) {
 export function getSiteConfig(settings: any): SiteConfig {
   const digits = String(settings?.whatsappNumber || '').replace(/\D/g, '')
   const whatsappNumber = digits.length >= 8 ? digits : FALLBACK_WHATSAPP
-  const instagramUrl = settings?.instagramUrl || FALLBACK_INSTAGRAM
-  const tiktokUrl = settings?.tiktokUrl || FALLBACK_TIKTOK
+  const instagramUrl: string | null = settings?.instagramUrl || FALLBACK_INSTAGRAM
+  const tiktokUrl: string | null = settings?.tiktokUrl || FALLBACK_TIKTOK
   const rate = Number(settings?.usdRate)
 
   return {
@@ -47,12 +52,13 @@ export function getSiteConfig(settings: any): SiteConfig {
     defaultMessage: settings?.whatsappDefaultMessage || "Hi, I'd like to inquire about Moirai",
     email: settings?.email || null,
     instagramUrl,
-    instagramHandle: handleFromUrl(instagramUrl),
+    instagramHandle: instagramUrl ? handleFromUrl(instagramUrl) : null,
     tiktokUrl,
-    tiktokHandle: handleFromUrl(tiktokUrl),
+    tiktokHandle: tiktokUrl ? handleFromUrl(tiktokUrl) : null,
     location: settings?.footerLocation || null,
     usdRate: Number.isFinite(rate) && rate > 0 ? rate : null,
     usdRateUpdatedAt: settings?.usdRateUpdatedAt || null,
+    showPrices: settings?.showPrices === true,
   }
 }
 

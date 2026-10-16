@@ -9,6 +9,13 @@ const post = {
             type: 'string',
         },
         {
+            name: 'hiddenFromSite',
+            title: 'Hide from site',
+            type: 'boolean',
+            description: 'Keep this post in the Studio but hide it from the Journal.',
+            initialValue: false,
+        },
+        {
             name: 'slug',
             title: 'Slug',
             type: 'slug',

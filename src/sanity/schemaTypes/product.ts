@@ -31,6 +31,13 @@ const product = {
             validation: (r: any) => r.required(),
         },
         {
+            name: 'hiddenFromSite',
+            title: 'Hide from site',
+            type: 'boolean',
+            description: 'Keep this product in the Studio but hide it from every public page.',
+            initialValue: false,
+        },
+        {
             name: 'featured',
             title: 'Show on Homepage',
             type: 'boolean',

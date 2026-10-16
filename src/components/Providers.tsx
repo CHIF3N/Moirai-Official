@@ -13,23 +13,55 @@ export function useSiteConfig() {
   return context
 }
 
-// Theme Context
-type Theme = 'light' | 'dark' | 'system'
-interface ThemeContextProps { theme: Theme; setTheme: (theme: Theme) => void; resolvedTheme: 'light' | 'dark' }
+// Theme Context — light / dark. The first paint is handled by the inline script in
+// app/layout.tsx (THEME_SCRIPT), so this provider only syncs state and saves choices.
+type Theme = 'light' | 'dark'
+interface ThemeContextProps { theme: Theme; setTheme: (theme: Theme) => void; resolvedTheme: Theme }
+
+export const THEME_STORAGE_KEY = 'moirai-theme'
 
 const ThemeContext = createContext<ThemeContextProps>({ theme: 'light', setTheme: () => {}, resolvedTheme: 'light' })
 
 export const useTheme = () => useContext(ThemeContext)
 
-// The site has one look (Noir Atelier), set on <html> in app/layout.tsx.
-// The context stays so existing callers keep working.
+function applyTheme(theme: Theme) {
+  const root = document.documentElement
+  root.setAttribute('data-theme', theme)
+  root.classList.toggle('dark', theme === 'dark')
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>('light')
+
   useEffect(() => {
-    // Clear a light-mode choice saved by the old theme toggle
-    try { localStorage.removeItem('theme') } catch { /* storage unavailable */ }
+    setThemeState(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light')
+    try { localStorage.removeItem('theme') } catch { /* key from an older toggle */ }
+
+    // Follow the operating system only until the visitor makes an explicit choice
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = (e: MediaQueryListEvent) => {
+      let saved: string | null = null
+      try { saved = localStorage.getItem(THEME_STORAGE_KEY) } catch { /* ignore */ }
+      if (saved) return
+      const next: Theme = e.matches ? 'dark' : 'light'
+      applyTheme(next)
+      setThemeState(next)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  return <ThemeContext.Provider value={{ theme: 'dark', setTheme: () => {}, resolvedTheme: 'dark' }}>{children}</ThemeContext.Provider>
+  const setTheme = (next: Theme) => {
+    const root = document.documentElement
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!reduce) root.classList.add('theme-switching')
+    applyTheme(next)
+    setThemeState(next)
+    try { localStorage.setItem(THEME_STORAGE_KEY, next) } catch { /* storage unavailable: theme still applies for this visit */ }
+    if (!reduce) window.setTimeout(() => root.classList.remove('theme-switching'), 400)
+  }
+
+  return <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme: theme }}>{children}</ThemeContext.Provider>
 }
 
 // Currency Context
@@ -42,6 +74,8 @@ interface CurrencyContextType {
   // USD is offered only when the owner has set a rate in Site Settings
   usdAvailable: boolean
   usdRateUpdatedAt: string | null
+  // False until the owner confirms prices in Site Settings
+  showPrices: boolean
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined)
@@ -68,7 +102,7 @@ export function useRecentlyViewed() {
 
 export function Providers({ children, site }: { children: React.ReactNode; site: SiteConfig }) {
   // Currency Logic
-  const usdAvailable = site.usdRate !== null
+  const usdAvailable = site.usdRate !== null && site.showPrices
   const [selectedCurrency, setCurrency] = useState<Currency>('XAF')
   const currency: Currency = usdAvailable ? selectedCurrency : 'XAF'
   
@@ -85,7 +119,7 @@ export function Providers({ children, site }: { children: React.ReactNode; site:
   }
 
   const formatPrice = (priceInXaf: number) => formatAmount(priceInXaf, currency, site.usdRate)
-  const displayPrice = (p: Priced) => hasFixedPrice(p) ? formatPrice(p.price) : PRICE_ON_REQUEST
+  const displayPrice = (p: Priced) => site.showPrices && hasFixedPrice(p) ? formatPrice(p.price) : PRICE_ON_REQUEST
 
   // Recently Viewed Logic
   const [viewedItems, setViewedItems] = useState<any[]>([])
@@ -114,7 +148,7 @@ export function Providers({ children, site }: { children: React.ReactNode; site:
   return (
     <ThemeProvider>
       <SiteConfigContext.Provider value={site}>
-        <CurrencyContext.Provider value={{ currency, setCurrency: handleSetCurrency, formatPrice, displayPrice, usdAvailable, usdRateUpdatedAt: site.usdRateUpdatedAt }}>
+        <CurrencyContext.Provider value={{ currency, setCurrency: handleSetCurrency, formatPrice, displayPrice, usdAvailable, usdRateUpdatedAt: site.usdRateUpdatedAt, showPrices: site.showPrices }}>
           <RecentlyViewedContext.Provider value={{ viewedItems, addViewedItem }}>
             {children}
           </RecentlyViewedContext.Provider>
