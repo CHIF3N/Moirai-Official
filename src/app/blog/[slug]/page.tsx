@@ -1,139 +1,139 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { fetchOr, postBySlugQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
-import { getSiteConfig } from '@/lib/site'
+import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
+import { ARTICLES, getArticle, type Block } from '@/content/journal'
+import { fetchOr, postBySlugQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { getJournalEntries, formatDate } from '@/lib/journal'
+import { getSiteConfig, waLink, CONSULTATION_HREF } from '@/lib/site'
+import styles from '../journal.module.css'
 
 export const revalidate = 60
 
-const ptComponents = {
-  types: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    image: ({ value }: any) => {
-      if (!value?.asset?._ref) return null
-      return (
-        <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', margin: '3rem 0', border: '1px solid var(--border)', overflow: 'hidden' }}>
-          {(() => {
-             const imgRaw = value
-             const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(1200).quality(80).url()) : undefined
-             return imageSrc ? (
-               <Image src={imageSrc} alt={value?.alt || 'Blog Image'} fill sizes="(max-width: 768px) 100vw, 800px" style={{ objectFit: 'cover' }} />
-             ) : (
-               <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.05)' }} />
-             )
-          })()}
-        </div>
-      )
+export function generateStaticParams() {
+  return ARTICLES.map(a => ({ slug: a.slug }))
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+async function loadEntry(slug: string) {
+  const article = getArticle(slug)
+  if (article) {
+    return {
+      title: article.title,
+      excerpt: article.excerpt,
+      publishedAt: article.publishedAt,
+      topic: article.topic,
+      imageUrl: urlFor(article.image).width(1600).quality(82).url(),
+      imageAlt: article.imageAlt,
+      blocks: article.body as Block[] | null,
+      sanityBody: null as any,
     }
-  },
-  block: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    h2: ({ children }: any) => <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 400, margin: '3.5rem 0 1.5rem', color: 'var(--text)' }}>{children}</h2>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    h3: ({ children }: any) => <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 400, margin: '2.5rem 0 1rem', color: 'var(--text)' }}>{children}</h3>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    blockquote: ({ children }: any) => <blockquote style={{ borderLeft: '2px solid var(--accent)', background: 'var(--accent-soft)', padding: '1.5rem', margin: '2.5rem 0', fontFamily: 'var(--font-display)', fontStyle: 'italic', color: 'var(--text)', fontSize: '1.2rem', lineHeight: 1.7 }}>{children}</blockquote>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    normal: ({ children }: any) => <p style={{ color: 'var(--muted)', fontSize: '14.5px', lineHeight: 2, marginBottom: '1.5rem' }}>{children}</p>
+  }
+  const post = await fetchOr<any>(`post "${slug}"`, postBySlugQuery, null, { slug })
+  if (!post) return null
+  return {
+    title: post.title || 'Untitled',
+    excerpt: post.excerpt || '',
+    publishedAt: post.publishedAt || null,
+    topic: 'From the atelier',
+    imageUrl: post.mainImage ? urlFor(post.mainImage).width(1600).quality(82).url() : null,
+    imageAlt: '',
+    blocks: null,
+    sanityBody: post.body ?? null,
   }
 }
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [post, settings] = await Promise.all([
-    fetchOr<any>(`post "${slug}"`, postBySlugQuery, null, { slug }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fetchOr<any>('siteSettings', siteSettingsQuery, null),
-  ])
-  const site = getSiteConfig(settings)
-
-  if (!post) {
-    return (
-      <div style={{ paddingTop: '10rem', textAlign: 'center', minHeight: '60vh', background: 'var(--bg)' }}>
-        <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', marginBottom: '2rem', color: 'var(--text)' }}>Post not found.</p>
-        <Link href="/blog" className="btn-ghost">← Back to Journal</Link>
-      </div>
-    )
+  const entry = await loadEntry(slug)
+  if (!entry) return { title: 'Story not found — Moirai' }
+  return {
+    title: `${entry.title} — The Moirai Journal`,
+    description: entry.excerpt,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      type: 'article',
+      title: entry.title,
+      description: entry.excerpt,
+      url: `/blog/${slug}`,
+      publishedTime: entry.publishedAt || undefined,
+      images: entry.imageUrl ? [{ url: entry.imageUrl, alt: entry.imageAlt }] : undefined,
+    },
   }
+}
+
+function renderBlock(b: Block, i: number) {
+  switch (b.type) {
+    case 'h2': return <h2 key={i}>{b.text}</h2>
+    case 'list': return <ul key={i}>{b.items.map((it, j) => <li key={j}>{it}</li>)}</ul>
+    case 'quote': return <blockquote key={i}>{b.text}</blockquote>
+    default: return <p key={i}>{b.text}</p>
+  }
+}
+
+export default async function JournalArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const [entry, settings, all] = await Promise.all([
+    loadEntry(slug),
+    fetchOr<any>('siteSettings', siteSettingsQuery, null),
+    getJournalEntries(),
+  ])
+  if (!entry) notFound()
+  const site = getSiteConfig(settings)
+  const related = all.filter(e => e.slug !== slug).slice(0, 3)
+  const date = formatDate(entry.publishedAt)
 
   return (
-    <div style={{ paddingTop: '5rem', background: 'var(--bg)', minHeight: '100vh' }}>
-      {/* Header */}
-      <section style={{ padding: '5rem 2rem 4rem', textAlign: 'center', background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <Link href="/blog" style={{ fontSize: '10px', letterSpacing: '0.2em', color: 'var(--accent)', textTransform: 'uppercase', display: 'inline-block', marginBottom: '2rem' }}>← The Journal</Link>
-          <p style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
-            {post?.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
-          </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,5vw,4rem)', fontWeight: 400, color: 'var(--text)', lineHeight: 1.2 }}>{post?.title || 'Untitled Post'}</h1>
+    <article className={styles.article}>
+      <header className={styles.articleHead}>
+        <Link href="/blog" className={styles.back}>← The Journal</Link>
+        <p className={styles.meta}>{entry.topic}{date && <> · <time dateTime={entry.publishedAt!}>{date}</time></>}</p>
+        <h1 className={styles.articleTitle}>{entry.title}</h1>
+        {entry.excerpt && <p className={styles.standfirst}>{entry.excerpt}</p>}
+      </header>
+
+      {entry.imageUrl && (
+        <div className={styles.hero}>
+          <Image src={entry.imageUrl} alt={entry.imageAlt} fill priority sizes="(max-width: 1100px) 100vw, 1100px" className={styles.img} />
         </div>
-      </section>
+      )}
 
-      {/* Cover image */}
-      {(() => {
-         const imgRaw = post?.mainImage
-         const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(1200).quality(80).url()) : undefined
-         return imageSrc ? (
-           <div style={{ maxWidth: 900, margin: '4rem auto 0', padding: '0 2rem', position: 'relative', height: 500 }}>
-             <Image src={imageSrc} alt={post?.title || 'Cover'} fill style={{ objectFit: 'cover', border: '1px solid var(--border)' }} />
-           </div>
-         ) : (
-           <div style={{ maxWidth: 900, margin: '4rem auto 0', padding: '0 2rem', height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>
-             <span style={{ fontSize: '12px', color: 'var(--muted)', letterSpacing: '0.1em' }}>(No cover image)</span>
-           </div>
-         )
-      })()}
+      <div className={styles.prose}>
+        {entry.blocks
+          ? entry.blocks.map(renderBlock)
+          : typeof entry.sanityBody === 'string'
+            ? entry.sanityBody.split(/\n{2,}/).map((para: string, i: number) => <p key={i} style={{ whiteSpace: 'pre-line' }}>{para}</p>)
+            : Array.isArray(entry.sanityBody) ? <PortableText value={entry.sanityBody} /> : null}
+      </div>
 
-      {/* Body */}
-      <article style={{ maxWidth: 720, margin: '0 auto', padding: '4rem 2rem 6rem' }}>
-        {post?.excerpt && (
-          <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontStyle: 'italic', color: 'var(--muted)', lineHeight: 1.8, marginBottom: '3rem', borderLeft: '2px solid var(--accent)', paddingLeft: '1.5rem' }}>
-            {post.excerpt}
-          </p>
-        )}
-
-        {/* The post schema stores the body as plain text; older posts may be rich text */}
-        {typeof post?.body === 'string' ? (
-          post.body.split(/\n{2,}/).map((para: string, i: number) => (
-            <p key={i} style={{ color: 'var(--muted)', fontSize: '14.5px', lineHeight: 2, marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>{para}</p>
-          ))
-        ) : Array.isArray(post?.body) ? (
-          <PortableText value={post.body} components={ptComponents} />
-        ) : null}
-
-        {/* Gallery */}
-        {Array.isArray(post?.gallery) && post.gallery.length > 0 && (
-          <div style={{ marginTop: '4rem' }}>
-            <div className="divider" style={{ marginBottom: '2rem' }} />
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', marginBottom: '2rem', color: 'var(--text)' }}>Gallery</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              {post.gallery.map((img: any, idx: number) => {
-                 const imgRaw = img
-                 const imageSrc = imgRaw ? (typeof imgRaw === 'string' ? imgRaw : urlFor(imgRaw).width(800).quality(80).url()) : undefined
-                 return (
-                   <div key={idx} style={{ position: 'relative', aspectRatio: '1', border: '1px solid var(--border)', overflow: 'hidden' }}>
-                      {imageSrc ? (
-                        <Image src={imageSrc} alt={`${post.title} gallery ${idx}`} fill sizes="50vw" style={{ objectFit: 'cover' }} loading="lazy" />
-                      ) : (
-                        <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.05)' }} />
-                      )}
-                   </div>
-                 )
-              })}
-            </div>
-          </div>
-        )}
-
-        <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <Link href="/blog" className="btn-ghost">← Back to Journal</Link>
-          <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', letterSpacing: '0.15em', color: 'var(--muted)', textTransform: 'uppercase' }}>Follow {site.instagramHandle}</a>
+      <aside className={styles.cta} aria-label="Work with Moirai">
+        <p className={styles.ctaTitle}>Ready to begin your own piece?</p>
+        <p className={styles.ctaText}>Tell us about your occasion and we will continue the conversation on WhatsApp.</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <Link href={CONSULTATION_HREF} className="btn-primary">Book a consultation</Link>
+          <a href={waLink(site.whatsappNumber, `Hi Moirai! I just read "${entry.title}" on your Journal.`)} target="_blank" rel="noopener noreferrer" className="btn-ghost">Message us</a>
         </div>
-      </article>
-    </div>
+      </aside>
+
+      {related.length > 0 && (
+        <section className={styles.related} aria-labelledby="related-title">
+          <h2 id="related-title" className={styles.relatedTitle}>More from the Journal</h2>
+          <ul className={styles.grid}>
+            {related.map(e => (
+              <li key={e.slug}>
+                <Link href={`/blog/${e.slug}`} className={styles.card}>
+                  <span className={styles.cardMedia}>
+                    {e.imageUrl && <Image src={e.imageUrl} alt={e.imageAlt} fill sizes="(max-width: 640px) 100vw, 33vw" className={styles.img} />}
+                  </span>
+                  <span className={styles.meta}>{e.topic}</span>
+                  <span className={styles.cardTitle}>{e.title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </article>
   )
 }

@@ -52,11 +52,13 @@ export default function ContactPage() {
               <a href={`mailto:${site.email}`} className={styles.big}>{site.email}</a>
             </div>
           )}
-          <div className={styles.block}>
-            <h2 className={styles.label}>Social</h2>
-            <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>Instagram {site.instagramHandle}</a>
-            <a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>TikTok {site.tiktokHandle}</a>
-          </div>
+          {(site.instagramUrl || site.tiktokUrl) && (
+            <div className={styles.block}>
+              <h2 className={styles.label}>Social</h2>
+              {site.instagramUrl && <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>Instagram {site.instagramHandle}</a>}
+              {site.tiktokUrl && <a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>TikTok {site.tiktokHandle}</a>}
+            </div>
+          )}
           {site.location && (
             <div className={styles.block}>
               <h2 className={styles.label}>Atelier</h2>
@@ -65,7 +67,7 @@ export default function ContactPage() {
           )}
           <div className={styles.block}>
             <h2 className={styles.label}>Payment</h2>
-            <p className={styles.text}>We accept Mobile Money (MoMo). Payment details are shared once your order is confirmed.</p>
+            <p className={styles.text}>Mobile Money (MoMo) is our payment method. Details are shared once your order is confirmed. Delivery arrangements are agreed when you order.</p>
           </div>
         </motion.aside>
 

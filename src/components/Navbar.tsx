@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSiteConfig } from './Providers'
 import { useCart } from './CartDrawer'
+import ThemeToggle from './ThemeToggle'
+import Logo from './Logo'
 import { waLink, CONSULTATION_HREF } from '@/lib/site'
 
 const BagIcon = () => (
@@ -76,7 +78,7 @@ export default function Navbar() {
     <>
       <a href="#main" className="skip-link">Skip to content</a>
 
-      <header className={`site-nav${scrolled || open ? ' is-solid' : ''}`}>
+      <header className={`site-nav glass${scrolled || open ? ' is-solid' : ''}`}>
         <nav className="site-nav-inner" aria-label="Main">
           <ul className="site-nav-links desk-only">
             {LEFT_LINKS.map(l => (
@@ -87,8 +89,7 @@ export default function Navbar() {
           </ul>
 
           <Link href="/" className="site-nav-brand" aria-label="Moirai — home">
-            <span className="wordmark">MOIRAI</span>
-            <span className="wordmark-sub">The House of Moirai</span>
+            <Logo className="site-logo" title="Moirai" />
           </Link>
 
           <div className="site-nav-actions">
@@ -99,6 +100,8 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
+
+            <ThemeToggle />
 
             <button type="button" onClick={toggleCart} className="nav-icon-btn" aria-label={totalItems > 0 ? `Open bag, ${totalItems} item${totalItems === 1 ? '' : 's'}` : 'Open bag'}>
               <BagIcon />
@@ -130,11 +133,11 @@ export default function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className="mobile-menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            className="mobile-menu glass"
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
             <ul className="mobile-menu-links">
               {ALL_LINKS.map((l, i) => (

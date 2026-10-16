@@ -66,10 +66,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('moirai_cart', JSON.stringify(items))
   }, [items])
 
-  // Lock body scroll when drawer is open
+  // Lock body scroll and close on Escape while the drawer is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsOpen(false) }
+    if (isOpen) document.addEventListener('keydown', onKey)
+    return () => { document.body.style.overflow = ''; document.removeEventListener('keydown', onKey) }
   }, [isOpen])
 
   const openCart   = () => setIsOpen(true)
@@ -140,12 +142,16 @@ const BagLargeIcon = () => (
 
 function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQty, clearCart, totalItems, totalPrice, hasPriceOnRequest } = useCart()
-  const { formatPrice, displayPrice, currency } = useCurrency()
+  const { formatPrice, displayPrice, currency, showPrices } = useCurrency()
   const site = useSiteConfig()
 
-  // The order message always quotes XAF, the authoritative price
+  // The order message always quotes XAF, the authoritative price — or asks for a quote while prices are unconfirmed
   const buildWhatsAppMessage = () => {
     if (items.length === 0) return ''
+    if (!showPrices) {
+      const lines = items.map(i => `• ${i.name} × ${i.qty}`)
+      return `Hi! I'd like to order the following from Moirai:\n\n${lines.join('\n')}\n\nCould you send me a quote and the delivery details?`
+    }
     const lines = items.map(i => `• ${i.name} × ${i.qty} — ${hasFixedPrice(i) ? formatXAF(i.price * i.qty) : PRICE_ON_REQUEST}`)
     const total = hasPriceOnRequest
       ? `Total for priced items: ${formatXAF(totalPrice)} (items priced on request to be quoted)`
@@ -168,9 +174,7 @@ function CartDrawer() {
             onClick={closeCart}
             style={{
               position: 'fixed', inset: 0, zIndex: 4000,
-              background: 'rgba(8, 7, 6, 0.6)',
-              backdropFilter: 'blur(4px)',
-              WebkitBackdropFilter: 'blur(4px)',
+              background: 'rgb(14 10 20 / 0.45)',
             }}
           />
 
@@ -181,13 +185,17 @@ function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="glass"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Your bag"
             style={{
               position: 'fixed',
-              top: 0, right: 0, bottom: 0,
-              width: 'min(440px, 95vw)',
+              top: 'var(--nav-gap)', right: 'var(--nav-gap)', bottom: 'var(--nav-gap)',
+              width: 'min(440px, calc(100vw - 2 * var(--nav-gap)))',
               zIndex: 4001,
-              background: 'var(--canvas)',
-              borderLeft: '1px solid var(--hairline)',
+              background: 'rgb(var(--bg-rgb) / 0.88)',
+              borderRadius: 'var(--r-lg)',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
@@ -200,7 +208,6 @@ function CartDrawer() {
               display: 'flex',
               alignItems: 'flex-start',
               justifyContent: 'space-between',
-              background: 'var(--surface)',
             }}>
               <div>
                 <p style={{
@@ -208,7 +215,7 @@ function CartDrawer() {
                   fontSize: '9px',
                   letterSpacing: '0.45em',
                   textTransform: 'uppercase',
-                  color: 'var(--gold)',
+                  color: 'var(--accent)',
                   marginBottom: '0.35rem',
                 }}>
                   Atelier Bag
@@ -278,7 +285,7 @@ function CartDrawer() {
             {/* Gold hairline meander divider */}
             <div style={{
               height: '3px',
-              background: 'linear-gradient(90deg, transparent, var(--gold) 30%, var(--bronze) 70%, transparent)',
+              background: 'linear-gradient(90deg, transparent, var(--accent) 30%, var(--bronze) 70%, transparent)',
             }} />
 
             {/* ── Items ── */}
@@ -382,7 +389,7 @@ function CartDrawer() {
                       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
                         <div>
                           {item.category && (
-                            <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '0.3rem' }}>
+                            <p style={{ fontFamily: 'var(--font-body)', fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '0.3rem' }}>
                               {item.category}
                             </p>
                           )}
@@ -402,7 +409,7 @@ function CartDrawer() {
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                             }}
-                            onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
+                            onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
                             onMouseLeave={e => (e.currentTarget.style.color = 'var(--obsidian)')}
                           >
                             {item.name}
@@ -441,7 +448,7 @@ function CartDrawer() {
                           {/* Subtotal + remove */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--obsidian)', fontWeight: 600 }}>
-                              {hasFixedPrice(item) ? formatPrice(item.price * item.qty) : ''}
+                              {showPrices && hasFixedPrice(item) ? formatPrice(item.price * item.qty) : ''}
                             </span>
                             <button
                               onClick={() => removeItem(item.id)}
@@ -469,27 +476,29 @@ function CartDrawer() {
                 background: 'var(--surface)',
               }}>
                 {/* Gold accent line */}
-                <div style={{ height: '2px', background: 'linear-gradient(90deg, var(--gold), var(--bronze))', marginBottom: '1.5rem' }} />
+                <div style={{ height: '2px', background: 'linear-gradient(90deg, var(--accent), var(--bronze))', marginBottom: '1.5rem' }} />
 
-                {/* Totals */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.25rem' }}>
+                {/* Totals — only once prices are confirmed */}
+                {showPrices && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.25rem' }}>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--umber)' }}>
                     Subtotal
                   </p>
                   <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 400, color: 'var(--obsidian)', letterSpacing: '0.03em' }}>
                     {formatPrice(totalPrice)}
                   </p>
-                </div>
+                </div>}
 
-                {(hasPriceOnRequest || currency === 'USD') && (
+                {showPrices && (hasPriceOnRequest || currency === 'USD') && (
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--umber)', marginBottom: '0.75rem', lineHeight: 1.6 }}>
                     {hasPriceOnRequest && 'Items priced on request are not included and will be quoted by the atelier. '}
                     {currency === 'USD' && 'USD amounts are approximate; your order is confirmed in FCFA.'}
                   </p>
                 )}
 
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'var(--umber)', marginBottom: '1.25rem', lineHeight: 1.6 }}>
-                  All orders are confirmed and finalized via WhatsApp consultation with our atelier.
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--umber)', marginBottom: '1.25rem', lineHeight: 1.6 }}>
+                  {showPrices
+                    ? 'Orders are confirmed with the atelier on WhatsApp. Delivery arrangements are agreed when you order; payment is by Mobile Money (MoMo).'
+                    : 'Send your selection on WhatsApp and the atelier will reply with a quote. Delivery arrangements are agreed when you order; payment is by Mobile Money (MoMo).'}
                 </p>
 
                 {/* WhatsApp Checkout */}
@@ -504,8 +513,8 @@ function CartDrawer() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.6rem',
-                    background: 'var(--oxblood)',
-                    borderColor: 'var(--oxblood)',
+                    background: 'var(--brand)',
+                    borderColor: 'var(--brand)',
                     marginBottom: '0.75rem',
                   }}
                 >

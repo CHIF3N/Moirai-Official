@@ -3,6 +3,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useCurrency, useSiteConfig } from './Providers'
 import { waLink, CONSULTATION_HREF } from '@/lib/site'
+import Logo from './Logo'
+import { SLOGANS } from '@/content/brand'
 import styles from './footer.module.css'
 
 interface FooterProps {
@@ -31,7 +33,9 @@ export default function Footer({ settings }: FooterProps) {
   // No newsletter provider is connected yet, so nothing is stored — say so plainly
   const onSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
-    setNote(`Sign-ups open soon. Until then, follow ${site.instagramHandle} on Instagram for new pieces.`)
+    setNote(site.tiktokUrl
+      ? `Sign-ups open soon. Until then, follow ${site.tiktokHandle} on TikTok for new pieces.`
+      : 'Sign-ups open soon. Until then, message us on WhatsApp to hear about new pieces.')
   }
 
   return (
@@ -39,8 +43,8 @@ export default function Footer({ settings }: FooterProps) {
       {/* Statement band */}
       <div className={styles.statement}>
         <p className={styles.kicker}>The House of Moirai · Buea, Cameroon</p>
-        <p className={styles.mark} aria-hidden="true">MOIRAI</p>
-        <p className={styles.motto}>Clotho spins. Lachesis measures. Atropos cuts. <em>Destiny, tailored.</em></p>
+        <Logo className={styles.mark} title="Moirai" />
+        <p className={styles.motto}>{SLOGANS.refined} <em>{SLOGANS.becoming}</em></p>
         <Link href={CONSULTATION_HREF} className="btn-primary">Book a consultation</Link>
       </div>
 
@@ -79,8 +83,8 @@ export default function Footer({ settings }: FooterProps) {
           <ul className={styles.links}>
             <li><a href={waLink(site.whatsappNumber, site.defaultMessage)} target="_blank" rel="noopener noreferrer">WhatsApp {site.whatsappDisplay}</a></li>
             {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
-            <li><a href={site.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram {site.instagramHandle}</a></li>
-            <li><a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer">TikTok {site.tiktokHandle}</a></li>
+            {site.instagramUrl && <li><a href={site.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram {site.instagramHandle}</a></li>}
+            {site.tiktokUrl && <li><a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer">TikTok {site.tiktokHandle}</a></li>}
           </ul>
           <p className={styles.address}>{locationText}</p>
         </section>
@@ -106,7 +110,7 @@ export default function Footer({ settings }: FooterProps) {
 
       <div className={styles.base}>
         <p>© {new Date().getFullYear()} Moirai — The House of Moirai. All rights reserved.</p>
-        <p className={styles.baseMotto}>Not a trend. Identity.</p>
+        <p className={styles.baseMotto}>{SLOGANS.identity}</p>
       </div>
     </footer>
   )

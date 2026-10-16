@@ -187,6 +187,13 @@ const siteSettings = {
             type: 'url',
         },
         {
+            name: 'showPrices',
+            title: 'Show product prices',
+            type: 'boolean',
+            description: 'Leave off until prices are confirmed. While off, every product shows "Price on request" and orders are quoted on WhatsApp.',
+            initialValue: false,
+        },
+        {
             name: 'usdRate',
             title: 'USD Rate (FCFA per 1 USD)',
             type: 'number',

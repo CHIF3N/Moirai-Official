@@ -1,0 +1,93 @@
+// Brand content supplied by the owner (16 Oct 2026) — the source of truth for
+// categories, slogans and values. Images are existing Moirai photographs from the
+// Sanity media library, used as editorial imagery until the official photoshoot.
+// To replace one, swap its `image` for another Sanity asset id.
+
+export const SLOGANS = {
+  becoming: 'Made for who you are becoming.',
+  refined: 'Refined. Intentional. Eternal.',
+  destiny: 'Destiny, Tailored.',
+  identity: 'Not a trend. Identity.',
+}
+
+export const VALUES = [
+  { title: 'Customer experience', desc: 'Every interaction is personal. You are not a transaction.' },
+  { title: 'Craftsmanship excellence', desc: 'We obsess over the details others overlook.' },
+  { title: 'Empowerment through style', desc: 'Fashion is the language of confidence.' },
+  { title: 'Sustainability', desc: 'Intentional creation. Pieces made to last.' },
+]
+
+export interface Category {
+  slug: string
+  title: string
+  short: string
+  description: string
+  image: string // Sanity image asset id
+  imageAlt: string
+  // Words that place a Sanity product in this category (matched against its category title)
+  match: string[]
+  enquiry: string
+}
+
+export const CATEGORIES: Category[] = [
+  {
+    slug: 'bespoke',
+    title: 'Bespoke & custom couture',
+    short: 'Bespoke',
+    description: 'Pieces designed and made for one person — shaped by a conversation about your occasion, your story and your body.',
+    image: 'image-ae25c4f9852cbf954116fc26906a873de8a46b2d-1080x1080-jpg',
+    imageAlt: 'Ivory couture gown with sculpted lace bodice, photographed on a balcony',
+    match: ['bespoke', 'custom', 'couture', 'bridal', 'wedding'],
+    enquiry: 'Hi Moirai! I would like to start a bespoke commission.',
+  },
+  {
+    slug: 'corsets',
+    title: 'Corsets',
+    short: 'Corsets',
+    description: 'Structured, figure-defining corsetry for bold silhouettes — worn as a statement on its own or as part of a complete look.',
+    image: 'image-30c127df06aa843a2b9b77b1d75f5741d833185c-1024x1280-jpg',
+    imageAlt: 'Red corseted dress against a deep green studio backdrop',
+    match: ['corset'],
+    enquiry: 'Hi Moirai! I am interested in a corset.',
+  },
+  {
+    slug: 'cocktail-dresses',
+    title: 'Cocktail dresses',
+    short: 'Cocktail',
+    description: 'Cocktail dresses for the evenings that matter, from sculpted minis to dramatic silhouettes.',
+    image: 'image-bffaef3c90af019078755055f649ad3b2c8ba9a4-1024x1280-jpg',
+    imageAlt: 'Red strapless cocktail dress with embellished neckline on a white studio background',
+    match: ['cocktail', 'dress', 'gown', 'evening'],
+    enquiry: 'Hi Moirai! I am interested in a cocktail dress.',
+  },
+  {
+    slug: 'cameroonian-traditional',
+    title: 'Cameroonian traditional fashion',
+    short: 'Traditional',
+    description: 'Cameroonian traditional attire, reimagined through a contemporary couture eye — heritage textiles in modern silhouettes.',
+    image: 'image-4bb159520b9ad2cb92c3d65afda9b759da08449c-1080x1080-jpg',
+    imageAlt: 'Flowing printed gown in blue and earth tones, photographed outside a weathered wooden house',
+    match: ['tradition', 'cameroon', 'heritage', 'african', 'culture'],
+    enquiry: 'Hi Moirai! I am interested in Cameroonian traditional fashion.',
+  },
+]
+
+export function categoryFor(productCategory: string | null | undefined): Category | null {
+  const c = (productCategory || '').toLowerCase()
+  if (!c) return null
+  return CATEGORIES.find(cat => cat.match.some(m => c.includes(m))) ?? null
+}
+
+// Placeholder documents in Sanity that should never appear publicly.
+// Remove ids from this list once the documents are deleted in the Studio.
+export const HIDDEN_DOCUMENT_IDS = [
+  '7e62ac3b-e809-4eca-b6b8-429ce2be79c9', // product "Wedding Dresses" — test entry
+  '89fa1b4b-ad2f-4567-a216-1a5d9a356b59', // product "Jacket" — test entry
+  '89e17d1f-c87a-44ff-9d99-bde5f31d5593', // post "TEST BLOG"
+]
+
+// Editorial photographs used in fixed homepage sections (Sanity asset ids)
+export const EDITORIAL = {
+  homeBespoke: { image: 'image-0e028a436b1bf268ac01ff15576417b59ccbf7ae-1023x1280-jpg', alt: 'Red sculpted gown with voluminous sleeves against a red backdrop' },
+  homeClosing: { image: 'image-37e23fa99829eeeaa120ee3e6877e93fd9388437-1024x1280-jpg', alt: '' },
+}

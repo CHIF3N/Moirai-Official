@@ -36,7 +36,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
     <div style={{ paddingTop: '5rem' }}>
       {/* Hero */}
       <section style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6rem 2rem', background: 'linear-gradient(170deg, var(--bg), var(--bg))', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(142, 31, 44, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgb(var(--brand-rgb) / 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <motion.div
           style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
@@ -46,9 +46,9 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
           <motion.p className="section-label" variants={staggerFadeUp}>Education &amp; Craft</motion.p>
           <motion.h1
             variants={staggerFadeUp}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem,7vw,5.5rem)', fontWeight: 700, letterSpacing: '0.04em', marginBottom: '1.5rem', lineHeight: 1.05, background: 'linear-gradient(135deg, var(--text) 0%, var(--accent-soft) 50%, var(--accent) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.75rem,7vw,6rem)', fontWeight: 300, letterSpacing: '-0.01em', marginBottom: '1.5rem', lineHeight: 1, color: 'var(--fg)' }}
           >
-            Moirai<br />Fashion School
+            Moirai<br /><em style={{ fontStyle: 'italic', color: 'var(--accent)' }}>Fashion School</em>
           </motion.h1>
           <motion.div className="divider" style={{ marginBottom: '2rem' }} variants={staggerFadeUp} />
           <motion.p
@@ -88,7 +88,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
               <motion.div
                 key={m.title}
                 variants={staggerFadeUp}
-                whileHover={{ borderColor: 'var(--gold)', y: -4, boxShadow: '0 12px 40px rgba(0,0,0,0.08)' }}
+                whileHover={{ borderColor: 'var(--accent)', y: -4, boxShadow: '0 12px 40px rgba(0,0,0,0.08)' }}
                 transition={{ duration: 0.35 }}
                 style={{
                   padding: '2.5rem',
@@ -102,7 +102,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
               >
                 <motion.p
                   className="greek-numeral"
-                  style={{ fontSize: '2.5rem', lineHeight: 1, marginBottom: '1.25rem', color: 'var(--gold)', fontFamily: 'var(--font-display)', fontWeight: 300 }}
+                  style={{ fontSize: '2.5rem', lineHeight: 1, marginBottom: '1.25rem', color: 'var(--accent)', fontFamily: 'var(--font-display)', fontWeight: 300 }}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
@@ -137,7 +137,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
                   transition={{ duration: 0.5, delay: i * 0.1, ease: 'easeOut' }}
                   style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}
                 >
-                  <span style={{ color: 'var(--gold)', marginTop: '0.1rem', flexShrink: 0, fontSize: '1.1rem' }}>✦</span>
+                  <span style={{ color: 'var(--accent)', marginTop: '0.1rem', flexShrink: 0, fontSize: '1.1rem' }}>✦</span>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', lineHeight: 1.65, fontWeight: 450 }}>{w}</p>
                 </motion.div>
               ))}
@@ -185,7 +185,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
           <motion.h2 variants={staggerFadeUp} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', marginTop: '0.5rem', marginBottom: '1rem' }}>Duration &amp; Enrollment</motion.h2>
           <motion.div variants={staggerFadeUp} className="greek-divider" />
           <motion.p variants={staggerFadeUp} style={{ color: 'var(--text-secondary)', fontSize: '13.5px', lineHeight: 1.7, marginBottom: '3rem' }}>
-            Duration and schedule details are available on request. Intake is intentionally limited each term to ensure every apprentice receives personal mentorship and uninterrupted studio time with the master couturiers of Moirai House.
+            Duration, schedule, fees and enrolment dates are shared on request — send us a message on WhatsApp and we will reply with the details for the next intake.
           </motion.p>
           <motion.div variants={staggerFadeUp} style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>

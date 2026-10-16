@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useCurrency, useSiteConfig } from './Providers'
 import { waLink, CONSULTATION_HREF } from '@/lib/site'
+import Logo from './Logo'
 import styles from './home.module.css'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -74,7 +75,7 @@ export default function HomeClient({
 
   const heroImg = leadHeroImageUrl || heroSlides?.[0]?.image || heroImageUrl
   const pieces = (editorialItems.length > 0 ? editorialItems : products).slice(0, 4)
-  const tiles = collections.filter((c: any) => c.image).slice(0, 3)
+  const tiles = collections.filter((c: any) => c.image).slice(0, 4)
   const journal = posts.slice(0, 3)
 
   const heroIn = (delay: number) => reduce
@@ -96,6 +97,7 @@ export default function HomeClient({
           </motion.div>
         )}
         <div className={styles.heroShade} aria-hidden="true" />
+        <span className={styles.heroMark} aria-hidden="true"><Logo title="" /></span>
 
         <div className={styles.heroContent}>
           <motion.p className={styles.eyebrow} {...heroIn(0.15)}>African haute couture · Buea, Cameroon</motion.p>
@@ -147,7 +149,7 @@ export default function HomeClient({
             <Reveal className={styles.sectionHead}>
               <div>
                 <p className="section-label">Collections</p>
-                <h2 id="collections-title" className={styles.h2}>The archive</h2>
+                <h2 id="collections-title" className={styles.h2}>What we make</h2>
               </div>
               <Link href="/collections" className={styles.textLink}>All collections <span aria-hidden="true">→</span></Link>
             </Reveal>
@@ -155,8 +157,8 @@ export default function HomeClient({
             <div className={styles.tiles} data-count={tiles.length}>
               {tiles.map((c: any, i: number) => (
                 <Reveal key={c.title} delay={i * 0.1}>
-                  <Link href="/collections" className={styles.tile}>
-                    <Image src={c.image} alt={`${c.title} collection`} fill sizes="(max-width: 900px) 100vw, 33vw" className={styles.tileImg} />
+                  <Link href={`/collections#${c.slug}`} className={styles.tile}>
+                    <Image src={c.image} alt={c.alt || `${c.title} collection`} fill sizes="(max-width: 900px) 100vw, 25vw" className={styles.tileImg} />
                     <span className={styles.tileShade} aria-hidden="true" />
                     <span className={styles.tileLabel}>
                       <span className={styles.tileIndex}>{String(i + 1).padStart(2, '0')}</span>
@@ -217,7 +219,7 @@ export default function HomeClient({
       {/* ── 5. BESPOKE ──────────────────────────────────────────── */}
       <section className={styles.split} aria-labelledby="bespoke-title">
         <div className={styles.splitMedia}>
-          {bespokeHeroImage && <Image src={bespokeHeroImage} alt="Bespoke couture by Moirai" fill sizes="(max-width: 900px) 100vw, 50vw" className={styles.splitImg} />}
+          {bespokeHeroImage && <Image src={bespokeHeroImage} alt="Red sculpted Moirai gown with voluminous sleeves" fill sizes="(max-width: 900px) 100vw, 50vw" className={styles.splitImg} />}
         </div>
         <Reveal className={styles.splitBody}>
           <p className="section-label">Bespoke atelier</p>
@@ -293,10 +295,10 @@ export default function HomeClient({
             </Reveal>
             <div className={styles.journal}>
               {journal.map((p: any, i: number) => (
-                <Reveal key={p._id} delay={i * 0.08}>
-                  <Link href={`/blog/${p.slug?.current || p.slug}`} className={styles.post}>
+                <Reveal key={p.slug} delay={i * 0.08}>
+                  <Link href={`/blog/${p.slug}`} className={styles.post}>
                     <span className={styles.postMedia}>
-                      {p.imageUrl && <Image src={p.imageUrl} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" className={styles.pieceImg} />}
+                      {p.imageUrl && <Image src={p.imageUrl} alt={p.imageAlt || ''} fill sizes="(max-width: 900px) 100vw, 33vw" className={styles.pieceImg} />}
                     </span>
                     {p.publishedAt && (
                       <time className={styles.postDate} dateTime={p.publishedAt}>
