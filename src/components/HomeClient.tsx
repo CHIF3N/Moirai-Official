@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useCurrency, useSiteConfig } from './Providers'
 import { waLink, CONSULTATION_HREF } from '@/lib/site'
 import Logo from './Logo'
+import SocialSection from './SocialSection'
 import styles from './home.module.css'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -260,6 +261,9 @@ export default function HomeClient({
           </div>
         </Reveal>
       </section>
+
+      {/* ── 6b. FROM INSTAGRAM ──────────────────────────────────── */}
+      <SocialSection />
 
       {/* ── 7. VALUES ───────────────────────────────────────────── */}
       <section className={styles.section} aria-labelledby="values-title">
