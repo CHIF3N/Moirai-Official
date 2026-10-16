@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { client, postBySlugQuery } from '@/lib/sanity'
-import { urlFor } from '@/sanity/lib/image'
+import { fetchOr, postBySlugQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { getSiteConfig } from '@/lib/site'
 import { PortableText } from '@portabletext/react'
 
 export const revalidate = 60
@@ -45,12 +45,12 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let post: any = null
-  try {
-    post = await client.fetch(postBySlugQuery, { slug })
-  } catch {
-    // Sanity not yet configured
-  }
+  const [post, settings] = await Promise.all([
+    fetchOr<any>(`post "${slug}"`, postBySlugQuery, null, { slug }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fetchOr<any>('siteSettings', siteSettingsQuery, null),
+  ])
+  const site = getSiteConfig(settings)
 
   if (!post) {
     return (
@@ -97,7 +97,12 @@ export default async function BlogPostPage({
           </p>
         )}
 
-        {post?.body ? (
+        {/* The post schema stores the body as plain text; older posts may be rich text */}
+        {typeof post?.body === 'string' ? (
+          post.body.split(/\n{2,}/).map((para: string, i: number) => (
+            <p key={i} style={{ color: 'var(--muted)', fontSize: '14.5px', lineHeight: 2, marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>{para}</p>
+          ))
+        ) : Array.isArray(post?.body) ? (
           <PortableText value={post.body} components={ptComponents} />
         ) : null}
 
@@ -126,7 +131,7 @@ export default async function BlogPostPage({
 
         <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <Link href="/blog" className="btn-ghost">← Back to Journal</Link>
-          <a href="https://instagram.com/Moirai.th" target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', letterSpacing: '0.15em', color: 'var(--muted)', textTransform: 'uppercase' }}>Follow @Moirai.th</a>
+          <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', letterSpacing: '0.15em', color: 'var(--muted)', textTransform: 'uppercase' }}>Follow {site.instagramHandle}</a>
         </div>
       </article>
     </div>

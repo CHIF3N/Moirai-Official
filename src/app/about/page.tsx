@@ -1,17 +1,11 @@
-import { client, urlFor } from '@/lib/sanity'
+import { fetchOr, siteSettingsQuery, urlFor } from '@/lib/sanity'
 import AboutClient from '@/components/AboutClient'
 
 export const revalidate = 60
 
 export default async function AboutPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let settings: any = null
-
-  try {
-    settings = await client.fetch(`*[_type == "siteSettings"][0]`)
-  } catch {
-    // Sanity not yet configured
-  }
+  const settings = await fetchOr<any>('siteSettings', siteSettingsQuery, null)
 
   const aboutImage = settings?.aboutHeroImage ? urlFor(settings.aboutHeroImage).url() : undefined
   const partners = settings?.partners?.map((p: any) => ({

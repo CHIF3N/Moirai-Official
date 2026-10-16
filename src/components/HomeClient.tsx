@@ -3,6 +3,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { useCurrency, useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 // ── Framer Motion Variants ──────────────────────────────────────────────────
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
@@ -28,8 +30,6 @@ const staggerChild = {
 interface HomeClientProps {
   products: any[]
   posts: any[]
-  waNumber: string
-  waMsg: string
   collections: any[]
   heroImageUrl?: string
   heroText?: string
@@ -38,24 +38,6 @@ interface HomeClientProps {
   bespokeHeroImage?: string
   editorialItems?: any[]
   leadHeroImageUrl?: string
-}
-
-// ── Helpers ─────────────────────────────────────────────────────────────────
-function formatXAF(n: number | null | undefined): string {
-  if (!n) return ''
-  return n.toLocaleString('fr-CM') + ' XAF'
-}
-function formatUSD(n: number | null | undefined): string {
-  if (!n) return ''
-  return '$' + n.toLocaleString('en-US') + ' USD'
-}
-function priceDisplay(item: any): string {
-  const xaf = item.priceXAF || item.price
-  const usd = item.priceUSD
-  if (xaf && usd) return `${formatXAF(xaf)} / ${formatUSD(usd)}`
-  if (xaf) return formatXAF(xaf)
-  if (usd) return formatUSD(usd)
-  return ''
 }
 
 // ── VALUES ───────────────────────────────────────────────────────────────────
@@ -70,8 +52,6 @@ const VALUES = [
 export default function HomeClient({
   products,
   posts,
-  waNumber,
-  waMsg,
   collections,
   heroImageUrl,
   heroText,
@@ -82,6 +62,8 @@ export default function HomeClient({
   leadHeroImageUrl,
 }: HomeClientProps) {
   const [heroLoaded, setHeroLoaded] = useState(false)
+  const { displayPrice } = useCurrency()
+  const site = useSiteConfig()
 
   // First available hero image
   const heroImg = leadHeroImageUrl || heroSlides?.[0]?.image || heroImageUrl
@@ -247,17 +229,15 @@ export default function HomeClient({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                     <div>
                       <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--obsidian)', fontWeight: 400 }}>
-                        {galleryItems[0].displayTitle || 'Bespoke Piece No. 1'}
+                        {galleryItems[0].title || galleryItems[0].displayTitle || 'Bespoke Piece No. 1'}
                       </p>
                       <p className="section-label" style={{ marginTop: '0.3rem' }}>
-                        {galleryItems[0].category?.title || 'ATELIER EDITION'}
+                        {galleryItems[0].category || 'ATELIER EDITION'}
                       </p>
                     </div>
-                    {priceDisplay(galleryItems[0]) && (
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500, color: 'var(--umber)', letterSpacing: '0.05em', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
-                        {priceDisplay(galleryItems[0])}
-                      </p>
-                    )}
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500, color: 'var(--umber)', letterSpacing: '0.05em', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
+                      {displayPrice(galleryItems[0])}
+                    </p>
                   </div>
                 </motion.div>
               )}
@@ -448,10 +428,9 @@ export default function HomeClient({
               {galleryItems.slice(0, 6).map((item: any) => {
                 const imgSrc = item.imageUrl
                 const title  = item.displayTitle || item.name || item.title || 'Atelier Piece'
-                const cat    = item.category?.title
-                const price  = priceDisplay(item)
+                const cat    = item.category
+                const price  = displayPrice(item)
                 const slug   = item.slug?.current || item.slug
-                const waText = encodeURIComponent(`Hi, I'd like to enquire about: ${title}`)
 
                 return (
                   <motion.article
@@ -493,12 +472,9 @@ export default function HomeClient({
                       {cat && <p className="product-card-cat">{cat}</p>}
                       <p className="product-card-title">{title}</p>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.6rem' }}>
-                        {price
-                          ? <p className="product-card-price">{price}</p>
-                          : <p className="product-card-price" style={{ color: 'var(--umber)' }}>Price on enquiry</p>
-                        }
+                        <p className="product-card-price">{price}</p>
                         <a
-                          href={`https://wa.me/237682710405?text=${waText}`}
+                          href={waLink(site.whatsappNumber, `Hi, I'd like to enquire about: ${title}`)}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{
@@ -611,7 +587,7 @@ export default function HomeClient({
                 START YOUR ORDER
               </Link>
               <a
-                href={`https://wa.me/237682710405?text=${encodeURIComponent('Hi! I am interested in a bespoke piece from Moirai.')}`}
+                href={waLink(site.whatsappNumber, 'Hi! I am interested in a bespoke piece from Moirai.')}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ fontFamily: 'var(--font-body)', fontSize: '9.5px', fontWeight: 500, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(251,249,245,0.55)', display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(251,249,245,0.2)', paddingBottom: '1px', transition: 'color 0.2s' }}
@@ -788,7 +764,7 @@ export default function HomeClient({
               START YOUR JOURNEY
             </Link>
             <a
-              href={`https://wa.me/${waNumber}?text=${waMsg}`}
+              href={waLink(site.whatsappNumber, site.defaultMessage)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost"

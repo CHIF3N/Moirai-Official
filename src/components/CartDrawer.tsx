@@ -4,14 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { urlFor } from '@/sanity/lib/image'
-import { useCurrency } from './Providers'
+import { useCurrency, useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
+import { formatXAF, hasFixedPrice, PRICE_ON_REQUEST, type PriceType } from '@/lib/price'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 export interface CartItem {
   id: string
   name: string
-  price: number
+  price: number | null
+  priceType?: PriceType
   image?: string | null
   slug?: string
   qty: number
@@ -29,7 +32,9 @@ interface CartContextType {
   updateQty: (id: string, qty: number) => void
   clearCart: () => void
   totalItems: number
+  // Sum of fixed-price items only, in XAF
   totalPrice: number
+  hasPriceOnRequest: boolean
 }
 
 // ── Context ───────────────────────────────────────────────────────────────────
@@ -90,10 +95,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = () => setItems([])
 
   const totalItems = items.reduce((s, i) => s + i.qty, 0)
-  const totalPrice = items.reduce((s, i) => s + i.price * i.qty, 0)
+  const totalPrice = items.reduce((s, i) => s + (hasFixedPrice(i) ? i.price * i.qty : 0), 0)
+  const hasPriceOnRequest = items.some(i => !hasFixedPrice(i))
 
   return (
-    <CartContext.Provider value={{ items, isOpen, openCart, closeCart, toggleCart, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ items, isOpen, openCart, closeCart, toggleCart, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice, hasPriceOnRequest }}>
       {children}
       <CartDrawer />
     </CartContext.Provider>
@@ -133,16 +139,20 @@ const BagLargeIcon = () => (
 // ── Drawer ────────────────────────────────────────────────────────────────────
 
 function CartDrawer() {
-  const { items, isOpen, closeCart, removeItem, updateQty, clearCart, totalItems, totalPrice } = useCart()
-  const { formatPrice } = useCurrency()
+  const { items, isOpen, closeCart, removeItem, updateQty, clearCart, totalItems, totalPrice, hasPriceOnRequest } = useCart()
+  const { formatPrice, displayPrice, currency } = useCurrency()
+  const site = useSiteConfig()
 
-  const WA = '237682710405'
+  // The order message always quotes XAF, the authoritative price
   const buildWhatsAppMessage = () => {
     if (items.length === 0) return ''
-    const lines = items.map(i => `• ${i.name} × ${i.qty} — ${formatPrice(i.price * i.qty)}`)
-    return `Hi! I'd like to order the following from Moirai:\n\n${lines.join('\n')}\n\nTotal: ${formatPrice(totalPrice)}`
+    const lines = items.map(i => `• ${i.name} × ${i.qty} — ${hasFixedPrice(i) ? formatXAF(i.price * i.qty) : PRICE_ON_REQUEST}`)
+    const total = hasPriceOnRequest
+      ? `Total for priced items: ${formatXAF(totalPrice)} (items priced on request to be quoted)`
+      : `Total: ${formatXAF(totalPrice)}`
+    return `Hi! I'd like to order the following from Moirai:\n\n${lines.join('\n')}\n\n${total}`
   }
-  const waUrl = `https://wa.me/${WA}?text=${encodeURIComponent(buildWhatsAppMessage())}`
+  const waUrl = waLink(site.whatsappNumber, buildWhatsAppMessage())
 
   return (
     <AnimatePresence>
@@ -398,7 +408,7 @@ function CartDrawer() {
                             {item.name}
                           </Link>
                           <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--umber)', fontWeight: 500 }}>
-                            {formatPrice(item.price)}
+                            {displayPrice(item)}
                           </p>
                         </div>
 
@@ -431,7 +441,7 @@ function CartDrawer() {
                           {/* Subtotal + remove */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--obsidian)', fontWeight: 600 }}>
-                              {formatPrice(item.price * item.qty)}
+                              {hasFixedPrice(item) ? formatPrice(item.price * item.qty) : ''}
                             </span>
                             <button
                               onClick={() => removeItem(item.id)}
@@ -470,6 +480,13 @@ function CartDrawer() {
                     {formatPrice(totalPrice)}
                   </p>
                 </div>
+
+                {(hasPriceOnRequest || currency === 'USD') && (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--umber)', marginBottom: '0.75rem', lineHeight: 1.6 }}>
+                    {hasPriceOnRequest && 'Items priced on request are not included and will be quoted by the atelier. '}
+                    {currency === 'USD' && 'USD amounts are approximate; your order is confirmed in FCFA.'}
+                  </p>
+                )}
 
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'var(--umber)', marginBottom: '1.25rem', lineHeight: 1.6 }}>
                   All orders are confirmed and finalized via WhatsApp consultation with our atelier.

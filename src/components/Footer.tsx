@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { useCurrency } from './Providers'
+import { useCurrency, useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 interface FooterProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -10,9 +11,9 @@ interface FooterProps {
 }
 
 export default function Footer({ settings }: FooterProps) {
-  const waNumber = (settings?.whatsappNumber || '237682710405').replace(/\D/g, '')
-  const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent("Hi, I'd like to inquire about Moirai")}`
-  const { currency, setCurrency } = useCurrency()
+  const site = useSiteConfig()
+  const waUrl = waLink(site.whatsappNumber, site.defaultMessage)
+  const { currency, setCurrency, usdAvailable, usdRateUpdatedAt } = useCurrency()
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
 
@@ -112,9 +113,9 @@ export default function Footer({ settings }: FooterProps) {
           <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
             {[
               { href: waUrl, label: 'WhatsApp' },
-              { href: 'https://instagram.com/Moirai.th', label: 'Instagram' },
-              { href: 'https://tiktok.com/@MOIRAI', label: 'TikTok' },
-              { href: `mailto:${settings?.email || 'hello@moiraihouse.com'}`, label: 'Email' },
+              { href: site.instagramUrl, label: 'Instagram' },
+              { href: site.tiktokUrl, label: 'TikTok' },
+              ...(site.email ? [{ href: `mailto:${site.email}`, label: 'Email' }] : []),
             ].map(({ href, label }) => (
               <a
                 key={label}
@@ -254,8 +255,9 @@ export default function Footer({ settings }: FooterProps) {
             {/* Preferences */}
             <motion.div variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
               <p className="section-label" style={{ marginBottom: '1.5rem' }}>PREFERENCES</p>
+              {usdAvailable && (<>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--umber)', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>Currency Display</p>
-              <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', gap: '0.4rem', marginBottom: currency === 'USD' ? '0.6rem' : '2rem' }}>
                 {(['XAF', 'USD'] as const).map(c => (
                   <button
                     key={c}
@@ -277,6 +279,12 @@ export default function Footer({ settings }: FooterProps) {
                   </button>
                 ))}
               </div>
+              {currency === 'USD' && (
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'var(--umber)', marginBottom: '2rem', lineHeight: 1.6 }}>
+                  USD prices are approximate{usdRateUpdatedAt ? ` (rate updated ${usdRateUpdatedAt})` : ''}. Orders are confirmed in FCFA.
+                </p>
+              )}
+              </>)}
               <p className="section-label" style={{ marginBottom: '0.75rem' }}>POLICY</p>
               {[
                 ['/privacy-policy', 'Privacy Policy'],
@@ -299,13 +307,10 @@ export default function Footer({ settings }: FooterProps) {
             <motion.div variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
               <p className="section-label" style={{ marginBottom: '1.5rem' }}>CONNECT</p>
               {[
-                { href: waUrl, label: 'WhatsApp: +237 682 710 405' },
-                ...(settings?.email
-                  ? [{ href: `mailto:${settings.email}`, label: settings.email }]
-                  : [{ href: 'mailto:hello@moiraihouse.com', label: 'hello@moiraihouse.com' }]
-                ),
-                { href: 'https://instagram.com/Moirai.th', label: 'Instagram: @Moirai.th' },
-                { href: 'https://tiktok.com/@MOIRAI', label: 'TikTok: @MOIRAI' },
+                { href: waUrl, label: `WhatsApp: ${site.whatsappDisplay}` },
+                ...(site.email ? [{ href: `mailto:${site.email}`, label: site.email }] : []),
+                { href: site.instagramUrl, label: `Instagram: ${site.instagramHandle}` },
+                { href: site.tiktokUrl, label: `TikTok: ${site.tiktokHandle}` },
               ].map(item => (
                 <a
                   key={item.href}

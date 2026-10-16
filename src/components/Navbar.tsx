@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTheme } from './Providers'
+import { useTheme, useSiteConfig } from './Providers'
 import { useCart } from './CartDrawer'
 
 // ── Icons ──
@@ -58,6 +58,7 @@ export default function Navbar() {
   const [open, setOpen]           = useState(false)
   const { theme, setTheme }       = useTheme()
   const { toggleCart, totalItems } = useCart()
+  const site = useSiteConfig()
   const [mounted, setMounted]     = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
@@ -153,7 +154,7 @@ export default function Navbar() {
             transition={{ duration: 0.45, delay: 0.4 }}
           >
             <a
-              href="https://wa.me/237682710405"
+              href={`https://wa.me/${site.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-enquire"
@@ -314,7 +315,7 @@ export default function Navbar() {
 
             {/* Mobile WhatsApp */}
             <a
-              href="https://wa.me/237682710405"
+              href={`https://wa.me/${site.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-enquire"

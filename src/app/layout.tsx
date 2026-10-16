@@ -8,18 +8,19 @@ import PageTransition from '@/components/PageTransition'
 import { Providers } from '@/components/Providers'
 import { CartProvider } from '@/components/CartDrawer'
 import SilkLoader from '@/components/SilkLoader'
-import { client, siteSettingsQuery } from '@/lib/sanity'
+import { fetchOr, siteSettingsQuery } from '@/lib/sanity'
+import { getSiteConfig } from '@/lib/site'
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://moirai-official-xi.vercel.app"),
+  metadataBase: new URL('https://moiraihouse.com'),
   title: 'Moirai. — Destiny, Tailored',
   description: 'Not a Trend. IDENTITY. Luxury bespoke fashion, corsets, cocktail dresses and Cameroonian traditional wear. The House of Moirai.',
   keywords: 'bespoke fashion, Cameroon, couture, corsets, cocktail dresses, fashion school, Moirai, luxury wear, custom dresses',
   openGraph: {
     title: 'Moirai. — Destiny, Tailored',
     description: 'Not a Trend. IDENTITY. Luxury bespoke fashion crafted for who you are becoming.',
-    url: 'https://moirai.com',
-    siteName: 'Moirai.th',
+    url: 'https://moiraihouse.com',
+    siteName: 'Moirai — The House of Moirai',
     images: [
       {
         url: '/og-image.jpg',
@@ -54,21 +55,14 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let settings: any = null
-  try {
-    settings = await client.fetch(siteSettingsQuery)
-  } catch {
-    // Sanity not yet configured — use defaults
-  }
-
-  const waNumber = settings?.whatsappNumber || '237682710405'
-  const waMessage = settings?.whatsappDefaultMessage || "Hi, I'd like to inquire about Moirai"
+  const settings = await fetchOr<any>('siteSettings', siteSettingsQuery, null)
+  const site = getSiteConfig(settings)
 
   return (
     <html lang="en">
       {/* paddingTop accounts for fixed ticker (29px) + editorial navbar (~80px) */}
       <body style={{ paddingTop: '109px' }}>
-        <Providers>
+        <Providers site={site}>
           <CartProvider>
             <SilkLoader />
             <Navbar />
@@ -76,7 +70,7 @@ export default async function RootLayout({
               <PageTransition>{children}</PageTransition>
             </main>
             <Footer settings={settings} />
-            <WhatsAppButton number={waNumber} message={waMessage} />
+            <WhatsAppButton number={site.whatsappNumber} message={site.defaultMessage} />
             <AIChatWidget />
           </CartProvider>
         </Providers>

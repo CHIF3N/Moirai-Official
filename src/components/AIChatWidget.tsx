@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-
-const WA_NUMBER = '237682710405'
+import { useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 const REPLIES: [RegExp, string][] = [
   [/bespoke|custom|couture|tailored/i, 'Our bespoke service is fully custom — we take your measurements, discuss your vision, and craft a one-of-a-kind piece. The process: Consultation → Design → Fitting → Delivery (2–4 weeks). Want to start?'],
@@ -14,7 +14,7 @@ const REPLIES: [RegExp, string][] = [
   [/size|measur|fit|fitting/i, 'All our pieces are made to your exact measurements. No standard sizing — you are the standard.'],
   [/corset/i, 'Our corsets are structured, figure-defining pieces designed for bold silhouettes. Available as standalone or as part of a full bespoke look.'],
   [/cocktail|dress|gown/i, 'Our cocktail dresses range from dramatic mermaid gowns to elegant mini dresses. All can be made bespoke or chosen from existing designs.'],
-  [/contact|reach|phone|whatsapp|instagram|tiktok/i, 'Reach us on WhatsApp: +237 682 710 405 | Instagram: @Moirai.th | TikTok: @MOIRAI. We\'re very responsive on WhatsApp!'],
+  [/contact|reach|phone|whatsapp|instagram|tiktok/i, 'Reach us on WhatsApp: {whatsapp} | Instagram: {instagram} | TikTok: {tiktok}. We\'re very responsive on WhatsApp!'],
   [/hello|hi|hey|good morning|good afternoon/i, 'Hello! Welcome to The House of Moirai ✦ I\'m here to help you explore our collections, bespoke service, or fashion school. What can I help you with?'],
   [/thank|thanks|appreciate/i, 'You\'re so welcome! 💜 Is there anything else I can help you with? Our team is always ready on WhatsApp if you need more.'],
 ]
@@ -52,7 +52,8 @@ export default function AIChatWidget() {
   const [greeted, setGreeted] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi! I was chatting with the Moirai assistant and would love to speak with someone directly.")}`
+  const site = useSiteConfig()
+  const waUrl = waLink(site.whatsappNumber, 'Hi! I was chatting with the Moirai assistant and would love to speak with someone directly.')
 
   useEffect(() => {
     if (open && !greeted) {
@@ -88,6 +89,9 @@ export default function AIChatWidget() {
     setTyping(true)
     setTimeout(() => {
       const reply = getReply(trimmed)
+        .replace('{whatsapp}', site.whatsappDisplay)
+        .replace('{instagram}', site.instagramHandle)
+        .replace('{tiktok}', site.tiktokHandle)
       setMessages(prev => [...prev, { role: 'ai', text: reply }])
       setTyping(false)
       setReplyCount(c => c + 1)

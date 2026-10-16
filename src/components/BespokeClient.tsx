@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
 import { urlFor } from '@/sanity/lib/image'
+import { useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 const PROCESS = [
   { num: 'I', title: 'Consultation & Discourse', desc: 'We start with a conversation. Your vision, your measurements, your heritage. Every seam matters. Conducted via private WhatsApp salon or in-person.' },
@@ -24,14 +26,13 @@ const BESPOKE_FALLBACK_IMAGES = [
 
 const FAQS = [
   { q: 'How long does a bespoke piece take to craft?', a: 'Typically 2–4 weeks depending on silhouette complexity and hand-embroidery. Expedited couture timelines can be accommodated upon request.' },
-  { q: 'How do I initiate a bespoke order?', a: "Simply reach out via WhatsApp at +237 682 710 405 or submit the atelier form below. Our creative director will initiate your consultation." },
+  { q: 'How do I initiate a bespoke order?', a: "Simply reach out via WhatsApp at {whatsapp} or submit the atelier form below. Our creative director will initiate your consultation." },
   { q: 'Do you offer entirely custom sizing?', a: 'Every bespoke creation is drafted from your exact anatomical measurements. Zero standard sizing. Your body is the sole blueprint.' },
   { q: 'What is the investment range?', a: 'Commissions vary based on structural complexity, textile rarity, and hand-embellishment hours. We tailor proposals respectfully to your vision.' },
   { q: 'Can I view previous bespoke archival creations?', a: 'Explore our editorial lookbook below or follow @Moirai.th on Instagram to review private client commissions and couture reveals.' },
   { q: "What if I don't have a fully realized concept?", a: 'That is the beauty of haute couture. Our consultation is an exploratory dialogue — bring a feeling, a sketch, or let us originate the silhouette together.' },
 ]
 
-const WA = '237682710405'
 
 interface BespokeClientProps {
   heroImage?: string
@@ -40,15 +41,16 @@ interface BespokeClientProps {
 
 export default function BespokeClient({ heroImage, gallery }: BespokeClientProps) {
   const [formData, setFormData] = useState({ name: '', phone: '', desc: '' })
+  const site = useSiteConfig()
   
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const text = `Hi, I am ${formData.name}.\n\nI want a custom design: ${formData.desc}\n\nMy number is: ${formData.phone}`
-    const finalUrl = `https://wa.me/${WA}?text=${encodeURIComponent(text)}`
+    const finalUrl = waLink(site.whatsappNumber, text)
     window.open(finalUrl, '_blank')
   }
 
-  const baseWaUrl = `https://wa.me/${WA}?text=${encodeURIComponent('Hi! I am interested in a bespoke piece from Moirai.')}`
+  const baseWaUrl = waLink(site.whatsappNumber, 'Hi! I am interested in a bespoke piece from Moirai.')
   const activeGallery = gallery && gallery.length > 0 ? gallery : BESPOKE_FALLBACK_IMAGES
 
   return (
@@ -195,7 +197,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
             ))}
           </motion.div>
           <p style={{ textAlign: 'center', marginTop: '3rem', fontSize: '13px', color: '#1E1C1A' }}>
-            Follow <a href="https://instagram.com/Moirai.th" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', fontWeight: 600, textDecoration: 'underline' }}>@Moirai.th</a> on Instagram to view recent private client commissions.
+            Follow <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', fontWeight: 600, textDecoration: 'underline' }}>{site.instagramHandle}</a> on Instagram to view recent private client commissions.
           </p>
         </div>
       </section>
@@ -245,7 +247,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
                 value={formData.phone}
                 onChange={e => setFormData({...formData, phone: e.target.value})}
                 style={{ width: '100%', padding: '1rem', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: '#1E1C1A', outline: 'none', fontFamily: 'inherit', fontSize: '14px' }}
-                placeholder="+237 600 000 000"
+                placeholder="e.g. +237 6XX XXX XXX"
               />
             </div>
 
@@ -289,7 +291,7 @@ export default function BespokeClient({ heroImage, gallery }: BespokeClientProps
               style={{ borderBottom: '1px solid var(--hairline)', padding: '2rem 0' }}
             >
               <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 600, color: 'var(--obsidian)', marginBottom: '0.65rem', letterSpacing: '0.01em' }}>{faq.q}</p>
-              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.65 }}>{faq.a}</p>
+              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.65 }}>{faq.a.replace('{whatsapp}', site.whatsappDisplay)}</p>
             </motion.div>
           ))}
         </div>

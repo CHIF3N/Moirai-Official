@@ -2,20 +2,22 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
+import { useSiteConfig } from '@/components/Providers'
+import { waLink } from '@/lib/site'
 
-const WA = '237682710405'
 const SUBJECTS = ['General Enquiry', 'Bespoke Order', 'Fashion School', 'Collaboration', 'Press', 'Other']
 
 export default function ContactPage() {
   const [subject, setSubject] = useState('General Enquiry')
+  const site = useSiteConfig()
 
-  const waDefault = `https://wa.me/${WA}?text=${encodeURIComponent("Hi, I'd like to inquire about Moirai")}`
+  const waDefault = waLink(site.whatsappNumber, site.defaultMessage)
 
   const handleSubmit = () => {
     const name = (document.getElementById('cname') as HTMLInputElement)?.value || ''
     const msg = (document.getElementById('cmsg') as HTMLTextAreaElement)?.value || ''
     const text = `Hi Moirai! I'm ${name}.\n\nSubject: ${subject}\n\n${msg}`
-    window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, '_blank')
+    window.open(waLink(site.whatsappNumber, text), '_blank')
   }
 
   return (
@@ -69,7 +71,7 @@ export default function ContactPage() {
                   style={{ fontSize: '14px', color: '#F0EBF8' }}
                   whileHover={{ color: '#C77DFF' }}
                   transition={{ duration: 0.2 }}
-                >+237 682 710 405</motion.a>
+                >{site.whatsappDisplay}</motion.a>
               </motion.div>
 
               <motion.div
@@ -80,8 +82,8 @@ export default function ContactPage() {
                 viewport={{ once: true }}
               >
                 <p style={{ fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.6rem' }}>Social Media</p>
-                <motion.a href="https://instagram.com/Moirai.th" target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '13px', color: '#B8A9C9', marginBottom: '0.5rem' }} whileHover={{ color: '#C77DFF', x: 4 }} transition={{ duration: 0.2 }}>Instagram: @Moirai.th</motion.a>
-                <motion.a href="https://tiktok.com/@MOIRAI" target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '13px', color: '#B8A9C9' }} whileHover={{ color: '#C77DFF', x: 4 }} transition={{ duration: 0.2 }}>TikTok: @MOIRAI</motion.a>
+                <motion.a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '13px', color: '#B8A9C9', marginBottom: '0.5rem' }} whileHover={{ color: '#C77DFF', x: 4 }} transition={{ duration: 0.2 }}>Instagram: {site.instagramHandle}</motion.a>
+                <motion.a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '13px', color: '#B8A9C9' }} whileHover={{ color: '#C77DFF', x: 4 }} transition={{ duration: 0.2 }}>TikTok: {site.tiktokHandle}</motion.a>
               </motion.div>
 
               <motion.div

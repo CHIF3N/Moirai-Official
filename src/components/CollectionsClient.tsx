@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerFadeUp } from '@/lib/animations'
+import { useCurrency, useSiteConfig } from './Providers'
+import { waLink } from '@/lib/site'
 
 // Curated luxury fashion editorial fallbacks — ensures no empty wireframe boxes
 const FALLBACK_IMAGES = [
@@ -17,12 +19,13 @@ const FALLBACK_IMAGES = [
 
 interface CollectionsClientProps {
   grouped: Record<string, any[]>
-  waNumber: string
   collections: any[]
   heroImage: string | null
 }
 
-export default function CollectionsClient({ grouped, waNumber, collections, heroImage }: CollectionsClientProps) {
+export default function CollectionsClient({ grouped, collections, heroImage }: CollectionsClientProps) {
+  const { displayPrice } = useCurrency()
+  const site = useSiteConfig()
   return (
     <div style={{ paddingTop: '5rem' }}>
       {/* Header */}
@@ -134,7 +137,7 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
                     </motion.div>
                   ))
                   : catProducts.map((p: any) => {
-                    const msg = encodeURIComponent(`Hi I want to order ${p.name || 'this item'}`)
+                    const name = p.title || p.name || 'this item'
                     const fallbackIdx = catProducts.indexOf(p) % FALLBACK_IMAGES.length
                     const displayImage = p.imageUrl || FALLBACK_IMAGES[fallbackIdx]
                     return (
@@ -159,12 +162,12 @@ export default function CollectionsClient({ grouped, waNumber, collections, hero
                             transition={{ duration: 0.2 }}
                             style={{ background: 'var(--card-bg)', padding: '1.25rem', border: '1px solid var(--gold)', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
                           >
-                            <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--card-title)' }}>{p.name}</p>
-                            {p.category?.title && <p style={{ fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.35rem' }}>{p.category.title}</p>}
-                            {p.price && <p style={{ fontSize: '12px', fontWeight: 600, color: '#1E1C1A', marginBottom: '0.75rem' }}>{p.price}</p>}
+                            <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--card-title)' }}>{name}</p>
+                            {p.category && <p style={{ fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.35rem' }}>{p.category}</p>}
+                            <p style={{ fontSize: '12px', fontWeight: 600, color: '#1E1C1A', marginBottom: '0.75rem' }}>{displayPrice(p)}</p>
                             {p.available !== false && (
                               <motion.a
-                                href={`https://wa.me/237682710405?text=${msg}`}
+                                href={waLink(site.whatsappNumber, `Hi I want to order ${name}`)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ display: 'inline-block', padding: '0.5rem 1rem', border: '1px solid var(--gold)', background: 'var(--gold)', color: '#161412', fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', width: 'fit-content' }}
