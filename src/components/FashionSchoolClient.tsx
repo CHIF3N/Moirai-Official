@@ -36,7 +36,7 @@ export default function FashionSchoolClient({ heroImage }: FashionSchoolClientPr
     <div style={{ paddingTop: '5rem' }}>
       {/* Hero */}
       <section style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6rem 2rem', background: 'linear-gradient(170deg, var(--bg), var(--bg))', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(142, 31, 44, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <motion.div
           style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}
           variants={staggerContainer}

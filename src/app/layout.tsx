@@ -1,15 +1,34 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import WhatsAppButton from '@/components/WhatsAppButton'
-import AIChatWidget from '@/components/AIChatWidget'
+import Concierge from '@/components/Concierge'
 import PageTransition from '@/components/PageTransition'
 import { Providers } from '@/components/Providers'
 import { CartProvider } from '@/components/CartDrawer'
 import SilkLoader from '@/components/SilkLoader'
 import { fetchOr, siteSettingsQuery } from '@/lib/sanity'
 import { getSiteConfig } from '@/lib/site'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
+})
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-jakarta',
+  display: 'swap',
+})
+
+export const viewport: Viewport = {
+  themeColor: '#0A0908',
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://moiraihouse.com'),
@@ -59,19 +78,17 @@ export default async function RootLayout({
   const site = getSiteConfig(settings)
 
   return (
-    <html lang="en">
-      {/* paddingTop accounts for fixed ticker (29px) + editorial navbar (~80px) */}
-      <body style={{ paddingTop: '109px' }}>
+    <html lang="en" className={`dark ${cormorant.variable} ${jakarta.variable}`} data-theme="dark">
+      <body>
         <Providers site={site}>
           <CartProvider>
             <SilkLoader />
             <Navbar />
-            <main style={{ position: 'relative', zIndex: 1 }}>
+            <main id="main" style={{ position: 'relative', zIndex: 1 }}>
               <PageTransition>{children}</PageTransition>
             </main>
             <Footer settings={settings} />
-            <WhatsAppButton number={site.whatsappNumber} message={site.defaultMessage} />
-            <AIChatWidget />
+            <Concierge />
           </CartProvider>
         </Providers>
       </body>

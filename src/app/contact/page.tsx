@@ -1,187 +1,126 @@
 'use client'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { staggerContainer, staggerFadeUp } from '@/lib/animations'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useSiteConfig } from '@/components/Providers'
 import { waLink } from '@/lib/site'
+import styles from './contact.module.css'
 
-const SUBJECTS = ['General Enquiry', 'Bespoke Order', 'Fashion School', 'Collaboration', 'Press', 'Other']
+const SUBJECTS = ['General enquiry', 'Bespoke order', 'Fashion School', 'Collaboration', 'Press', 'Other']
 
 export default function ContactPage() {
-  const [subject, setSubject] = useState('General Enquiry')
   const site = useSiteConfig()
+  const reduce = useReducedMotion()
+  const [name, setName] = useState('')
+  const [subject, setSubject] = useState(SUBJECTS[0])
+  const [message, setMessage] = useState('')
+  const [errors, setErrors] = useState<{ name?: string; message?: string }>({})
+  const [opened, setOpened] = useState(false)
 
-  const waDefault = waLink(site.whatsappNumber, site.defaultMessage)
-
-  const handleSubmit = () => {
-    const name = (document.getElementById('cname') as HTMLInputElement)?.value || ''
-    const msg = (document.getElementById('cmsg') as HTMLTextAreaElement)?.value || ''
-    const text = `Hi Moirai! I'm ${name}.\n\nSubject: ${subject}\n\n${msg}`
-    window.open(waLink(site.whatsappNumber, text), '_blank')
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const next: typeof errors = {}
+    if (!name.trim()) next.name = 'Please tell us your name.'
+    if (message.trim().length < 5) next.message = 'Please write a short message so we know how to help.'
+    setErrors(next)
+    if (Object.keys(next).length > 0) {
+      document.getElementById(next.name ? 'contact-name' : 'contact-message')?.focus()
+      return
+    }
+    const text = `Hi Moirai! I'm ${name.trim()}.\n\nSubject: ${subject}\n\n${message.trim()}`
+    window.open(waLink(site.whatsappNumber, text), '_blank', 'noopener,noreferrer')
+    setOpened(true)
   }
 
+  const fade = (delay: number) => reduce ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }
+
   return (
-    <div style={{ paddingTop: '5rem' }}>
-      {/* Header */}
-      <section style={{ padding: '5rem 2rem 4rem', textAlign: 'center', background: 'linear-gradient(170deg, #0d0b10, #1e1826)', borderBottom: '1px solid #2a2133', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(107,63,160,0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <motion.div
-          style={{ position: 'relative', zIndex: 1 }}
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.p className="section-label" variants={staggerFadeUp}>Get In Touch</motion.p>
-          <motion.h1
-            variants={staggerFadeUp}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem,7vw,5rem)', fontWeight: 700, marginBottom: '1rem', background: 'linear-gradient(135deg, #FAFAFA 0%, #E0AAFF 50%, #9B5DE5 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-          >Contact</motion.h1>
-          <motion.div className="divider" variants={staggerFadeUp} />
-        </motion.div>
-      </section>
+    <div className={styles.page}>
+      <header className={styles.head}>
+        <motion.p className="section-label" {...fade(0)}>Get in touch</motion.p>
+        <motion.h1 className={styles.title} {...fade(0.1)}>Let&apos;s create <em>something together.</em></motion.h1>
+      </header>
 
-      <section className="section">
-        <div className="container" style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem' }}>
-
-            {/* Info side */}
-            <motion.div
-              initial={{ opacity: 0, x: -48 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-              viewport={{ once: true, margin: '-60px' }}
-            >
-              <p className="section-label">Reach Out</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem,3vw,2.5rem)', marginBottom: '3rem', lineHeight: 1.2 }}>
-                Let&apos;s create<br />something together.
-              </h2>
-
-              <motion.div
-                style={{ marginBottom: '2rem' }}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                viewport={{ once: true }}
-              >
-                <p style={{ fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.6rem' }}>WhatsApp (Fastest)</p>
-                <motion.a
-                  href={waDefault}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ fontSize: '14px', color: '#F0EBF8' }}
-                  whileHover={{ color: '#C77DFF' }}
-                  transition={{ duration: 0.2 }}
-                >{site.whatsappDisplay}</motion.a>
-              </motion.div>
-
-              <motion.div
-                style={{ marginBottom: '2rem' }}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.18 }}
-                viewport={{ once: true }}
-              >
-                <p style={{ fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.6rem' }}>Social Media</p>
-                <motion.a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '13px', color: '#B8A9C9', marginBottom: '0.5rem' }} whileHover={{ color: '#C77DFF', x: 4 }} transition={{ duration: 0.2 }}>Instagram: {site.instagramHandle}</motion.a>
-                <motion.a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '13px', color: '#B8A9C9' }} whileHover={{ color: '#C77DFF', x: 4 }} transition={{ duration: 0.2 }}>TikTok: {site.tiktokHandle}</motion.a>
-              </motion.div>
-
-              <motion.div
-                style={{ marginBottom: '3rem' }}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.26 }}
-                viewport={{ once: true }}
-              >
-                <p style={{ fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.6rem' }}>Payment</p>
-                <p style={{ fontSize: '13px', color: '#B8A9C9', lineHeight: 1.8 }}>
-                  We accept Mobile Money (MoMo).<br />
-                  Payment details provided upon order confirmation.
-                </p>
-              </motion.div>
-
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} style={{ display: 'inline-block' }}>
-                <a href={waDefault} target="_blank" rel="noopener noreferrer" className="btn-primary">Chat on WhatsApp Now</a>
-              </motion.div>
-            </motion.div>
-
-            {/* Form side */}
-            <motion.div
-              initial={{ opacity: 0, x: 48 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-              viewport={{ once: true, margin: '-60px' }}
-            >
-              <p className="section-label">Send a Message</p>
-              <p style={{ color: '#7A6B8A', fontSize: '12px', marginBottom: '2rem', lineHeight: 1.8 }}>
-                Fill in the form and we&apos;ll open a WhatsApp conversation with your message pre-filled — so our team can respond immediately.
-              </p>
-
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.5rem' }}>Your Name</label>
-                <motion.input
-                  id="cname"
-                  type="text"
-                  placeholder="e.g. Amara"
-                  style={{ width: '100%', padding: '0.9rem 1rem', background: '#130f18', border: '1px solid #2a2133', color: '#F0EBF8', fontSize: '13px', outline: 'none', fontFamily: 'inherit' }}
-                  whileFocus={{ borderColor: '#6B3FA0' }}
-                  onFocus={e => (e.currentTarget.style.borderColor = '#6B3FA0')}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#2a2133')}
-                />
-              </div>
-
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.75rem' }}>Subject</label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  {SUBJECTS.map(s => (
-                    <motion.button
-                      key={s}
-                      onClick={() => setSubject(s)}
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.96 }}
-                      style={{
-                        padding: '0.4rem 0.9rem',
-                        fontSize: '10px',
-                        letterSpacing: '0.1em',
-                        border: '1px solid',
-                        cursor: 'pointer',
-                        fontFamily: 'inherit',
-                        transition: 'all 0.2s',
-                        borderColor: subject === s ? '#9B5DE5' : '#2a2133',
-                        color: subject === s ? '#C77DFF' : '#7A6B8A',
-                        background: subject === s ? 'rgba(155,93,229,0.1)' : 'transparent',
-                      }}
-                    >{s}</motion.button>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '2rem' }}>
-                <label style={{ display: 'block', fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#9B5DE5', marginBottom: '0.5rem' }}>Message</label>
-                <motion.textarea
-                  id="cmsg"
-                  rows={5}
-                  placeholder="Tell us what you're looking for..."
-                  style={{ width: '100%', padding: '0.9rem 1rem', background: '#130f18', border: '1px solid #2a2133', color: '#F0EBF8', fontSize: '13px', outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8 }}
-                  onFocus={e => (e.currentTarget.style.borderColor = '#6B3FA0')}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#2a2133')}
-                />
-              </div>
-
-              <motion.button
-                onClick={handleSubmit}
-                className="btn-primary"
-                style={{ width: '100%', cursor: 'pointer' }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Send via WhatsApp
-              </motion.button>
-            </motion.div>
+      <div className={styles.grid}>
+        <motion.aside className={styles.info} {...fade(0.2)} aria-label="Contact details">
+          <div className={styles.block}>
+            <h2 className={styles.label}>WhatsApp — fastest</h2>
+            <a href={waLink(site.whatsappNumber, site.defaultMessage)} target="_blank" rel="noopener noreferrer" className={styles.big}>{site.whatsappDisplay}</a>
           </div>
-        </div>
-        <style>{`@media(max-width:768px){section>div>div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}}`}</style>
-      </section>
+          {site.email && (
+            <div className={styles.block}>
+              <h2 className={styles.label}>Email</h2>
+              <a href={`mailto:${site.email}`} className={styles.big}>{site.email}</a>
+            </div>
+          )}
+          <div className={styles.block}>
+            <h2 className={styles.label}>Social</h2>
+            <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>Instagram {site.instagramHandle}</a>
+            <a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>TikTok {site.tiktokHandle}</a>
+          </div>
+          {site.location && (
+            <div className={styles.block}>
+              <h2 className={styles.label}>Atelier</h2>
+              <p className={styles.text}>{site.location}</p>
+            </div>
+          )}
+          <div className={styles.block}>
+            <h2 className={styles.label}>Payment</h2>
+            <p className={styles.text}>We accept Mobile Money (MoMo). Payment details are shared once your order is confirmed.</p>
+          </div>
+        </motion.aside>
+
+        <motion.form className={styles.form} onSubmit={handleSubmit} noValidate {...fade(0.3)} aria-labelledby="contact-form-title">
+          <h2 id="contact-form-title" className={styles.formTitle}>Send a message</h2>
+          <p className={styles.text}>Fill this in and WhatsApp will open with your message ready — tap send to reach the atelier.</p>
+
+          <div className={styles.field}>
+            <label htmlFor="contact-name" className={styles.fieldLabel}>Your name</label>
+            <input
+              id="contact-name"
+              type="text"
+              autoComplete="name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? 'contact-name-error' : undefined}
+              className={styles.input}
+            />
+            {errors.name && <p id="contact-name-error" className={styles.error}>{errors.name}</p>}
+          </div>
+
+          <fieldset className={styles.field}>
+            <legend className={styles.fieldLabel}>Subject</legend>
+            <div className={styles.chips}>
+              {SUBJECTS.map(s => (
+                <label key={s} className={styles.chip}>
+                  <input type="radio" name="subject" value={s} checked={subject === s} onChange={() => setSubject(s)} />
+                  <span>{s}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className={styles.field}>
+            <label htmlFor="contact-message" className={styles.fieldLabel}>Message</label>
+            <textarea
+              id="contact-message"
+              rows={5}
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              aria-invalid={!!errors.message}
+              aria-describedby={errors.message ? 'contact-message-error' : undefined}
+              className={styles.input}
+              placeholder="Tell us what you're looking for…"
+            />
+            {errors.message && <p id="contact-message-error" className={styles.error}>{errors.message}</p>}
+          </div>
+
+          <button type="submit" className="btn-primary" style={{ width: '100%' }}>Continue on WhatsApp</button>
+          <p className={styles.status} role="status" aria-live="polite">
+            {opened && <>WhatsApp should have opened in a new tab. If it didn&apos;t, message us at <a href={waLink(site.whatsappNumber)} target="_blank" rel="noopener noreferrer">{site.whatsappDisplay}</a>.</>}
+          </p>
+        </motion.form>
+      </div>
     </div>
   )
 }

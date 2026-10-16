@@ -31,7 +31,7 @@ export default function BlogClient({ posts, blogHeroImage }: BlogClientProps) {
           ) : null
         })()}
         {!blogHeroImage && (
-           <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(124, 58, 237, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
+           <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(142, 31, 44, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />
         )}
         <motion.div
           style={{ position: 'relative', zIndex: 1 }}

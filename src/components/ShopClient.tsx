@@ -61,7 +61,7 @@ export default function ShopClient({ products }: { products: any[] }) {
         position: 'relative',
         overflow: 'hidden',
       }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(124, 58, 237, 0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center top, rgba(142, 31, 44, 0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <motion.div
           style={{ position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
@@ -88,11 +88,11 @@ export default function ShopClient({ products }: { products: any[] }) {
 
       {/* Sticky filter bar */}
       <div className="sticky-bar" style={{
-        background: 'rgba(var(--bg-rgb, 255, 255, 255), 0.98)',
+        background: 'rgba(10, 9, 8, 0.94)',
         borderBottom: '1px solid var(--border)',
-        padding: '1rem 2rem',
+        padding: '1rem clamp(1.25rem, 4vw, 2rem)',
         position: 'sticky',
-        top: 60,
+        top: 'var(--nav-h)',
         zIndex: 100,
         backdropFilter: 'blur(12px)',
       }}>
@@ -120,11 +120,14 @@ export default function ShopClient({ products }: { products: any[] }) {
               {(['grid', 'list'] as const).map(v => (
                 <motion.button
                   key={v}
+                  type="button"
                   onClick={() => setView(v)}
+                  aria-label={v === 'grid' ? 'Grid view' : 'List view'}
+                  aria-pressed={view === v}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   style={{
-                    width: 32, height: 32,
+                    width: 40, height: 40,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     border: '1px solid',
                     cursor: 'pointer',
@@ -241,7 +244,7 @@ export default function ShopClient({ products }: { products: any[] }) {
                     </div>
                     <div style={{ padding: '1.5rem' }}>
                       <Link href={`/product/${p.slug}`} style={{ display: 'block' }}>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 400, marginBottom: '0.5rem', color: 'var(--text)' }}>{p.name}</h3>
+                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 400, marginBottom: '0.5rem', color: 'var(--text)' }}>{p.name}</h2>
                         <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.7, marginBottom: '1.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.desc || 'Moirai exclusive piece'}</p>
                       </Link>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -346,7 +349,7 @@ export default function ShopClient({ products }: { products: any[] }) {
                     <div>
                       <Link href={`/product/${p.slug}`} style={{ display: 'block' }}>
                         {p.category && p.category !== 'Other' && <p style={{ fontSize: '10px', letterSpacing: '0.2em', color: 'var(--accent)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>{p.category}</p>}
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 400, color: 'var(--text)', marginBottom: '0.5rem' }}>{p.name}</h3>
+                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 400, color: 'var(--text)', marginBottom: '0.5rem' }}>{p.name}</h2>
                         <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.7, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.desc || 'Moirai exclusive piece'}</p>
                       </Link>
                     </div>
@@ -373,7 +376,7 @@ export default function ShopClient({ products }: { products: any[] }) {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @media (max-width: 768px) {
-           .sticky-bar { top: 60px !important; }
+           .sticky-bar { top: var(--nav-h) !important; }
         }
       `}</style>
     </div>

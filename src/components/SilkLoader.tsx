@@ -12,12 +12,14 @@ export default function SilkLoader() {
 
   useEffect(() => {
     // Only play once per tab session
-    const seen = sessionStorage.getItem('moirai_loader_shown')
-    if (!seen) {
+    let seen: string | null = '1'
+    try { seen = sessionStorage.getItem('moirai_loader_shown') } catch { /* storage unavailable: skip the intro */ }
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!seen && !reduceMotion) {
       setVisible(true)
-      sessionStorage.setItem('moirai_loader_shown', '1')
+      try { sessionStorage.setItem('moirai_loader_shown', '1') } catch { /* ignore */ }
       // Dismiss after animation completes
-      const t = setTimeout(() => setVisible(false), 2800)
+      const t = setTimeout(() => setVisible(false), 1700)
       return () => clearTimeout(t)
     }
   }, [])
@@ -32,7 +34,7 @@ export default function SilkLoader() {
             initial={{ scaleY: 1, originY: 0 }}
             animate={{ scaleY: 0, originY: 0 }}
             exit={{}}
-            transition={{ duration: 1.1, delay: 1.4, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: 0.9, delay: 0.6, ease: [0.76, 0, 0.24, 1] }}
             style={{
               position: 'fixed',
               top: 0, left: 0,
@@ -49,7 +51,7 @@ export default function SilkLoader() {
             initial={{ scaleY: 1, originY: 0 }}
             animate={{ scaleY: 0, originY: 0 }}
             exit={{}}
-            transition={{ duration: 1.1, delay: 1.6, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: 0.9, delay: 0.72, ease: [0.76, 0, 0.24, 1] }}
             style={{
               position: 'fixed',
               top: 0, right: 0,
@@ -66,7 +68,7 @@ export default function SilkLoader() {
             initial={{ scaleY: 1, opacity: 1, originY: 0 }}
             animate={{ scaleY: 0, opacity: 0, originY: 0 }}
             exit={{}}
-            transition={{ duration: 1.0, delay: 1.4, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: 0.8, delay: 0.6, ease: [0.76, 0, 0.24, 1] }}
             style={{
               position: 'fixed',
               top: 0,
@@ -86,7 +88,7 @@ export default function SilkLoader() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             style={{
               position: 'fixed',
               inset: 0,
@@ -125,7 +127,7 @@ export default function SilkLoader() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.75 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
               style={{
                 fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
                 fontSize: '8px',
@@ -142,7 +144,7 @@ export default function SilkLoader() {
             <motion.div
               initial={{ scaleX: 0, originX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 width: '80px',
                 height: '1px',
@@ -154,7 +156,7 @@ export default function SilkLoader() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0.6, 0] }}
-              transition={{ duration: 1.2, delay: 0.9, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{ duration: 1.2, delay: 0.4, repeat: Infinity, ease: 'easeInOut' }}
               style={{
                 marginTop: '1.5rem',
                 fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",

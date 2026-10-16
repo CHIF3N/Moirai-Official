@@ -21,28 +21,15 @@ const ThemeContext = createContext<ThemeContextProps>({ theme: 'light', setTheme
 
 export const useTheme = () => useContext(ThemeContext)
 
+// The site has one look (Noir Atelier), set on <html> in app/layout.tsx.
+// The context stays so existing callers keep working.
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
-  const [resolvedTheme, setResolvedTheme] = useState<'light'|'dark'>('light')
-
   useEffect(() => {
-     const stored = localStorage.getItem('theme') as Theme
-     if (stored) { setTheme(stored); setResolvedTheme(stored === 'dark' ? 'dark' : 'light'); }
+    // Clear a light-mode choice saved by the old theme toggle
+    try { localStorage.removeItem('theme') } catch { /* storage unavailable */ }
   }, [])
 
-  useEffect(() => {
-     localStorage.setItem('theme', theme)
-     const rTheme = theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme
-     setResolvedTheme(rTheme)
-     if (rTheme === 'dark') {
-       document.documentElement.classList.add('dark')
-     } else {
-       document.documentElement.classList.remove('dark')
-     }
-     document.documentElement.setAttribute('data-theme', rTheme)
-  }, [theme])
-
-  return <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>{children}</ThemeContext.Provider>
+  return <ThemeContext.Provider value={{ theme: 'dark', setTheme: () => {}, resolvedTheme: 'dark' }}>{children}</ThemeContext.Provider>
 }
 
 // Currency Context

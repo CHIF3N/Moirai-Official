@@ -25,13 +25,13 @@ export default async function HomePage() {
       : [],
   }))
 
-  const heroImageUrl = settings?.heroImage ? urlFor(settings.heroImage).url() : undefined
+  const heroImageUrl = settings?.heroImage ? urlFor(settings.heroImage).width(1600).quality(85).url() : undefined
   const heroText = settings?.heroText
 
   const collections = settings?.collections?.map((c: any) => ({
     title: c.title,
     slug: c.slug || c.title?.toLowerCase().replace(/ /g, '-'),
-    image: c.image ? urlFor(c.image).url() : undefined,
+    image: c.image ? urlFor(c.image).width(900).quality(85).url() : undefined,
   })).filter((c: any) => c.image || c.title) || []
 
   const heroSlides = settings?.heroSlides?.map((s: any) => ({
@@ -48,8 +48,19 @@ export default async function HomePage() {
   })) || []
 
   const bespokeHeroImage = settings?.bespokeHeroImage
-    ? urlFor(settings.bespokeHeroImage).width(1200).quality(90).url()
+    ? urlFor(settings.bespokeHeroImage).width(1200).quality(85).url()
     : undefined
+  const schoolImage = settings?.fashionSchoolHeroImage
+    ? urlFor(settings.fashionSchoolHeroImage).width(1200).quality(85).url()
+    : undefined
+  const closingImage = settings?.collectionsHeroImage
+    ? urlFor(settings.collectionsHeroImage).width(1600).quality(80).url()
+    : undefined
+
+  const postsWithUrls = posts.map((p: any) => ({
+    ...p,
+    imageUrl: p.mainImage ? urlFor(p.mainImage).width(800).quality(80).url() : null,
+  }))
 
   // Homepage gallery: the latest pieces in the catalogue
   const editorialItemsWithUrls = latestProducts.slice(0, 8).map((p: any) => withImageUrl(p, 800))
@@ -60,13 +71,15 @@ export default async function HomePage() {
   return (
     <HomeClient
       products={productsWithUrls}
-      posts={posts}
+      posts={postsWithUrls}
       collections={collections}
       heroImageUrl={heroImageUrl}
       heroText={heroText}
       heroSlides={heroSlides}
       lookbook={lookbook}
       bespokeHeroImage={bespokeHeroImage}
+      schoolImage={schoolImage}
+      closingImage={closingImage}
       editorialItems={editorialItemsWithUrls}
       leadHeroImageUrl={leadHeroImageUrl}
     />

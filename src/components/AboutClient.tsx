@@ -24,7 +24,7 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
     <div style={{ paddingTop: '5rem' }}>
       {/* Hero */}
       <section style={{ minHeight: '55vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6rem 2rem', background: 'linear-gradient(170deg, var(--bg), var(--bg))', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-        {!aboutImage && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />}
+        {!aboutImage && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(142, 31, 44, 0.15) 0%, transparent 60%)', pointerEvents: 'none' }} />}
         <motion.div
           style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}
           variants={staggerContainer}
@@ -57,10 +57,10 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                 Woven by the Fates.<br />Worn by You.
               </h2>
               <div className="greek-divider" style={{ margin: '1.5rem 0' }} />
-              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.75, marginBottom: '1.25rem' }}>
+              <p style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.75, marginBottom: '1.25rem' }}>
                 Moirai takes its name from the ancient Greek Fates — Clotho who spun the thread of life, Lachesis who measured destiny, and Atropos who cut the ultimate silhouette.
               </p>
-              <p style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.75, marginBottom: '2rem' }}>
+              <p style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.75, marginBottom: '2rem' }}>
                 We believe couture is never accidental. Every garment chosen is a conscious revelation of self-sovereignty — an intentional proclamation of who you are and the legacy you are weaving.
               </p>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontStyle: 'italic', color: 'var(--obsidian)', lineHeight: 1.6, borderLeft: '3px solid var(--gold)', paddingLeft: '1.25rem', background: 'rgba(194, 162, 111, 0.08)', padding: '1rem 1.25rem' }}>
@@ -131,7 +131,7 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
                   {ceo.name}
                 </h2>
                 <div className="greek-divider" style={{ margin: '1rem 0 1.5rem', marginLeft: 0 }} />
-                <div style={{ color: '#1E1C1A', fontSize: '14px', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
+                <div style={{ color: 'var(--ivory-2)', fontSize: '14px', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
                   {ceo.bio}
                 </div>
               </motion.div>
@@ -238,7 +238,7 @@ export default function AboutClient({ aboutImage, partners, ceo, team }: { about
               >
                 <p style={{ fontSize: '1.6rem', color: 'var(--gold)', marginBottom: '1rem' }}>{v.icon}</p>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--card-title)', marginBottom: '0.75rem' }}>{v.title}</p>
-                <p style={{ color: '#1E1C1A', fontSize: '13px', lineHeight: 1.65 }}>{v.desc}</p>
+                <p style={{ color: 'var(--ivory-2)', fontSize: '13px', lineHeight: 1.65 }}>{v.desc}</p>
               </motion.div>
             ))}
           </motion.div>

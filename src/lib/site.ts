@@ -59,3 +59,6 @@ export function getSiteConfig(settings: any): SiteConfig {
 export function waLink(number: string, text?: string) {
   return `https://wa.me/${number}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 }
+
+// Where every "Book a consultation" button leads: the bespoke inquiry form
+export const CONSULTATION_HREF = '/bespoke#contact-design'

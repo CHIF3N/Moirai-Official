@@ -504,8 +504,8 @@ function CartDrawer() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.6rem',
-                    background: '#1F7A4D',
-                    borderColor: '#1F7A4D',
+                    background: 'var(--oxblood)',
+                    borderColor: 'var(--oxblood)',
                     marginBottom: '0.75rem',
                   }}
                 >
