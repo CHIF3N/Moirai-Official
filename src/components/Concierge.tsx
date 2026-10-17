@@ -22,7 +22,7 @@ const ANSWERS = [
   { q: 'How does a bespoke commission work?', a: 'It is fully custom: we discuss your vision, take your measurements and craft a one-of-a-kind piece. Consultation → design → fitting → delivery; the timeline is agreed with you at the consultation.' },
   { q: 'How much does a piece cost?', a: 'Pricing depends on the piece, fabric and complexity. Bridal, bespoke and corsetry are quoted individually — send us a WhatsApp message for a quote.' },
   { q: 'How do I place an order?', a: 'Add pieces to your bag and send the order on WhatsApp, or message us directly. We confirm every order personally.' },
-  { q: 'How do I pay?', a: 'Mobile Money (MoMo) is our payment method. Payment details are shared once your order is confirmed with the atelier.' },
+  { q: 'How do I pay?', a: 'Mobile Money (MoMo). MO jackets can be paid online with Mobile Money through our Fapshi store — use “Buy now” on the MO page. For other pieces, payment details are shared once your order is confirmed with the atelier.' },
   { q: 'Do you deliver?', a: 'Delivery arrangements are agreed with you when you order. Tell us where you are on WhatsApp and we will confirm the options.' },
   { q: 'What sizes do you offer?', a: 'Bespoke pieces are made to your exact measurements. No standard sizing — you are the standard.' },
   { q: 'What does the Fashion School teach?', a: 'Sewing, pattern making, fabrics, styling and the business of fashion. Message us for duration, schedule and fees.' },

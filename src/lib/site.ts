@@ -23,6 +23,8 @@ const FALLBACK_WHATSAPP = '237682710405'
 // (The old handles @Moirai.th and @MOIRAI belonged to other or missing accounts.)
 const FALLBACK_INSTAGRAM = 'https://www.instagram.com/moirai.th_/'
 const FALLBACK_TIKTOK = 'https://www.tiktok.com/@threads_ofheritage'
+// Listed as the business email on the brand's Fapshi store (checked 17 Oct 2026)
+const FALLBACK_EMAIL = 'thehousemoirai@gmail.com'
 
 function displayPhone(digits: string) {
   // Cameroon numbers: +237 6XX XXX XXX
@@ -50,7 +52,7 @@ export function getSiteConfig(settings: any): SiteConfig {
     whatsappNumber,
     whatsappDisplay: displayPhone(whatsappNumber),
     defaultMessage: settings?.whatsappDefaultMessage || "Hi, I'd like to inquire about Moirai",
-    email: settings?.email || null,
+    email: settings?.email || FALLBACK_EMAIL,
     instagramUrl,
     instagramHandle: instagramUrl ? handleFromUrl(instagramUrl) : null,
     tiktokUrl,
