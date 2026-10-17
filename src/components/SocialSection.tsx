@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useSiteConfig } from './Providers'
 import { SOCIAL_MEDIA } from '@/content/brand'
+import TikTokStrip from './TikTokStrip'
 import styles from './social.module.css'
 
 // Posts from the brand's own Instagram. The video loads only when it scrolls into view,
@@ -51,7 +52,7 @@ export default function SocialSection() {
         <div className={styles.head}>
           <p className="section-label">In the atelier</p>
           <h2 id="social-title" className={styles.h2}>Moments <em>from our world.</em></h2>
-          <p className={styles.lead}>Behind the seams and on the day — straight from our Instagram.</p>
+          <p className={styles.lead}>Behind the seams and on the day — straight from our Instagram and TikTok.</p>
         </div>
 
         <div className={styles.grid}>
@@ -87,6 +88,8 @@ export default function SocialSection() {
             </figure>
           ))}
         </div>
+
+        <TikTokStrip profileUrl={site.tiktokUrl} handle={site.tiktokHandle} />
 
         <div className={styles.follow}>
           {site.instagramUrl && <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">Follow {site.instagramHandle} on Instagram</a>}

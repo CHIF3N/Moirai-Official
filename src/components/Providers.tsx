@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { MotionConfig } from 'framer-motion'
 import { type Currency, type Priced, formatAmount, hasFixedPrice, PRICE_ON_REQUEST } from '@/lib/price'
 import type { SiteConfig } from '@/lib/site'
 
@@ -147,6 +148,8 @@ export function Providers({ children, site }: { children: React.ReactNode; site:
 
   return (
     <ThemeProvider>
+      {/* Honour the visitor's reduced-motion setting everywhere without changing the rendered markup */}
+      <MotionConfig reducedMotion="user">
       <SiteConfigContext.Provider value={site}>
         <CurrencyContext.Provider value={{ currency, setCurrency: handleSetCurrency, formatPrice, displayPrice, usdAvailable, usdRateUpdatedAt: site.usdRateUpdatedAt, showPrices: site.showPrices }}>
           <RecentlyViewedContext.Provider value={{ viewedItems, addViewedItem }}>
@@ -154,6 +157,7 @@ export function Providers({ children, site }: { children: React.ReactNode; site:
           </RecentlyViewedContext.Provider>
         </CurrencyContext.Provider>
       </SiteConfigContext.Provider>
+      </MotionConfig>
     </ThemeProvider>
   )
 }

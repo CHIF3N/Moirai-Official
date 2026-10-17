@@ -119,3 +119,22 @@ export const SOCIAL_MEDIA = {
     },
   ],
 }
+
+// Homepage hero slideshow (Sanity asset ids). The hero image set in Site Settings is always shown first.
+// `position` keeps the subject in frame when the photo is cropped.
+export const HERO_SLIDES = [
+  { image: 'image-b3286dd4eaa4c861c263cb3cb9616cc02186dc1c-1080x1080-jpg', alt: 'Woman in a blue headwrap and flowing printed Moirai gown seated outside a weathered wooden house', position: '72% 60%' },
+  { image: 'image-b6a50a0988279ec0e989bb6a301a027fef592b29-1024x1280-jpg', alt: 'Woman in a red printed Moirai dress with sculpted off-shoulder sleeves on a staircase', position: '50% 30%' },
+  { image: 'image-870b382ac4b95e942d3b3f91989da7c8939541c8-1033x1280-jpg', alt: 'Portrait in a sculptural black lace headpiece and printed Moirai garment', position: '50% 25%' },
+  { image: 'image-3751fe686ce1c07a4d6a86dcede8d02bc308a769-1080x1080-jpg', alt: 'A bride in an ivory Moirai gown framed by a tall glass doorway', position: '50% 45%' },
+]
+
+// Videos from the brand's TikTok (@threads_ofheritage), confirmed via TikTok's official oEmbed on 17 Oct 2026.
+// Covers are stored locally; the video itself plays in TikTok's official embed player, loaded only on tap.
+export const TIKTOK_VIDEOS = [
+  { id: '7688726718999285012', title: 'STASIS — your new favourite jacket', credit: '📸 @Baby Jesus', cover: '/social/tiktok-7688726718999285012.jpg', logoCover: true },
+  { id: '7690500692359826708', title: 'The Velvet Puff STÁSIS', credit: '📸 @Sam-Sona · Muse @melanin_babi', cover: '/social/tiktok-7690500692359826708.jpg', logoCover: true },
+  { id: '7675028383817862421', title: 'Every outfit tells a story — the pink power suit', credit: null, cover: '/social/tiktok-7675028383817862421.jpg' },
+  { id: '7686024256123227413', title: 'The long wait is over — a first look', credit: null, cover: '/social/tiktok-7686024256123227413.jpg', logoCover: true },
+  { id: '7548356979756911928', title: 'The leather jacket', credit: null, cover: '/social/tiktok-7548356979756911928.jpg' },
+]
