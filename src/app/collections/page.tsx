@@ -5,6 +5,7 @@ import { fetchOr, allProductsQuery, siteSettingsQuery, urlFor, mediaUrl } from '
 import { getSiteConfig, waLink } from '@/lib/site'
 import { CATEGORIES, categoryFor } from '@/content/brand'
 import { hasFixedPrice, formatXAF, PRICE_ON_REQUEST } from '@/lib/price'
+import CollectionDeck from '@/components/CollectionDeck'
 import styles from './collections.module.css'
 
 export const revalidate = 60
@@ -48,23 +49,23 @@ export default async function CollectionsPage() {
         const items = byCategory.get(c.slug) || []
         return (
           <section key={c.slug} id={c.slug} className={`${styles.chapter} ${styles[`v${i % 4}`]}`} aria-labelledby={`${c.slug}-title`}>
-            <div className={styles.media}>
-              <Image src={mediaUrl(c.image, 1400, 85)} alt={c.imageAlt} fill sizes="(max-width: 900px) 100vw, 60vw" className={styles.img} />
-            </div>
+            {c.gallery && c.gallery.length > 0 ? (
+              <div className={`${styles.media} ${styles.mediaDeck}`}>
+                <CollectionDeck
+                  label={`${c.title} photographs`}
+                  images={[{ image: c.image, alt: c.imageAlt, position: c.position }, ...c.gallery].map(g => ({ src: mediaUrl(g.image, 1000, 85), alt: g.alt, position: g.position }))}
+                />
+              </div>
+            ) : (
+              <div className={styles.media}>
+                <Image src={mediaUrl(c.image, 1400, 85)} alt={c.imageAlt} fill sizes="(max-width: 900px) 100vw, 60vw" className={styles.img} style={{ objectPosition: c.position || '50% 25%' }} />
+              </div>
+            )}
             <div className={styles.body}>
               <span className={styles.num}>{String(i + 1).padStart(2, '0')}</span>
               <h2 id={`${c.slug}-title`} className={styles.h2}>{c.title}</h2>
               <p className={styles.desc}>{c.description}</p>
 
-              {c.gallery && c.gallery.length > 0 && (
-                <ul className={styles.strip} aria-label={`More from ${c.title}`}>
-                  {c.gallery.map(g => (
-                    <li key={g.image} className={styles.stripItem}>
-                      <Image src={mediaUrl(g.image, 600)} alt={g.alt} fill sizes="(max-width: 900px) 30vw, 12vw" className={styles.img} />
-                    </li>
-                  ))}
-                </ul>
-              )}
 
               {items.length > 0 ? (
                 <ul className={styles.products}>

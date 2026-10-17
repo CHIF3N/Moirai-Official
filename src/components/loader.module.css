@@ -49,13 +49,42 @@
   opacity: 0; transform: translateY(10px);
   animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards;
 }
+/* The three Fates, each appearing as her part of the sequence happens */
 .fates {
-  margin-top: 0.6rem;
-  font-family: var(--font-body); font-size: clamp(10px, 1.2vw, 12px); font-weight: 500;
-  letter-spacing: 0.42em; margin-right: -0.42em; text-transform: uppercase; color: #C4A3EF;
-  opacity: 0; transform: translateY(8px);
-  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.15s forwards;
+  list-style: none; margin-top: 1.1rem;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem clamp(1rem, 3vw, 2.25rem);
+  font-family: var(--font-body); font-size: clamp(10px, 1.1vw, 12px); font-weight: 500;
+  letter-spacing: 0.24em; text-transform: uppercase; color: #A992C9;
 }
+.fates li { opacity: 0; transform: translateY(8px); white-space: nowrap; }
+.fates b { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 1.55em; letter-spacing: 0.02em; text-transform: none; color: #E6D6FA; margin-right: 0.35em; }
+.fate1 { animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards; }
+.fate2 { animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards; }
+.fate3 { animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards; }
+
+/* ΜΟΙΡΑΙ in Greek, glowing faintly behind the wordmark */
+.greek {
+  position: absolute; z-index: 0; left: 50%; top: 50%; transform: translate(-50%, -58%) scale(1.04);
+  font-family: var(--font-display); font-weight: 300; font-size: clamp(5rem, 22vw, 18rem); letter-spacing: 0.12em;
+  color: rgb(196 163 239 / 0.04); -webkit-text-stroke: 1px rgb(196 163 239 / 0.34);
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; animation: greekIn 1.4s ease 0.1s forwards, greekOut 0.5s ease 1.8s forwards;
+}
+@keyframes greekIn { to { opacity: 1; transform: translate(-50%, -58%) scale(1); } }
+@keyframes greekOut { from { opacity: 1; transform: translate(-50%, -58%) scale(1); } to { opacity: 0; transform: translate(-50%, -58%) scale(1.06); } }
+
+/* Greek key (meander) borders that draw in along the curtain edges */
+.meander {
+  position: absolute; left: 0; right: 0; height: 14px;
+  background-repeat: repeat-x; background-size: 28px 14px; opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 13V1h12v8H5V5h3v2h2V3H3v8h11V1h14v12h-3V4h-8v5h3V7h2v4h-7V3' fill='none' stroke='%23C4A3EF' stroke-width='1.2'/%3E%3C/svg%3E");
+  clip-path: inset(0 100% 0 0);
+  animation: drawKey 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+}
+.meanderTop { top: clamp(1.25rem, 4vh, 2.5rem); }
+.meanderBottom { bottom: clamp(1.25rem, 4vh, 2.5rem); clip-path: inset(0 0 0 100%); animation-name: drawKeyReverse; }
+@keyframes drawKey { to { clip-path: inset(0 0 0 0); } }
+@keyframes drawKeyReverse { to { clip-path: inset(0 0 0 0); } }
 .skip {
   position: absolute; bottom: clamp(1.5rem, 5vh, 3rem); left: 0; right: 0; z-index: 1;
   text-align: center; font-family: var(--font-body); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
@@ -68,6 +97,7 @@
 .leaving .top { animation: partUp 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards; }
 .leaving .bottom { animation: partDown 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards; }
 .leaving .stage, .leaving .skip { animation: stageOut 0.35s ease forwards; }
+.leaving .greek { animation: greekOut 0.35s ease forwards; }
 
 @keyframes spinLeft { to { transform: scaleX(1); } }
 @keyframes spinRight { to { transform: scaleX(1); } }
@@ -85,7 +115,10 @@
 /* Reduced motion: a calm 1.2s fade, no movement */
 @media (prefers-reduced-motion: reduce) {
   .loader { animation: fadeAway 0.5s ease 0.7s forwards, loaderGone 0.01s linear 1.2s forwards; }
-  .curtain, .stage, .logoWrap, .threadLeft, .threadRight, .tagline, .fates, .skip { animation: none !important; }
+  .curtain, .stage, .logoWrap, .threadLeft, .threadRight, .tagline, .fates, .fates li, .skip, .greek, .meander { animation: none !important; }
+  .fates li, .greek { opacity: 1; transform: translate(0, 0); }
+  .greek { transform: translate(-50%, -58%); }
+  .meander { clip-path: none; }
   .logoWrap { clip-path: none; filter: none; }
   .threadLeft, .threadRight { transform: scaleX(1); }
   .tagline, .fates { opacity: 1; transform: none; }
