@@ -35,10 +35,20 @@ export const CATEGORIES: Category[] = [
     title: 'Bespoke & custom couture',
     short: 'Bespoke',
     description: 'Pieces designed and made for one person — shaped by a conversation about your occasion, your story and your body.',
-    image: 'image-ae25c4f9852cbf954116fc26906a873de8a46b2d-1080x1080-jpg',
-    imageAlt: 'Ivory couture gown with sculpted lace bodice, photographed on a balcony',
-    match: ['bespoke', 'custom', 'couture', 'bridal', 'wedding'],
+    image: 'image-0e028a436b1bf268ac01ff15576417b59ccbf7ae-1023x1280-jpg',
+    imageAlt: 'Red sculpted gown with voluminous sleeves against a red backdrop',
+    match: ['bespoke', 'custom', 'couture'],
     enquiry: 'Hi Moirai! I would like to start a bespoke commission.',
+  },
+  {
+    slug: 'bridal',
+    title: 'Bridal',
+    short: 'Bridal',
+    description: 'Wedding gowns and bridal looks made for your day — from the first fitting to the final reveal.',
+    image: 'image-ae25c4f9852cbf954116fc26906a873de8a46b2d-1080x1080-jpg',
+    imageAlt: 'Bride in an ivory gown with a sculpted lace bodice, photographed on a balcony',
+    match: ['bridal', 'wedding', 'bride'],
+    enquiry: 'Hi Moirai! I would like to talk about a bridal gown.',
   },
   {
     slug: 'corsets',
@@ -88,7 +98,7 @@ export const HIDDEN_DOCUMENT_IDS = [
 
 // Editorial photographs used in fixed homepage sections (Sanity asset ids)
 export const EDITORIAL = {
-  homeBespoke: { image: 'image-0e028a436b1bf268ac01ff15576417b59ccbf7ae-1023x1280-jpg', alt: 'Red sculpted gown with voluminous sleeves against a red backdrop' },
+  homeBespoke: { image: 'image-b6a50a0988279ec0e989bb6a301a027fef592b29-1024x1280-jpg', alt: 'Woman in a red printed Moirai dress with sculpted off-shoulder sleeves on a staircase' },
   homeClosing: { image: 'image-37e23fa99829eeeaa120ee3e6877e93fd9388437-1024x1280-jpg', alt: '' },
 }
 
@@ -102,14 +112,8 @@ export const SOCIAL_MEDIA = {
     alt: 'A bride in a white robe opens an orange Moirai gift box on her wedding morning',
     post: 'https://www.instagram.com/p/DZsQAiHgN-C/',
   },
+  // The jacket campaign image now lives in the MO space (content/mo.ts)
   images: [
-    {
-      src: '/social/jacket-collection-green.jpg',
-      width: 1200, height: 1200,
-      alt: 'Man in a green geometric-quilted Moirai jacket, seated, in front of the Moirai wordmark',
-      caption: 'The Moirai Jacket Collection — “our definition of luxury is comfort.”',
-      post: 'https://www.instagram.com/p/DPD6LeFDX8V/',
-    },
     {
       src: '/social/pink-october.jpg',
       width: 900, height: 1600,

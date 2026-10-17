@@ -16,11 +16,12 @@ export default function HeroSlides({ slides }: { slides: HeroSlide[] }) {
   const [paused, setPaused] = useState(false)
   const auto = !reduce && !paused && slides.length > 1
 
+  // A timeout per slide, so choosing a slide with the dots restarts the countdown
   useEffect(() => {
     if (!auto) return
-    const t = window.setInterval(() => setIndex(i => (i + 1) % slides.length), INTERVAL)
-    return () => window.clearInterval(t)
-  }, [auto, slides.length])
+    const t = window.setTimeout(() => setIndex(i => (i + 1) % slides.length), INTERVAL)
+    return () => window.clearTimeout(t)
+  }, [auto, slides.length, index])
 
   if (slides.length === 0) return null
 

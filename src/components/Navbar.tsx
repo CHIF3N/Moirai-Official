@@ -7,6 +7,7 @@ import { useSiteConfig } from './Providers'
 import { useCart } from './CartDrawer'
 import ThemeToggle from './ThemeToggle'
 import Logo from './Logo'
+import MoMark from './MoMark'
 import { waLink, CONSULTATION_HREF } from '@/lib/site'
 
 const BagIcon = () => (
@@ -29,6 +30,7 @@ const RIGHT_LINKS = [
 const ALL_LINKS = [
   ...LEFT_LINKS.map(l => l.href === '/fashion-school' ? { ...l, label: 'Fashion School' } : l),
   ...RIGHT_LINKS,
+  { href: '/mo', label: 'MO by Moirai' },
   { href: '/contact', label: 'Contact' },
 ]
 
@@ -94,6 +96,11 @@ export default function Navbar() {
 
           <div className="site-nav-actions">
             <ul className="site-nav-links desk-only">
+              <li>
+                <Link href="/mo" className="nav-mo" aria-label="MO by Moirai — streetwear" aria-current={isActive('/mo') ? 'page' : undefined}>
+                  <MoMark title="" />
+                </Link>
+              </li>
               {RIGHT_LINKS.map(l => (
                 <li key={l.href}>
                   <Link href={l.href} className="nav-link" aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</Link>

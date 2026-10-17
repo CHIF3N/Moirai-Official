@@ -165,7 +165,7 @@
 }
 
 /* ── Collection tiles ───────────────────────────────────── */
-.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.75rem, 1.5vw, 1.5rem); }
+.tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(0.75rem, 1.5vw, 1.5rem); }
 .tiles[data-count="3"] { grid-template-columns: repeat(3, 1fr); }
 .tiles > :nth-child(even) { transform: translateY(clamp(1rem, 3vw, 3rem)); }
 .tiles[data-count="1"] { grid-template-columns: 1fr; }
@@ -321,3 +321,33 @@
   .heroMark { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .heroPause { display: none; } }
+
+/* ── MO by Moirai teaser — MO's own colours in both themes ── */
+.mo { background: #220135; color: #F1E8FF; overflow: hidden; }
+.moInner {
+  max-width: 1440px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 3.5rem);
+}
+.moMark { font-size: clamp(5rem, 13vw, 11rem); line-height: 1; color: #F1E8FF; margin: 0; font-weight: 400; }
+.moLine { margin-top: 1.5rem; font-size: clamp(1.4rem, 2.4vw, 2rem); font-family: var(--font-display); font-style: italic; color: #CDB4FF; }
+.moIntro { margin-top: 0.75rem; font-size: 16px; line-height: 1.6; color: #CDB9E8; max-width: 30rem; }
+.moBtn {
+  min-height: 52px; padding: 0 2rem; border-radius: var(--r-pill);
+  display: inline-flex; align-items: center;
+  background: #F1E8FF; color: #220135; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.moBtn:hover { background: #CDB4FF; transform: translateY(-1px); }
+.moLink { display: inline-flex; min-height: 44px; align-items: center; gap: 0.4rem; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #F1E8FF; border-bottom: 1px solid rgb(241 232 255 / 0.35); }
+.moLink:hover { color: #CDB4FF; }
+.moBtn:focus-visible, .moLink:focus-visible { outline: 2px solid #CDB4FF; outline-offset: 3px; }
+.moShots { position: relative; aspect-ratio: 1 / 0.95; }
+.moShot { position: absolute; display: block; overflow: hidden; border-radius: var(--r-lg); background: #2A1239; box-shadow: 0 24px 60px rgb(0 0 0 / 0.45); }
+.moShotA { inset: 0 22% 10% 0; transform: rotate(-3deg); }
+.moShotB { width: 38%; aspect-ratio: 9 / 16; right: 0; bottom: 0; transform: rotate(4deg); border: 5px solid #220135; }
+@media (max-width: 900px) {
+  .moInner { grid-template-columns: 1fr; }
+  .moShots { width: min(100%, 460px); margin: 0 auto; }
+}
+@media (min-width: 901px) and (max-width: 1200px) { .tiles { grid-template-columns: repeat(3, 1fr); } }

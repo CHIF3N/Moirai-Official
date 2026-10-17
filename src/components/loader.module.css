@@ -1,0 +1,94 @@
+/* Opening sequence — 2.6s total. Timeline:
+   0.10–0.95s  thread spins across (Clotho)
+   0.35–1.30s  wordmark revealed along the thread (Lachesis)
+   0.95–1.60s  tagline and motto
+   1.75–2.20s  thread cuts from the centre (Atropos)
+   1.90–2.60s  curtain halves part and the overlay is removed */
+.loader {
+  position: fixed; inset: 0; z-index: 9999;
+  display: grid; place-items: center;
+  pointer-events: auto;
+  animation: loaderGone 0.01s linear 2.6s forwards;
+}
+.curtain {
+  position: absolute; left: 0; right: 0; height: 50.5%;
+  background: radial-gradient(120% 140% at 50% 100%, #2A0F45 0%, #120818 55%, #0B0710 100%);
+}
+.top { top: 0; animation: partUp 0.75s cubic-bezier(0.76, 0, 0.24, 1) 1.9s forwards; }
+.bottom { bottom: 0; transform-origin: bottom; background: radial-gradient(120% 140% at 50% 0%, #2A0F45 0%, #120818 55%, #0B0710 100%); animation: partDown 0.75s cubic-bezier(0.76, 0, 0.24, 1) 1.9s forwards; }
+
+.stage {
+  position: relative; z-index: 1;
+  width: min(78vw, 640px);
+  display: flex; flex-direction: column; align-items: center;
+  animation: stageOut 0.55s cubic-bezier(0.65, 0, 0.35, 1) 1.8s forwards;
+}
+.logoWrap {
+  width: 100%;
+  clip-path: inset(0 100% 0 0);
+  filter: blur(6px);
+  animation: reveal 0.95s cubic-bezier(0.65, 0, 0.35, 1) 0.35s forwards;
+}
+.logo { display: block; width: 100%; height: auto; color: #F4F0F8; }
+
+.thread {
+  position: relative; display: block;
+  width: 118%; height: 2px; margin: clamp(1.25rem, 3vw, 1.75rem) 0 clamp(1rem, 2.4vw, 1.4rem);
+}
+.threadLeft, .threadRight {
+  position: absolute; top: 0; height: 100%; width: 50%;
+  background: linear-gradient(90deg, rgb(196 163 239 / 0), #C4A3EF 30%, #E6D6FA 50%, #A06BF0 80%, rgb(160 107 240 / 0));
+  box-shadow: 0 0 12px rgb(196 163 239 / 0.85), 0 0 2px #FFFFFF;
+}
+.threadLeft { left: 0; transform-origin: left; transform: scaleX(0); animation: spinLeft 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards, cutLeft 0.45s cubic-bezier(0.7, 0, 0.84, 0) 1.75s forwards; }
+.threadRight { right: 0; transform-origin: left; transform: scaleX(0); animation: spinRight 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards, cutRight 0.45s cubic-bezier(0.7, 0, 0.84, 0) 1.75s forwards; }
+
+.tagline {
+  font-family: var(--font-display); font-style: italic; font-weight: 300;
+  font-size: clamp(1.4rem, 3.4vw, 2.2rem); color: #F4F0F8; letter-spacing: 0.02em;
+  opacity: 0; transform: translateY(10px);
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards;
+}
+.fates {
+  margin-top: 0.6rem;
+  font-family: var(--font-body); font-size: clamp(10px, 1.2vw, 12px); font-weight: 500;
+  letter-spacing: 0.42em; margin-right: -0.42em; text-transform: uppercase; color: #C4A3EF;
+  opacity: 0; transform: translateY(8px);
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.15s forwards;
+}
+.skip {
+  position: absolute; bottom: clamp(1.5rem, 5vh, 3rem); left: 0; right: 0; z-index: 1;
+  text-align: center; font-family: var(--font-body); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgb(244 240 248 / 0.45);
+  opacity: 0; animation: fadeIn 0.4s ease 0.8s forwards, stageOut 0.3s ease 1.8s forwards;
+}
+
+/* Skipped by a tap or key: play the exit straight away */
+.leaving { animation: loaderGone 0.01s linear 0.65s forwards; }
+.leaving .top { animation: partUp 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards; }
+.leaving .bottom { animation: partDown 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards; }
+.leaving .stage, .leaving .skip { animation: stageOut 0.35s ease forwards; }
+
+@keyframes spinLeft { to { transform: scaleX(1); } }
+@keyframes spinRight { to { transform: scaleX(1); } }
+@keyframes cutLeft { from { transform: scaleX(1); } to { transform: translateX(-30%) scaleX(0); } }
+@keyframes cutRight { from { transform: scaleX(1); transform-origin: right; } to { transform: translateX(30%) scaleX(0); transform-origin: right; } }
+@keyframes reveal { to { clip-path: inset(0 0 0 0); filter: blur(0); } }
+@keyframes rise { to { opacity: 1; transform: none; } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes stageOut { to { opacity: 0; transform: scale(1.04); filter: blur(4px); } }
+@keyframes partUp { to { transform: translateY(-101%); } }
+@keyframes partDown { to { transform: translateY(101%); } }
+/* Moves the overlay out of the way — works even if JavaScript never runs */
+@keyframes loaderGone { to { opacity: 0; transform: translateY(-200vh); visibility: hidden; } }
+
+/* Reduced motion: a calm 1.2s fade, no movement */
+@media (prefers-reduced-motion: reduce) {
+  .loader { animation: fadeAway 0.5s ease 0.7s forwards, loaderGone 0.01s linear 1.2s forwards; }
+  .curtain, .stage, .logoWrap, .threadLeft, .threadRight, .tagline, .fates, .skip { animation: none !important; }
+  .logoWrap { clip-path: none; filter: none; }
+  .threadLeft, .threadRight { transform: scaleX(1); }
+  .tagline, .fates { opacity: 1; transform: none; }
+  .skip { display: none; }
+}
+@keyframes fadeAway { to { opacity: 0; } }

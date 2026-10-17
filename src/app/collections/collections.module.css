@@ -47,6 +47,7 @@
   backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .v2 .body { background: var(--bg-2); } }
+/* 05 wraps back to layout 01 */
 /* 04 — tall portrait framed inside the page, text left */
 .v3 { grid-template-columns: 1fr 1fr; padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3.5rem); gap: clamp(2rem, 5vw, 5rem); }
 .v3 .media { order: 2; border-radius: 999px 999px var(--r-lg) var(--r-lg); min-height: 620px; }

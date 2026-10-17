@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google'
+import { Cormorant_Garamond, Plus_Jakarta_Sans, Montserrat } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -23,6 +23,14 @@ const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-jakarta',
+  display: 'swap',
+})
+
+// The "BY MOIRAI" line of the MO by Moirai logo
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['500'],
+  variable: '--font-montserrat',
   display: 'swap',
 })
 
@@ -85,7 +93,7 @@ export default async function RootLayout({
   const site = getSiteConfig(settings)
 
   return (
-    <html lang="en" className={`${cormorant.variable} ${jakarta.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${cormorant.variable} ${jakarta.variable} ${montserrat.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>

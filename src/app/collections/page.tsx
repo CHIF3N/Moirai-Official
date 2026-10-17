@@ -34,7 +34,7 @@ export default async function CollectionsPage() {
     <div className={styles.page}>
       <header className={styles.head}>
         <p className="section-label">Collections</p>
-        <h1 className={styles.title}>Four ways <em>to be made.</em></h1>
+        <h1 className={styles.title}>Five collections. <em>One house.</em></h1>
         <nav aria-label="Collections" className={styles.index}>
           {CATEGORIES.map((c, i) => (
             <a key={c.slug} href={`#${c.slug}`} className={styles.indexLink}>
