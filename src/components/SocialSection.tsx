@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useSiteConfig } from './Providers'
 import { SOCIAL_MEDIA } from '@/content/brand'
-import TikTokStrip from './TikTokStrip'
+import { TikTokCard } from './TikTokStrip'
+import { TIKTOK_VIDEOS } from '@/content/brand'
 import styles from './social.module.css'
 
 // Posts from the brand's own Instagram. The video loads only when it scrolls into view,
@@ -78,8 +79,11 @@ export default function SocialSection() {
             </figcaption>
           </figure>
 
-          {SOCIAL_MEDIA.images.map((img, i) => (
-            <figure key={img.src} className={`${styles.card} ${i === 0 ? styles.square : styles.tall}`}>
+          {/* The house's own TikTok — the pink power suit (MO streetwear videos live on /mo) */}
+          <TikTokCard video={TIKTOK_VIDEOS.find(v => v.id === '7675028383817862421')!} className={styles.offset} />
+
+          {SOCIAL_MEDIA.images.map(img => (
+            <figure key={img.src} className={`${styles.card} ${styles.tall}`}>
               <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes="(max-width: 900px) 100vw, 30vw" className={styles.img} />
               <figcaption className={styles.caption}>
                 <span>{img.caption}</span>
@@ -88,8 +92,6 @@ export default function SocialSection() {
             </figure>
           ))}
         </div>
-
-        <TikTokStrip profileUrl={site.tiktokUrl} handle={site.tiktokHandle} />
 
         <div className={styles.follow}>
           {site.instagramUrl && <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">Follow {site.instagramHandle} on Instagram</a>}

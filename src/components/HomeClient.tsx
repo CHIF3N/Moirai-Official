@@ -7,6 +7,8 @@ import { waLink, CONSULTATION_HREF } from '@/lib/site'
 import Logo from './Logo'
 import SocialSection from './SocialSection'
 import HeroSlides, { type HeroSlide } from './HeroSlides'
+import MoMark from './MoMark'
+import { MO, MO_IMAGES } from '@/content/mo'
 import styles from './home.module.css'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -77,7 +79,7 @@ export default function HomeClient({
 
   const heroImg = leadHeroImageUrl || heroSlides?.[0]?.image || heroImageUrl
   const pieces = (editorialItems.length > 0 ? editorialItems : products).slice(0, 4)
-  const tiles = collections.filter((c: any) => c.image).slice(0, 4)
+  const tiles = collections.filter((c: any) => c.image).slice(0, 5)
   const journal = posts.slice(0, 3)
 
   // Same markup for every visitor; MotionConfig (Providers) tones animation down for reduced motion
@@ -217,7 +219,7 @@ export default function HomeClient({
       {/* ── 5. BESPOKE ──────────────────────────────────────────── */}
       <section className={styles.split} aria-labelledby="bespoke-title">
         <div className={styles.splitMedia}>
-          {bespokeHeroImage && <Image src={bespokeHeroImage} alt="Red sculpted Moirai gown with voluminous sleeves" fill sizes="(max-width: 900px) 100vw, 50vw" className={styles.splitImg} />}
+          {bespokeHeroImage && <Image src={bespokeHeroImage} alt="Woman in a red printed Moirai dress with sculpted off-shoulder sleeves" fill sizes="(max-width: 900px) 100vw, 50vw" className={styles.splitImg} />}
         </div>
         <Reveal className={styles.splitBody}>
           <p className="section-label">Bespoke atelier</p>
@@ -261,6 +263,28 @@ export default function HomeClient({
 
       {/* ── 6b. FROM INSTAGRAM ──────────────────────────────────── */}
       <SocialSection />
+
+      {/* ── 6c. MO BY MOIRAI ─────────────────────────────────────── */}
+      <section className={styles.mo} aria-labelledby="mo-teaser-title">
+        <div className={styles.moInner}>
+          <Reveal className={styles.moText}>
+            <h2 id="mo-teaser-title" className={styles.moMark}><MoMark withByline title="MO by Moirai" /></h2>
+            <p className={styles.moLine}>{MO.tagline}</p>
+            <p className={styles.moIntro}>The STASIS jackets, the Velvet Puff STÁSIS — and a second drop on the way.</p>
+            <div className={styles.actions}>
+              <Link href="/mo" className={styles.moBtn}>Enter MO</Link>
+              <a href={MO.earlyAccessUrl} target="_blank" rel="noopener noreferrer" className={styles.moLink}>Early access — Drop 02 <span aria-hidden="true">→</span></a>
+            </div>
+          </Reveal>
+          <div className={styles.moShots}>
+            {MO_IMAGES.map((img, i) => (
+              <Link key={img.src} href="/mo" className={`${styles.moShot} ${i === 0 ? styles.moShotA : styles.moShotB}`} tabIndex={-1} aria-hidden="true">
+                <Image src={img.src} alt="" fill sizes="(max-width: 900px) 60vw, 26vw" className={styles.pieceImg} />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── 7. VALUES ───────────────────────────────────────────── */}
       <section className={styles.section} aria-labelledby="values-title">

@@ -17,6 +17,7 @@ const EXPLORE = [
   ['/shop', 'Shop'],
   ['/bespoke', 'Bespoke atelier'],
   ['/fashion-school', 'Fashion School'],
+  ['/mo', 'MO by Moirai'],
   ['/blog', 'Journal'],
   ['/about', 'About'],
   ['/contact', 'Contact'],

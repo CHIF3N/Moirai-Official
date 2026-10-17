@@ -1,0 +1,125 @@
+/* MO by Moirai — streetwear identity. Re-maps the site tokens inside .mo so shared
+   components (buttons, TikTok cards, header colours) follow MO in both themes. */
+.mo {
+  --mo-ink: #220135;          /* from the MO logo */
+  --mo-violet: #7B3FF2;
+  --bg: #F4EFE6; --bg-2: #ECE4F2; --bg-3: #E2D6EC;
+  --fg: #220135; --fg-2: #4A2E5E; --fg-3: #6B5680;
+  --fg-rgb: 34 1 53; --bg-rgb: 244 239 230;
+  --accent: #6A2FD9; --accent-2: #7B3FF2; --accent-rgb: 106 47 217;
+  --brand: #220135; --brand-hover: #3A0C57; --brand-rgb: 34 1 53; --brand-deep: #E6D6FA; --on-brand: #FFFFFF;
+  --hairline: rgb(34 1 53 / 0.14); --hairline2: rgb(34 1 53 / 0.26);
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body);
+  overflow-x: clip;
+}
+:global([data-theme="dark"]) .mo {
+  --bg: #12051A; --bg-2: #1C0A28; --bg-3: #2A1239;
+  --fg: #F1E8FF; --fg-2: #CDB9E8; --fg-3: #A792C2;
+  --fg-rgb: 241 232 255; --bg-rgb: 18 5 26;
+  --accent: #B794FF; --accent-2: #CDB4FF; --accent-rgb: 183 148 255;
+  --brand: #7B3FF2; --brand-hover: #8F59FF; --brand-rgb: 123 63 242; --brand-deep: #220135; --on-brand: #FFFFFF;
+  --hairline: rgb(241 232 255 / 0.12); --hairline2: rgb(241 232 255 / 0.24);
+}
+
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 3.5rem); }
+.img { object-fit: cover; }
+.h2 {
+  font-family: var(--font-mo), Impact, 'Arial Narrow', sans-serif; font-weight: 400;
+  font-size: clamp(2.75rem, 7vw, 6rem); line-height: 0.92; letter-spacing: 0.005em; text-transform: uppercase;
+  color: var(--fg);
+}
+.lead { margin-top: 1rem; font-size: 17px; line-height: 1.6; color: var(--fg-2); max-width: 34rem; }
+.section { padding: clamp(4.5rem, 9vw, 8rem) 0; }
+.panel { background: var(--bg-2); }
+
+/* Hero */
+.hero {
+  max-width: 1600px; margin: 0 auto;
+  min-height: 100svh;
+  display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: clamp(2rem, 4vw, 4rem);
+  padding: calc(var(--nav-h) + clamp(2rem, 5vw, 4rem)) clamp(1.25rem, 4vw, 3.5rem) clamp(3rem, 6vw, 5rem);
+}
+.heroMark { font-size: clamp(7rem, 19vw, 17rem); line-height: 1; color: var(--fg); margin: 0; }
+.heroLine {
+  margin-top: 1.5rem;
+  font-family: var(--font-mo), Impact, sans-serif; text-transform: uppercase;
+  font-size: clamp(1.6rem, 3.2vw, 2.75rem); line-height: 1; color: var(--accent);
+}
+.heroIntro { margin-top: 1rem; font-size: 17px; line-height: 1.6; color: var(--fg-2); max-width: 30rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+
+.heroCollage { position: relative; aspect-ratio: 1 / 1.05; }
+.shot { position: absolute; margin: 0; overflow: hidden; border-radius: var(--r-lg); background: var(--bg-3); box-shadow: var(--shadow-lg); }
+.shotA { inset: 0 18% 14% 0; transform: rotate(-2.5deg); }
+.shotB { width: 46%; aspect-ratio: 1; right: 0; bottom: 0; transform: rotate(4deg); border: 6px solid var(--bg); }
+.sticker {
+  position: absolute; left: -2%; bottom: 6%;
+  width: clamp(5.5rem, 9vw, 7.5rem); aspect-ratio: 1; border-radius: 50%;
+  display: grid; place-items: center; text-align: center;
+  background: var(--mo-violet); color: #FFFFFF;
+  font-family: var(--font-mo), Impact, sans-serif; text-transform: uppercase; font-size: clamp(1.1rem, 1.8vw, 1.5rem); line-height: 0.95;
+  transform: rotate(-12deg); box-shadow: 0 10px 24px rgb(123 63 242 / 0.4);
+}
+
+/* Marquee */
+.marquee { overflow: hidden; background: var(--mo-ink); color: #F1E8FF; border-block: 1px solid rgb(255 255 255 / 0.08); }
+:global([data-theme="dark"]) .marquee { background: var(--mo-violet); }
+.marqueeTrack { display: flex; width: max-content; animation: moMarquee 28s linear infinite; }
+.marqueeTrack span {
+  display: inline-flex; align-items: center; gap: 1.5rem; padding: 1rem 1.5rem 1rem 0;
+  font-family: var(--font-mo), Impact, sans-serif; text-transform: uppercase; font-size: clamp(1.5rem, 3vw, 2.4rem); white-space: nowrap;
+}
+.marqueeTrack b { font-weight: 400; color: #CDB4FF; font-size: 0.6em; }
+.marquee:hover .marqueeTrack { animation-play-state: paused; }
+@keyframes moMarquee { to { transform: translateX(-33.333%); } }
+@media (prefers-reduced-motion: reduce) { .marqueeTrack { animation: none; } }
+
+/* Drop */
+.split { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 3rem; }
+.quote { margin: 0; max-width: 26rem; font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.35; color: var(--fg); }
+.quote cite { display: block; margin-top: 0.5rem; font-size: 13px; font-style: normal; color: var(--fg-3); letter-spacing: 0.08em; }
+
+/* Gallery */
+.gallery { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: clamp(1rem, 2vw, 1.75rem); margin-top: clamp(2rem, 4vw, 3rem); align-items: start; }
+.galleryItem { margin: 0; }
+.galleryMedia { position: relative; display: block; overflow: hidden; border-radius: var(--r-lg); background: var(--bg-3); }
+.galleryItem figcaption { margin-top: 0.75rem; font-size: 15px; color: var(--fg-2); }
+.galleryItem figcaption a { margin-left: 0.5rem; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+
+/* Pieces */
+.pieces { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 2rem; }
+.piece { display: grid; gap: 0.4rem; }
+.pieceMedia { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-md); background: var(--bg-3); }
+.pieceName { font-family: var(--font-mo), Impact, sans-serif; text-transform: uppercase; font-size: 1.35rem; color: var(--fg); }
+.piecePrice { font-size: 14px; color: var(--fg-2); }
+.empty { margin-top: 1.75rem; padding: clamp(1.5rem, 4vw, 2.5rem); border-radius: var(--r-lg); border: 1px dashed var(--hairline2); display: grid; gap: 1.25rem; justify-items: start; max-width: 46rem; }
+.emptyText { font-size: 17px; line-height: 1.6; color: var(--fg-2); }
+
+/* Early access */
+.cta {
+  position: relative; overflow: hidden; isolation: isolate;
+  padding: clamp(5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3.5rem);
+  background: var(--mo-ink); color: #F1E8FF; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+}
+.ctaMark { position: absolute; z-index: -1; width: min(110vw, 1500px); height: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); color: rgb(205 180 255 / 0.08); }
+.ctaTitle { font-family: var(--font-mo), Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(3rem, 9vw, 8rem); line-height: 0.9; }
+.ctaText { margin-top: 1rem; font-size: 18px; color: #CDB9E8; }
+.ctaBtn {
+  margin-top: 2rem; min-height: 56px; padding: 0 2.25rem; border-radius: var(--r-pill);
+  display: inline-flex; align-items: center;
+  background: #F1E8FF; color: #220135; font-weight: 600; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+  transition: transform 0.2s, background-color 0.2s;
+}
+.ctaBtn:hover { background: #CDB4FF; transform: translateY(-1px); }
+.ctaBtn:focus-visible { outline: 2px solid #CDB4FF; outline-offset: 3px; }
+.small { margin-top: 0.9rem; font-size: 13px; color: #A792C2; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; min-height: 0; }
+  .heroMark { font-size: clamp(6rem, 34vw, 11rem); }
+  .heroCollage { width: min(100%, 480px); margin: 1rem auto 0; }
+  .gallery { grid-template-columns: 1fr; }
+  .pieces { grid-template-columns: repeat(2, 1fr); }
+}
