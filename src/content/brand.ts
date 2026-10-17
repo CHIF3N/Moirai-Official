@@ -22,8 +22,10 @@ export interface Category {
   title: string
   short: string
   description: string
-  image: string // Sanity image asset id
+  image: string // Sanity image asset id, or a file in /public
   imageAlt: string
+  // More photographs for the collection (Sanity asset ids or /public files)
+  gallery?: { image: string; alt: string }[]
   // Words that place a Sanity product in this category (matched against its category title)
   match: string[]
   enquiry: string
@@ -35,9 +37,15 @@ export const CATEGORIES: Category[] = [
     title: 'Bespoke & custom couture',
     short: 'Bespoke',
     description: 'Pieces designed and made for one person — shaped by a conversation about your occasion, your story and your body.',
-    image: 'image-0e028a436b1bf268ac01ff15576417b59ccbf7ae-1023x1280-jpg',
-    imageAlt: 'Red sculpted gown with voluminous sleeves against a red backdrop',
-    match: ['bespoke', 'custom', 'couture'],
+    image: '/collections/bespoke-blue-suit-1.jpg',
+    imageAlt: 'Woman in a tailored sky-blue Moirai power suit seated on a clear stool against a peach backdrop',
+    gallery: [
+      { image: '/collections/bespoke-blue-suit-2.jpg', alt: 'The sky-blue Moirai suit, jacket worn open, hair in motion' },
+      { image: '/collections/bespoke-pink-suit.jpg', alt: 'Pageant contestant in a tailored blush-pink Moirai suit with an embellished jacket and North West sash' },
+      { image: '/collections/bespoke-blue-suit-3.jpg', alt: 'The sky-blue Moirai suit, seated pose' },
+      { image: 'image-0e028a436b1bf268ac01ff15576417b59ccbf7ae-1023x1280-jpg', alt: 'Red sculpted gown with voluminous sleeves against a red backdrop' },
+    ],
+    match: ['bespoke', 'custom', 'couture', 'suit', 'tailor'],
     enquiry: 'Hi Moirai! I would like to start a bespoke commission.',
   },
   {
@@ -47,6 +55,12 @@ export const CATEGORIES: Category[] = [
     description: 'Wedding gowns and bridal looks made for your day — from the first fitting to the final reveal.',
     image: 'image-ae25c4f9852cbf954116fc26906a873de8a46b2d-1080x1080-jpg',
     imageAlt: 'Bride in an ivory gown with a sculpted lace bodice, photographed on a balcony',
+    gallery: [
+      { image: '/collections/bridal-lace-seated.jpg', alt: 'Bride in a long-sleeved sheer lace Moirai gown holding a white bouquet, seated' },
+      { image: '/collections/bridal-lace-standing.jpg', alt: 'Bride in a fitted long-sleeved lace Moirai mermaid gown with a white bouquet' },
+      { image: '/collections/bridal-lace-full.jpg', alt: 'Full-length view of the long-sleeved lace Moirai mermaid gown' },
+      { image: 'image-3751fe686ce1c07a4d6a86dcede8d02bc308a769-1080x1080-jpg', alt: 'A bride in an ivory Moirai gown framed by a tall glass doorway' },
+    ],
     match: ['bridal', 'wedding', 'bride'],
     enquiry: 'Hi Moirai! I would like to talk about a bridal gown.',
   },

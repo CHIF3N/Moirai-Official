@@ -16,7 +16,7 @@ export interface Article {
   excerpt: string
   publishedAt: string // ISO date of publication on the site
   topic: string
-  image: string
+  image: string // Sanity asset id or a file in /public
   imageAlt: string
   body: Block[]
 }
@@ -91,8 +91,8 @@ export const ARTICLES: Article[] = [
     excerpt: 'Bespoke means a garment designed and made for one person. Here is how the process usually unfolds, step by step.',
     publishedAt: PUBLISHED,
     topic: 'Bespoke',
-    image: 'image-3751fe686ce1c07a4d6a86dcede8d02bc308a769-1080x1080-jpg',
-    imageAlt: 'A bride in an ivory gown framed by a tall glass doorway',
+    image: '/collections/bespoke-blue-suit-3.jpg',
+    imageAlt: 'Woman in a tailored sky-blue Moirai power suit, seated against a peach backdrop',
     body: [
       { type: 'p', text: '“Bespoke” is used loosely in fashion, sometimes for anything with a monogram. In its truest sense it means a garment designed and made for one specific person: their measurements, their posture, their occasion and their taste. Nothing about it starts from a standard size.' },
       { type: 'h2', text: 'Bespoke, made-to-measure and ready-to-wear' },

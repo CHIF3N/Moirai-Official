@@ -16,7 +16,14 @@ export const MO = {
 // TikTok videos that belong to MO (ids from TIKTOK_VIDEOS in content/brand.ts)
 export const MO_VIDEO_IDS = ['7688726718999285012', '7690500692359826708', '7686024256123227413', '7548356979756911928']
 
-export const MO_IMAGES = [
+// MO women's jackets — burgundy velvet (photos supplied by the owner, 17 Oct 2026; the
+// product shot is cropped to remove a printed "shipping world wide" line, as delivery isn't finalised)
+export const MO_IMAGES: { src: string; width: number; height: number; alt: string; caption: string; post?: string }[] = [
+  { src: '/mo/velvet-jacket-duo.jpg', width: 819, height: 1024, alt: 'Two women in burgundy velvet MO jackets, one with jeans, one with a black feather skirt', caption: 'MO women’s jackets — burgundy velvet.' },
+  { src: '/mo/velvet-jacket-portrait.jpg', width: 669, height: 1024, alt: 'Woman in a burgundy velvet MO jacket holding an MO card', caption: 'Cropped, cinched, velvet.' },
+  { src: '/mo/velvet-jacket-sofa.jpg', width: 819, height: 1024, alt: 'Woman in a burgundy velvet MO jacket seated on a sofa beside an MO by Moirai bag', caption: 'With the MO bag.' },
+  { src: '/mo/velvet-jacket-card.jpg', width: 819, height: 1024, alt: 'Two women in burgundy velvet MO jackets, one holding an MO card', caption: 'MO, worn together.' },
+  { src: '/mo/velvet-jacket-product.jpg', width: 1024, height: 845, alt: 'Burgundy velvet MO jacket with puff sleeves on a hanger, MO logo over it', caption: 'The velvet jacket, up close.' },
   {
     src: '/social/jacket-collection-green.jpg', width: 1200, height: 1200,
     alt: 'Man in a green geometric-quilted jacket, seated, in front of the Moirai wordmark',
