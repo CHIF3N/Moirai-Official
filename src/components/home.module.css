@@ -36,6 +36,8 @@
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 2.5rem; }
 
 /* ── Hero ───────────────────────────────────────────────── */
+/* Desktop: text column left, photographs right — the fade only softens the seam,
+   so the photograph itself stays clear. Phone: photograph first, text below it. */
 .hero {
   position: relative;
   min-height: 100svh;
@@ -44,18 +46,39 @@
   background: var(--bg);
   isolation: isolate;
 }
-.heroMedia { position: absolute; inset: 0 0 0 auto; width: 62%; z-index: -2; }
-.heroImg { object-fit: cover; object-position: center 20%; }
+.heroMedia { position: absolute; inset: 0 0 0 auto; width: 58%; z-index: -2; overflow: hidden; background: var(--bg-3); }
+.heroImg { object-fit: cover; }
+.heroSlide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease; }
+.heroSlide.isActive { opacity: 1; }
+.heroSlide.isActive .heroImg { animation: heroDrift 8s ease-out both; }
+@keyframes heroDrift { from { transform: scale(1.06); } to { transform: scale(1); } }
+
 .heroShade {
-  position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(90deg, var(--bg) 38%, rgb(var(--bg-rgb) / 0.82) 44%, rgb(var(--bg-rgb) / 0.35) 56%, rgb(var(--bg-rgb) / 0) 72%),
-    linear-gradient(0deg, var(--bg) 0%, rgb(var(--bg-rgb) / 0) 30%);
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, var(--bg) 42%, rgb(var(--bg-rgb) / 0.55) 46%, rgb(var(--bg-rgb) / 0) 55%);
 }
+
+/* Slide controls: a small glass pill on the photograph */
+.heroControls {
+  position: absolute; right: clamp(1rem, 2.5vw, 2rem); bottom: clamp(1rem, 2.5vw, 2rem); z-index: 2;
+  display: flex; align-items: center; gap: 0.15rem; padding: 0.3rem 0.4rem;
+  border-radius: var(--r-pill);
+  background: rgb(14 10 20 / 0.45); border: 1px solid rgb(255 255 255 / 0.18);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.heroDot { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; }
+.heroDot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: rgb(255 255 255 / 0.5); transition: width 0.3s, background-color 0.3s; }
+.heroDot[aria-current="true"]::before { width: 20px; border-radius: 4px; background: #FFFFFF; }
+.heroPause { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; color: #FFFFFF; margin-left: 0.2rem; }
+.heroDot:focus-visible, .heroPause:focus-visible { outline: 2px solid #E6D6FA; outline-offset: 1px; }
+
 .heroContent {
   width: 100%; max-width: 1440px; margin: 0 auto;
   padding: calc(var(--nav-h) + 4rem) clamp(1.25rem, 4vw, 3.5rem) clamp(4rem, 9vh, 7rem);
+  pointer-events: none; /* its box spans the photograph — let clicks reach the slide controls */
 }
+.heroContent > * { pointer-events: auto; }
+.heroContent > * { max-width: min(36rem, 38vw); }
 .eyebrow {
   font-size: 12px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase;
   color: var(--accent-2);
@@ -65,20 +88,19 @@
 .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--brand-hover); }
 .heroTitle {
   font-family: var(--font-display);
-  font-size: var(--fs-h1);
+  font-size: clamp(3rem, 7vw, 7.5rem);
   font-weight: 300;
   line-height: 0.92;
   letter-spacing: -0.025em;
   color: var(--fg);
-  max-width: 10ch;
 }
 .heroTitle em { font-style: italic; font-weight: 300; }
-.heroLead { margin-top: 2rem; max-width: 30rem; font-size: 17px; line-height: 1.7; color: var(--fg-2); }
+.heroLead { margin-top: 2rem; font-size: 17px; line-height: 1.7; color: var(--fg-2); }
 .heroNot { color: var(--fg); font-family: var(--font-display); font-style: italic; font-size: 1.2em; }
 .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.75rem; }
 
 .heroScroll {
-  position: absolute; left: 50%; bottom: 1.5rem; width: 1px; height: 48px;
+  position: absolute; left: 21%; bottom: 1.5rem; width: 1px; height: 48px;
   background: var(--hairline2); overflow: hidden;
 }
 .heroScroll span {
@@ -87,16 +109,30 @@
 }
 @keyframes scrollCue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
 
+@media (prefers-reduced-motion: reduce) {
+  .heroSlide { transition: none; }
+  .heroSlide.isActive .heroImg { animation: none; }
+}
+
 @media (max-width: 900px) {
-  .heroMedia { width: 100%; }
-  .heroShade {
-    background:
-      linear-gradient(0deg, var(--bg) 18%, rgb(var(--bg-rgb) / 0.7) 48%, rgb(var(--bg-rgb) / 0.15) 75%, rgb(var(--bg-rgb) / 0.45) 100%);
+  .hero { flex-direction: column; align-items: stretch; min-height: 0; }
+  /* The photograph gets the top of the screen to itself */
+  .heroMedia {
+    position: relative; inset: auto; z-index: 0;
+    width: 100%; height: 70svh; min-height: 440px;
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
   }
-  .heroContent { padding-top: 46svh; padding-bottom: 3rem; }
-  .eyebrow { font-size: 11px; letter-spacing: 0.2em; margin-bottom: 1.25rem; }
-  .heroTitle { font-size: clamp(3.25rem, 15vw, 5rem); }
-  .heroLead { font-size: 16px; }
+  .heroMedia::after {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 28%; z-index: 1; pointer-events: none;
+    background: linear-gradient(180deg, rgb(14 10 20 / 0.35), rgb(14 10 20 / 0));
+  }
+  .heroShade { display: none; }
+  .heroContent { padding: 2.25rem 1.25rem 3rem; }
+  .heroContent > * { max-width: none; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.2em; margin-bottom: 1rem; }
+  .heroTitle { font-size: clamp(3rem, 14vw, 4.5rem); }
+  .heroLead { display: none; }
+  .heroActions { margin-top: 1.75rem; }
   .heroActions > * { flex: 1 1 100%; }
   .heroScroll { display: none; }
 }
@@ -276,11 +312,12 @@
 .heroMark {
   position: absolute; z-index: -1; pointer-events: none;
   left: clamp(-2rem, -2vw, 0rem); bottom: clamp(-1.5rem, -2vw, 0rem);
-  width: min(78vw, 1200px);
+  width: min(44vw, 680px);
   color: rgb(var(--accent-rgb) / 0.13);
 }
 .heroMark svg { display: block; width: 100%; height: auto; }
 [data-theme="dark"] .heroMark { color: rgb(var(--accent-rgb) / 0.10); }
 @media (max-width: 900px) {
-  .heroMark { width: 120vw; left: -6vw; bottom: 38%; color: rgb(var(--fg-rgb) / 0.12); }
+  .heroMark { display: none; }
 }
+@media (prefers-reduced-motion: reduce) { .heroPause { display: none; } }

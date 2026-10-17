@@ -1,11 +1,12 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useCurrency, useSiteConfig } from './Providers'
 import { waLink, CONSULTATION_HREF } from '@/lib/site'
 import Logo from './Logo'
 import SocialSection from './SocialSection'
+import HeroSlides, { type HeroSlide } from './HeroSlides'
 import styles from './home.module.css'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -22,6 +23,7 @@ interface HomeClientProps {
   closingImage?: string
   editorialItems?: any[]
   leadHeroImageUrl?: string
+  slides?: HeroSlide[]
 }
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
@@ -43,12 +45,11 @@ const VALUES = [
 const SCHOOL_MODULES = ['Design foundations', 'Pattern making & cutting', 'Sewing & couture technique', 'Fabrics & materials', 'Styling', 'Business of fashion']
 
 function Reveal({ children, delay = 0, className, as = 'div' }: { children: React.ReactNode; delay?: number; className?: string; as?: 'div' | 'li' }) {
-  const reduce = useReducedMotion()
   const Comp = as === 'li' ? motion.li : motion.div
   return (
     <Comp
       className={className}
-      initial={reduce ? false : { opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.8, delay, ease: EASE }}
@@ -69,34 +70,30 @@ export default function HomeClient({
   closingImage,
   editorialItems = [],
   leadHeroImageUrl,
+  slides = [],
 }: HomeClientProps) {
   const { displayPrice } = useCurrency()
   const site = useSiteConfig()
-  const reduce = useReducedMotion()
 
   const heroImg = leadHeroImageUrl || heroSlides?.[0]?.image || heroImageUrl
   const pieces = (editorialItems.length > 0 ? editorialItems : products).slice(0, 4)
   const tiles = collections.filter((c: any) => c.image).slice(0, 4)
   const journal = posts.slice(0, 3)
 
-  const heroIn = (delay: number) => reduce
-    ? {}
-    : { initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay, ease: EASE } }
+  // Same markup for every visitor; MotionConfig (Providers) tones animation down for reduced motion
+  const heroIn = (delay: number) => ({ initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay, ease: EASE } })
 
   return (
     <>
       {/* ── 1. HERO ─────────────────────────────────────────────── */}
       <section className={styles.hero} aria-labelledby="hero-title">
-        {heroImg && (
-          <motion.div
-            className={styles.heroMedia}
-            initial={reduce ? false : { opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.6, ease: EASE }}
-          >
-            <Image src={heroImg} alt="Moirai couture — editorial portrait" fill priority sizes="(max-width: 900px) 100vw, 62vw" className={styles.heroImg} />
-          </motion.div>
-        )}
+        {slides.length > 0
+          ? <HeroSlides slides={slides} />
+          : heroImg && (
+            <div className={styles.heroMedia}>
+              <Image src={heroImg} alt="Moirai couture — editorial portrait" fill priority sizes="(max-width: 900px) 100vw, 58vw" className={styles.heroImg} />
+            </div>
+          )}
         <div className={styles.heroShade} aria-hidden="true" />
         <span className={styles.heroMark} aria-hidden="true"><Logo title="" /></span>
 
@@ -306,7 +303,7 @@ export default function HomeClient({
                     </span>
                     {p.publishedAt && (
                       <time className={styles.postDate} dateTime={p.publishedAt}>
-                        {new Date(p.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        {new Date(p.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
                       </time>
                     )}
                     <span className={styles.postTitle}>{p.title}</span>

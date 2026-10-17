@@ -1,7 +1,7 @@
 import { fetchOr, allProductsQuery, featuredProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
 import { getJournalEntries } from '@/lib/journal'
 import HomeClient from '@/components/HomeClient'
-import { CATEGORIES, EDITORIAL } from '@/content/brand'
+import { CATEGORIES, EDITORIAL, HERO_SLIDES } from '@/content/brand'
 
 export const revalidate = 60
 
@@ -65,6 +65,15 @@ export default async function HomePage() {
   // Use first hero slide image as lead editorial hero image
   const leadHeroImageUrl = heroSlides?.[0]?.image || heroImageUrl
 
+  // Hero slideshow: the Site Settings hero first, then the editorial slides (no duplicates)
+  const cmsHeroRef: string | undefined = settings?.heroImage?.asset?._ref
+  const slides = [
+    ...(cmsHeroRef && !HERO_SLIDES.some(s => s.image === cmsHeroRef)
+      ? [{ src: urlFor(cmsHeroRef).width(1600).quality(85).url(), alt: 'Moirai couture — editorial portrait', position: '50% 40%' }]
+      : []),
+    ...HERO_SLIDES.map(s => ({ src: urlFor(s.image).width(1600).quality(85).url(), alt: s.alt, position: s.position })),
+  ]
+
   return (
     <HomeClient
       products={productsWithUrls}
@@ -79,6 +88,7 @@ export default async function HomePage() {
       closingImage={closingImage}
       editorialItems={editorialItemsWithUrls}
       leadHeroImageUrl={leadHeroImageUrl}
+      slides={slides}
     />
   )
 }
