@@ -1,0 +1,22 @@
+.card {
+  display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(1rem, 3vw, 2.5rem); align-items: center;
+  padding: clamp(1rem, 2.5vw, 1.75rem); border-radius: var(--r-lg);
+  background: var(--bg-2); border: 1px solid var(--hairline);
+}
+.media { position: relative; aspect-ratio: 4 / 5; border-radius: var(--r-md); overflow: hidden; background: radial-gradient(120% 90% at 50% 40%, rgb(var(--accent-rgb) / 0.16), var(--bg-3) 75%); }
+.body { display: grid; gap: 0.6rem; align-content: center; }
+.kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.name { font-family: var(--font-mo, var(--font-display)), Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(1.75rem, 3vw, 2.6rem); line-height: 0.95; color: var(--fg); }
+.price { font-size: 20px; font-weight: 600; color: var(--fg); font-variant-numeric: tabular-nums; }
+.desc { font-size: 15px; line-height: 1.6; color: var(--fg-2); max-width: 28rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.6rem; }
+.small { font-size: 13px; color: var(--fg-3); }
+.small a { color: var(--fg); text-decoration: underline; }
+
+/* Compact version for the Shop page strip: a wide row with a fixed-size photo deck */
+.compact { grid-template-columns: minmax(260px, 400px) 1fr; }
+.compact .name { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+
+@media (max-width: 760px) {
+  .card { grid-template-columns: 1fr; }
+}

@@ -123,3 +123,8 @@
   .heroCollage { width: min(100%, 480px); margin: 1rem auto 0; }
   .pieces { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Shop MO — pay online */
+.products { display: grid; gap: clamp(1rem, 2vw, 1.5rem); margin-top: clamp(2rem, 4vw, 3rem); }
+.storeNote { margin-top: 1.5rem; font-size: 14px; color: var(--fg-3); }
+.storeNote a { color: var(--fg); text-decoration: underline; }

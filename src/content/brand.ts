@@ -24,8 +24,10 @@ export interface Category {
   description: string
   image: string // Sanity image asset id, or a file in /public
   imageAlt: string
+  // Focal point (CSS object-position) so faces stay in frame when a photo is cropped
+  position?: string
   // More photographs for the collection (Sanity asset ids or /public files)
-  gallery?: { image: string; alt: string }[]
+  gallery?: { image: string; alt: string; position?: string }[]
   // Words that place a Sanity product in this category (matched against its category title)
   match: string[]
   enquiry: string
@@ -39,6 +41,7 @@ export const CATEGORIES: Category[] = [
     description: 'Pieces designed and made for one person — shaped by a conversation about your occasion, your story and your body.',
     image: '/collections/bespoke-blue-suit-1.jpg',
     imageAlt: 'Woman in a tailored sky-blue Moirai power suit seated on a clear stool against a peach backdrop',
+    position: '50% 18%',
     gallery: [
       { image: '/collections/bespoke-blue-suit-2.jpg', alt: 'The sky-blue Moirai suit, jacket worn open, hair in motion' },
       { image: '/collections/bespoke-pink-suit.jpg', alt: 'Pageant contestant in a tailored blush-pink Moirai suit with an embellished jacket and North West sash' },
@@ -55,6 +58,7 @@ export const CATEGORIES: Category[] = [
     description: 'Wedding gowns and bridal looks made for your day — from the first fitting to the final reveal.',
     image: 'image-ae25c4f9852cbf954116fc26906a873de8a46b2d-1080x1080-jpg',
     imageAlt: 'Bride in an ivory gown with a sculpted lace bodice, photographed on a balcony',
+    position: '55% 30%',
     gallery: [
       { image: '/collections/bridal-lace-seated.jpg', alt: 'Bride in a long-sleeved sheer lace Moirai gown holding a white bouquet, seated' },
       { image: '/collections/bridal-lace-standing.jpg', alt: 'Bride in a fitted long-sleeved lace Moirai mermaid gown with a white bouquet' },
@@ -71,6 +75,7 @@ export const CATEGORIES: Category[] = [
     description: 'Structured, figure-defining corsetry for bold silhouettes — worn as a statement on its own or as part of a complete look.',
     image: 'image-30c127df06aa843a2b9b77b1d75f5741d833185c-1024x1280-jpg',
     imageAlt: 'Red corseted dress against a deep green studio backdrop',
+    position: '50% 28%',
     match: ['corset'],
     enquiry: 'Hi Moirai! I am interested in a corset.',
   },
@@ -81,6 +86,7 @@ export const CATEGORIES: Category[] = [
     description: 'Cocktail dresses for the evenings that matter, from sculpted minis to dramatic silhouettes.',
     image: 'image-bffaef3c90af019078755055f649ad3b2c8ba9a4-1024x1280-jpg',
     imageAlt: 'Red strapless cocktail dress with embellished neckline on a white studio background',
+    position: '45% 30%',
     match: ['cocktail', 'dress', 'gown', 'evening'],
     enquiry: 'Hi Moirai! I am interested in a cocktail dress.',
   },
@@ -91,6 +97,7 @@ export const CATEGORIES: Category[] = [
     description: 'Cameroonian traditional attire, reimagined through a contemporary couture eye — heritage textiles in modern silhouettes.',
     image: 'image-4bb159520b9ad2cb92c3d65afda9b759da08449c-1080x1080-jpg',
     imageAlt: 'Flowing printed gown in blue and earth tones, photographed outside a weathered wooden house',
+    position: '50% 35%',
     match: ['tradition', 'cameroon', 'heritage', 'african', 'culture'],
     enquiry: 'Hi Moirai! I am interested in Cameroonian traditional fashion.',
   },

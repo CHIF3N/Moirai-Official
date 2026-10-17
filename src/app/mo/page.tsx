@@ -3,9 +3,10 @@ import Image from 'next/image'
 import { fetchOr, allProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
 import { getSiteConfig, waLink } from '@/lib/site'
 import { hasFixedPrice, formatXAF, PRICE_ON_REQUEST } from '@/lib/price'
-import { MO, MO_IMAGES, MO_SANITY_IMAGE, MO_VIDEO_IDS, isMoProduct } from '@/content/mo'
+import { MO, MO_IMAGES, MO_SANITY_IMAGE, MO_VIDEO_IDS, MO_PRODUCTS, MO_STORE_URL, isMoProduct } from '@/content/mo'
+import MoProductCard from '@/components/MoProductCard'
 
-const PRODUCT_SHOT = MO_IMAGES.find(i => i.src.endsWith('velvet-jacket-product.jpg'))!
+const PRODUCT_SHOT = { src: '/mo/stasis-cropped-1.jpg', alt: 'Velvet Cropped STASIS — burgundy velvet cropped jacket on a hanger' }
 import MoMark from '@/components/MoMark'
 import TikTokStrip from '@/components/TikTokStrip'
 import styles from './mo.module.css'
@@ -34,10 +35,10 @@ export default async function MoPage() {
           <p className={styles.heroLine}>{MO.tagline}</p>
           <p className={styles.heroIntro}>{MO.intro}</p>
           <div className={styles.actions}>
-            <a href={MO.earlyAccessUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              Get early access — Drop 02<span className="sr-only"> (opens a form on tally.so)</span>
+            <a href="#mo-shop" className="btn-primary">Shop the STASIS</a>
+            <a href={MO.earlyAccessUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+              Early access — Drop 02<span className="sr-only"> (opens a form on tally.so)</span>
             </a>
-            <a href={waLink(site.whatsappNumber, MO.enquiry)} target="_blank" rel="noopener noreferrer" className="btn-ghost">Order on WhatsApp</a>
           </div>
         </div>
         <div className={styles.heroCollage}>
@@ -57,6 +58,39 @@ export default async function MoPage() {
           {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((w, i) => <span key={i}>{w}<b>✦</b></span>)}
         </div>
       </div>
+
+      {/* ── Shop MO: pay online with Mobile Money (Fapshi) ── */}
+      <section id="mo-shop" className={styles.section} aria-labelledby="mo-pieces-title">
+        <div className={styles.wrap}>
+          <div className={styles.split}>
+            <h2 id="mo-pieces-title" className={styles.h2}>Shop MO</h2>
+            <p className={styles.lead}>In stock now. Add to your bag or buy straight away — payment is with Mobile Money on our Fapshi store.</p>
+          </div>
+          <div className={styles.products}>
+            {MO_PRODUCTS.map(p => <MoProductCard key={p.payUrl} product={p} />)}
+          </div>
+          {pieces.length > 0 && (
+            <ul className={styles.pieces}>
+              {pieces.map((p: any) => {
+                const name = p.title || 'MO piece'
+                const slug = p.slug?.current || p.slug
+                return (
+                  <li key={p._id}>
+                    <Link href={slug ? `/product/${slug}` : '/shop'} className={styles.piece}>
+                      <span className={styles.pieceMedia}>
+                        {p.image && <Image src={urlFor(p.image).width(700).url()} alt={name} fill sizes="(max-width: 640px) 50vw, 25vw" className={styles.img} />}
+                      </span>
+                      <span className={styles.pieceName}>{name}</span>
+                      <span className={styles.piecePrice}>{site.showPrices && hasFixedPrice(p) ? formatXAF(p.price) : PRICE_ON_REQUEST}</span>
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+          <p className={styles.storeNote}>Also on our store: <a href={MO_STORE_URL} target="_blank" rel="noopener noreferrer">store.fapshi.com/the-house-moirai</a></p>
+        </div>
+      </section>
 
       {/* ── The drop on TikTok ── */}
       <section className={styles.section} aria-labelledby="mo-drop-title">
@@ -90,36 +124,6 @@ export default async function MoPage() {
         </div>
       </section>
 
-      {/* ── Pieces ── */}
-      <section className={styles.section} aria-labelledby="mo-pieces-title">
-        <div className={styles.wrap}>
-          <h2 id="mo-pieces-title" className={styles.h2}>Shop MO</h2>
-          {pieces.length > 0 ? (
-            <ul className={styles.pieces}>
-              {pieces.map((p: any) => {
-                const name = p.title || 'MO piece'
-                const slug = p.slug?.current || p.slug
-                return (
-                  <li key={p._id}>
-                    <Link href={slug ? `/product/${slug}` : '/shop'} className={styles.piece}>
-                      <span className={styles.pieceMedia}>
-                        {p.image && <Image src={urlFor(p.image).width(700).url()} alt={name} fill sizes="(max-width: 640px) 50vw, 25vw" className={styles.img} />}
-                      </span>
-                      <span className={styles.pieceName}>{name}</span>
-                      <span className={styles.piecePrice}>{site.showPrices && hasFixedPrice(p) ? formatXAF(p.price) : PRICE_ON_REQUEST}</span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          ) : (
-            <div className={styles.empty}>
-              <p className={styles.emptyText}>MO pieces are ordered directly with the team. Message us on WhatsApp for what is available now and how to order — payment is by Mobile Money (MoMo).</p>
-              <a href={waLink(site.whatsappNumber, MO.enquiry)} target="_blank" rel="noopener noreferrer" className="btn-primary">Order on WhatsApp</a>
-            </div>
-          )}
-        </div>
-      </section>
 
       {/* ── Early access ── */}
       <section className={styles.cta} aria-labelledby="mo-cta-title">

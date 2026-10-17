@@ -19,6 +19,8 @@ export interface CartItem {
   slug?: string
   qty: number
   category?: string
+  // Online payment page (Fapshi). Items with one have a confirmed price and can be paid at /checkout.
+  payUrl?: string
 }
 
 interface CartContextType {
@@ -415,7 +417,7 @@ function CartDrawer() {
                             {item.name}
                           </Link>
                           <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--umber)', fontWeight: 500 }}>
-                            {displayPrice(item)}
+                            {item.payUrl && hasFixedPrice(item) ? formatPrice(item.price) : displayPrice(item)}
                           </p>
                         </div>
 
@@ -448,7 +450,7 @@ function CartDrawer() {
                           {/* Subtotal + remove */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--obsidian)', fontWeight: 600 }}>
-                              {showPrices && hasFixedPrice(item) ? formatPrice(item.price * item.qty) : ''}
+                              {(showPrices || item.payUrl) && hasFixedPrice(item) ? formatPrice(item.price * item.qty) : ''}
                             </span>
                             <button
                               onClick={() => removeItem(item.id)}
@@ -501,20 +503,25 @@ function CartDrawer() {
                     : 'Send your selection on WhatsApp and the atelier will reply with a quote. Delivery arrangements are agreed when you order; payment is by Mobile Money (MoMo).'}
                 </p>
 
-                {/* WhatsApp Checkout */}
+                {/* Online payment for items with a payment link */}
+                {items.some(i => i.payUrl) && (
+                  <Link href="/checkout" onClick={closeCart} className="btn-primary" style={{ width: '100%', marginBottom: '0.75rem' }}>
+                    Checkout · pay with Mobile Money
+                  </Link>
+                )}
+
+                {/* WhatsApp order */}
                 <a
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary"
+                  className={items.some(i => i.payUrl) ? 'btn-ghost' : 'btn-primary'}
                   style={{
                     width: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.6rem',
-                    background: 'var(--brand)',
-                    borderColor: 'var(--brand)',
                     marginBottom: '0.75rem',
                   }}
                 >

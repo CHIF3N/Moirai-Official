@@ -32,7 +32,7 @@ export interface ShopCategory {
   imageAlt: string
 }
 
-export default function ShopClient({ products, categories }: { products: ShopProduct[]; categories: ShopCategory[] }) {
+export default function ShopClient({ products, categories, featured }: { products: ShopProduct[]; categories: ShopCategory[]; featured?: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()
@@ -81,6 +81,8 @@ export default function ShopClient({ products, categories }: { products: ShopPro
           {active ? active.description : 'Choose a piece, send your selection on WhatsApp, and the atelier will confirm the details with you. Payment is by Mobile Money (MoMo).'}
         </p>
       </header>
+
+      {featured}
 
       <div className={`${styles.toolbar} glass`} role="search">
         <label htmlFor="shop-search" className="sr-only">Search the shop</label>

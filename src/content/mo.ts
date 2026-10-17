@@ -16,14 +16,12 @@ export const MO = {
 // TikTok videos that belong to MO (ids from TIKTOK_VIDEOS in content/brand.ts)
 export const MO_VIDEO_IDS = ['7688726718999285012', '7690500692359826708', '7686024256123227413', '7548356979756911928']
 
-// MO women's jackets — burgundy velvet (photos supplied by the owner, 17 Oct 2026; the
-// product shot is cropped to remove a printed "shipping world wide" line, as delivery isn't finalised)
+// MO women's jackets — burgundy velvet (photos supplied by the owner, 17 Oct 2026)
 export const MO_IMAGES: { src: string; width: number; height: number; alt: string; caption: string; post?: string }[] = [
   { src: '/mo/velvet-jacket-duo.jpg', width: 819, height: 1024, alt: 'Two women in burgundy velvet MO jackets, one with jeans, one with a black feather skirt', caption: 'MO women’s jackets — burgundy velvet.' },
   { src: '/mo/velvet-jacket-portrait.jpg', width: 669, height: 1024, alt: 'Woman in a burgundy velvet MO jacket holding an MO card', caption: 'Cropped, cinched, velvet.' },
   { src: '/mo/velvet-jacket-sofa.jpg', width: 819, height: 1024, alt: 'Woman in a burgundy velvet MO jacket seated on a sofa beside an MO by Moirai bag', caption: 'With the MO bag.' },
   { src: '/mo/velvet-jacket-card.jpg', width: 819, height: 1024, alt: 'Two women in burgundy velvet MO jackets, one holding an MO card', caption: 'MO, worn together.' },
-  { src: '/mo/velvet-jacket-product.jpg', width: 1024, height: 845, alt: 'Burgundy velvet MO jacket with puff sleeves on a hanger, MO logo over it', caption: 'The velvet jacket, up close.' },
   {
     src: '/social/jacket-collection-green.jpg', width: 1200, height: 1200,
     alt: 'Man in a green geometric-quilted jacket, seated, in front of the Moirai wordmark',
@@ -48,3 +46,41 @@ export function isMoProduct(category: string | null | undefined, name: string | 
   const text = `${category || ''} ${name || ''}`.toLowerCase()
   return MO.match.some(m => text.includes(m))
 }
+
+// MO products on the brand's Fapshi store (https://store.fapshi.com/the-house-moirai),
+// read 17 Oct 2026. Names, prices and descriptions are copied from the store; payment happens on Fapshi.
+export const MO_STORE_URL = 'https://store.fapshi.com/the-house-moirai'
+
+export interface MoProduct {
+  name: string
+  price: number // FCFA, as listed on Fapshi
+  description: string
+  payUrl: string
+  images: { src: string; alt: string; position?: string }[]
+}
+
+export const MO_PRODUCTS: MoProduct[] = [
+  {
+    name: 'Velvet Cropped STASIS',
+    price: 20000,
+    description: 'The CROPPED STASIS is a carefully crafted jacket, made with breathable, soft textured velvet. It is made for every style, every occasion and everyone.',
+    payUrl: 'https://store.fapshi.com/the-house-moirai/product/4jjd5t',
+    images: [
+      { src: '/mo/stasis-cropped-1.jpg', alt: 'Velvet Cropped STASIS — burgundy velvet cropped jacket with wide lapels and puff sleeves, on a hanger', position: '50% 40%' },
+      { src: '/mo/stasis-cropped-2.jpg', alt: 'Two women on a sofa wearing burgundy velvet MO jackets', position: '50% 35%' },
+    ],
+  },
+  {
+    name: 'Velvet Puff STASIS',
+    price: 20000,
+    description: 'The VELVET PUFF is just what your closet is missing. Great with every outfit — a must-have.',
+    payUrl: 'https://store.fapshi.com/the-house-moirai/product/vlscny',
+    images: [
+      { src: '/mo/stasis-puff-1.jpg', alt: 'Velvet Puff STASIS — woman in a burgundy zip-front velvet puff jacket holding an MO card', position: '50% 25%' },
+      { src: '/mo/stasis-puff-2.jpg', alt: 'Woman in sunglasses wearing the burgundy Velvet Puff STASIS, arms raised', position: '50% 25%' },
+      { src: '/mo/stasis-puff-3.jpg', alt: 'Two women wearing the burgundy Velvet Puff STASIS', position: '50% 25%' },
+      { src: '/mo/stasis-puff-4.jpg', alt: 'Two women in burgundy velvet MO jackets seated on a bed', position: '50% 30%' },
+      { src: '/mo/stasis-puff-black.jpg', alt: 'Woman in sunglasses wearing a black velvet puff jacket', position: '50% 25%' },
+    ],
+  },
+]

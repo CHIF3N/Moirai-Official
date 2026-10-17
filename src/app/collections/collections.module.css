@@ -75,3 +75,9 @@
 .stripItem { position: relative; aspect-ratio: 3 / 4; overflow: hidden; border-radius: var(--r-sm); background: var(--bg-3); }
 .stripItem .img { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
 .stripItem:hover .img { transform: scale(1.06); }
+
+/* Multi-photo collections: a swipeable deck on a soft panel */
+.mediaDeck { background: radial-gradient(120% 90% at 50% 40%, rgb(var(--accent-rgb) / 0.14), var(--bg-3) 70%); }
+.v1 .mediaDeck { background: radial-gradient(120% 90% at 50% 40%, rgb(255 255 255 / 0.5), var(--bg-2) 75%); }
+:global([data-theme="dark"]) .v1 .mediaDeck { background: radial-gradient(120% 90% at 50% 40%, rgb(var(--accent-rgb) / 0.12), var(--bg-2) 75%); }
+@media (max-width: 900px) { .mediaDeck { aspect-ratio: auto; min-height: 560px; } }
