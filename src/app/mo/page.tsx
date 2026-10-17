@@ -4,6 +4,8 @@ import { fetchOr, allProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sani
 import { getSiteConfig, waLink } from '@/lib/site'
 import { hasFixedPrice, formatXAF, PRICE_ON_REQUEST } from '@/lib/price'
 import { MO, MO_IMAGES, MO_SANITY_IMAGE, MO_VIDEO_IDS, isMoProduct } from '@/content/mo'
+
+const PRODUCT_SHOT = MO_IMAGES.find(i => i.src.endsWith('velvet-jacket-product.jpg'))!
 import MoMark from '@/components/MoMark'
 import TikTokStrip from '@/components/TikTokStrip'
 import styles from './mo.module.css'
@@ -20,7 +22,6 @@ export default async function MoPage() {
   ])
   const site = getSiteConfig(settings)
   const pieces = products.filter(p => isMoProduct(p.category, p.title))
-  const campaign = urlFor(MO_SANITY_IMAGE.image).width(1000).quality(82).url()
 
   return (
     <div className={styles.mo}>
@@ -44,7 +45,7 @@ export default async function MoPage() {
             <Image src={MO_IMAGES[0].src} alt={MO_IMAGES[0].alt} fill priority sizes="(max-width: 900px) 80vw, 34vw" className={styles.img} />
           </figure>
           <figure className={`${styles.shot} ${styles.shotB}`}>
-            <Image src={campaign} alt={MO_SANITY_IMAGE.alt} fill sizes="(max-width: 900px) 55vw, 22vw" className={styles.img} />
+            <Image src={PRODUCT_SHOT.src} alt={PRODUCT_SHOT.alt} fill sizes="(max-width: 900px) 55vw, 22vw" className={styles.img} />
           </figure>
           <span className={styles.sticker} aria-hidden="true">Drop<br />02</span>
         </div>
@@ -75,14 +76,14 @@ export default async function MoPage() {
       <section className={`${styles.section} ${styles.panel}`} aria-labelledby="mo-jackets-title">
         <div className={styles.wrap}>
           <h2 id="mo-jackets-title" className={styles.h2}>Jackets, reworked</h2>
-          <p className={styles.lead}>Geometric quilting, leather and velvet — made to move with you from day to night.</p>
+          <p className={styles.lead}>Burgundy velvet, geometric quilting and leather — made to move with you from day to night.</p>
           <div className={styles.gallery}>
-            {MO_IMAGES.map(img => (
+            {[...MO_IMAGES, { src: urlFor(MO_SANITY_IMAGE.image).width(1000).quality(82).url(), width: 1080, height: 1080, alt: MO_SANITY_IMAGE.alt, caption: 'From the jacket campaign.', post: undefined }].filter(img => img.src !== PRODUCT_SHOT.src).map(img => (
               <figure key={img.src} className={styles.galleryItem}>
                 <span className={styles.galleryMedia} style={{ aspectRatio: `${img.width} / ${img.height}` }}>
                   <Image src={img.src} alt={img.alt} fill sizes="(max-width: 900px) 100vw, 40vw" className={styles.img} />
                 </span>
-                <figcaption>{img.caption} <a href={img.post} target="_blank" rel="noopener noreferrer">View post</a></figcaption>
+                <figcaption>{img.caption}{img.post && <> <a href={img.post} target="_blank" rel="noopener noreferrer">View post</a></>}</figcaption>
               </figure>
             ))}
           </div>

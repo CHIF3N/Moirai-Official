@@ -1,4 +1,4 @@
-import { fetchOr, allProductsQuery, featuredProductsQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { fetchOr, allProductsQuery, featuredProductsQuery, siteSettingsQuery, urlFor, mediaUrl } from '@/lib/sanity'
 import { getJournalEntries } from '@/lib/journal'
 import HomeClient from '@/components/HomeClient'
 import { CATEGORIES, EDITORIAL, HERO_SLIDES } from '@/content/brand'
@@ -34,7 +34,7 @@ export default async function HomePage() {
   const collections = CATEGORIES.map(c => ({
     title: c.title,
     slug: c.slug,
-    image: urlFor(c.image).width(900).quality(85).url(),
+    image: mediaUrl(c.image, 900, 85),
     alt: c.imageAlt,
   }))
 

@@ -1,5 +1,5 @@
 import { ARTICLES } from '@/content/journal'
-import { fetchOr, allPostsQuery, urlFor } from '@/lib/sanity'
+import { fetchOr, allPostsQuery, urlFor, mediaUrl } from '@/lib/sanity'
 
 // One list for the Journal: articles published with the site plus posts written in Sanity
 export interface JournalEntry {
@@ -34,7 +34,7 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
     excerpt: a.excerpt,
     publishedAt: a.publishedAt,
     topic: a.topic,
-    imageUrl: urlFor(a.image).width(1000).quality(80).url(),
+    imageUrl: mediaUrl(a.image, 1000, 80),
     imageAlt: a.imageAlt,
   }))
 

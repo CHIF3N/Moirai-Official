@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import { ARTICLES, getArticle, type Block } from '@/content/journal'
-import { fetchOr, postBySlugQuery, siteSettingsQuery, urlFor } from '@/lib/sanity'
+import { fetchOr, postBySlugQuery, siteSettingsQuery, urlFor, mediaUrl } from '@/lib/sanity'
 import { getJournalEntries, formatDate } from '@/lib/journal'
 import { getSiteConfig, waLink, CONSULTATION_HREF } from '@/lib/site'
 import styles from '../journal.module.css'
@@ -24,7 +24,7 @@ async function loadEntry(slug: string) {
       excerpt: article.excerpt,
       publishedAt: article.publishedAt,
       topic: article.topic,
-      imageUrl: urlFor(article.image).width(1600).quality(82).url(),
+      imageUrl: mediaUrl(article.image, 1600),
       imageAlt: article.imageAlt,
       blocks: article.body as Block[] | null,
       sanityBody: null as any,

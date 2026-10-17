@@ -15,3 +15,8 @@ export async function fetchOr<T>(label: string, query: string, fallback: T, para
     return fallback
   }
 }
+
+// Content images can be a Sanity asset id or a file in /public (e.g. "/collections/x.jpg")
+export function mediaUrl(src: string, width: number, quality = 82) {
+  return src.startsWith('/') ? src : urlFor(src).width(width).quality(quality).url()
+}

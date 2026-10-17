@@ -68,3 +68,10 @@
   .v2 .media { position: relative; inset: auto; z-index: 0; aspect-ratio: 4 / 5; }
   .v2 .body { margin: -4rem 1rem 1.5rem; justify-self: stretch; }
 }
+
+/* Extra photographs for a collection */
+.strip { list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(84px, 1fr); gap: 0.6rem; margin-top: 1.75rem; max-width: 34rem; overflow-x: auto; scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+.stripItem { position: relative; aspect-ratio: 3 / 4; overflow: hidden; border-radius: var(--r-sm); background: var(--bg-3); }
+.stripItem .img { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+.stripItem:hover .img { transform: scale(1.06); }

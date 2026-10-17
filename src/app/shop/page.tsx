@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { fetchOr, allProductsQuery, urlFor } from '@/lib/sanity'
+import { fetchOr, allProductsQuery, urlFor, mediaUrl } from '@/lib/sanity'
 import { CATEGORIES, categoryFor } from '@/content/brand'
 import ShopClient, { type ShopProduct, type ShopCategory } from '@/components/ShopClient'
 
@@ -35,7 +35,7 @@ export default async function ShopPage() {
     short: c.short,
     description: c.description,
     enquiry: c.enquiry,
-    image: urlFor(c.image).width(900).quality(82).url(),
+    image: mediaUrl(c.image, 900),
     imageAlt: c.imageAlt,
   }))
 
